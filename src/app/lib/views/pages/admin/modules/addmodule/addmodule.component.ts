@@ -1,26 +1,23 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { filter, map, takeUntil, delay, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { IDynamicForm, IHTMLFormControl, SelectInput, CheckBoxInput } from 'src/app/lib/core/components/dynamic-inputs/core';
 import { DynamicControlParser } from 'src/app/lib/core/helpers/dynamic-control-parser';
 import { TypeUtilHelper } from 'src/app/lib/core/helpers/type-utils-helper';
-import { FormHelperService } from 'src/app/lib/core/helpers/form-helper';
 import { TranslationService } from 'src/app/lib/core/translator';
-import { ComponentReactiveFormHelpers } from 'src/app/lib/core/helpers/component-reactive-form-helpers';
 import { getJSObjectPropertyValue } from 'src/app/lib/core/utils';
 import { moduleFormViewModelBindings, ModuleV2 } from '../../../../partials/app-modules/core/v2/models/module';
 import { createModuleAction, updateModuleAction, moduleCreatedAction, moduleUpdatedAction, getModuleUsingID } from '../../../../partials/app-modules/core/v2/actions/module';
 import { ModulesProvider } from '../../../../partials/app-modules/core/v2/providers/module';
 import { DrewlabsRessourceServerClient } from '../../../../../core/http/core/ressource-server-client';
-import { AppUIStateProvider, UIStateStatusCode } from '../../../../../core/helpers/app-ui-store-manager.service';
 import { createSubject } from 'src/app/lib/core/rxjs/helpers';
 import { combineLatest } from 'rxjs';
-import { PageComponent } from '../../../../../core/helpers/component-interfaces';
-import { Log, Err } from '../../../../../core/utils/logger';
-import { environment } from 'src/environments/environment';
 import { ActivatedRoute } from '@angular/router';
-import { backendRoutePaths } from '../../../../partials/partials-configs';
+import { UIStateStatusCode } from 'src/app/lib/core/contracts/ui-state';
+import { AppUIStateProvider } from 'src/app/lib/core/ui-state';
+import { ComponentReactiveFormHelpers } from 'src/app/lib/core/components/dynamic-inputs/angular';
+import { MODULE_RESOURCE_PATH_TOKEN } from 'src/app/lib/views/partials/app-modules/core';
 
 @Component({
   selector: 'app-addmodule',
@@ -49,7 +46,7 @@ export class AddmoduleComponent implements OnInit, OnDestroy {
       if (params.has('id')) {
         getModuleUsingID(this.modules.store$)(
           this.client,
-          backendRoutePaths.modules,
+          this.path,
           params.get('id')
         );
       }
@@ -89,29 +86,18 @@ export class AddmoduleComponent implements OnInit, OnDestroy {
   formViewState$ = combineLatest([
     this.modules.state$,
     this.selectedModule$,
-    this.formHelper.formLoaded$.pipe(
-      filter((form) => this.typeHelper.isDefined(form.get('moduleFormID')))
-    )])
+  ])
     .pipe(
       delay(.3),
-      map(([moduleState, moduleID, forms]) => ({
+      map(([moduleState, moduleID]) => ({
         performingAction: moduleState.performingAction,
         selectedModule: moduleState.items.find((item) => item.id === moduleID),
-        forms,
         items: moduleState.items
       }),
       ),
       tap(state => {
         this.selectedModule = state.selectedModule || this.selectedModule;
-        if (state.forms) {
-          this.form = state.forms.get('moduleFormID');
-          this.componentFormGroup = this.controlParser.buildFormGroupFromDynamicForm(
-            this.form, !this.typeHelper.isDefined(this.selectedModule)
-          ) as FormGroup;
-          if (this.selectedModule) {
-            this.prefilForm();
-          }
-        }
+        // TODO : Build and prefill the form
       }));
 
   performingAction$ = combineLatest([this.uiState.uiState, this.formViewState$]).pipe(
@@ -121,50 +107,21 @@ export class AddmoduleComponent implements OnInit, OnDestroy {
   constructor(
     private controlParser: DynamicControlParser,
     public readonly typeHelper: TypeUtilHelper,
-    private formHelper: FormHelperService,
     private translate: TranslationService,
     private modules: ModulesProvider,
     private client: DrewlabsRessourceServerClient,
     private uiState: AppUIStateProvider,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    @Inject(MODULE_RESOURCE_PATH_TOKEN) private path?: string
   ) {
     this.translations$.subscribe();
-    this.performingAction$.subscribe(state => Log(state));
+    this.performingAction$.subscribe();
     this.state$.subscribe();
   }
 
   async ngOnInit() {
     moduleCreatedAction(this.modules.store$)(false);
     moduleUpdatedAction(this.modules.store$)(false);
-    this.publishers.push(
-      ...[
-        this.formHelper.loadForms
-      ]
-    );
-    this.formHelper.suscribe();
-    // Triggers form loading event
-    this.formHelper.loadForms.next({
-      configs: [
-        {
-          id: environment.forms.modules as number,
-          label: 'moduleFormID',
-        },
-      ],
-      result: {
-        error: (error: any) => {
-          Err(error);
-          this.uiState.endAction();
-        },
-        success: () => {
-          this.uiState.endAction();
-        },
-        warnings: (errors: any) => {
-          Err(errors);
-          this.uiState.endAction();
-        }
-      }
-    }
-    );
   }
 
   prefilForm() {
@@ -213,7 +170,6 @@ export class AddmoduleComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.formHelper.unsubscribe().onCompleActionListeners(this.publishers);
     this._destroy$.next();
     this.uiState.endAction();
     moduleCreatedAction(this.modules.store$)(null);

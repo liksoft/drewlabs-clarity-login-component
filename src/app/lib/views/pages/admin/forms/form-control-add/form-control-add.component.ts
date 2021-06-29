@@ -1,20 +1,19 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { IDynamicForm } from 'src/app/lib/core/components/dynamic-inputs/core';
 import { FormGroup } from '@angular/forms';
-import { FormRequest, ComponentReactiveFormHelpers } from 'src/app/lib/core/helpers/component-reactive-form-helpers';
-import { AppUIStoreManager } from 'src/app/lib/core/helpers/app-ui-store-manager.service';
-import { AbstractAlertableComponent, cloneAbstractControl } from '../../../../../core/helpers/component-interfaces';
 import { DynamicControlParser } from 'src/app/lib/core/helpers/dynamic-control-parser';
+import { cloneAbstractControl, ComponentReactiveFormHelpers } from 'src/app/lib/core/components/dynamic-inputs/angular';
+import { AppUIStateProvider } from 'src/app/lib/core/ui-state';
 
 @Component({
   selector: 'app-form-control-add',
   templateUrl: './form-control-add.component.html',
   styles: []
 })
-export class FormControlAddComponent extends AbstractAlertableComponent implements OnInit, OnDestroy {
+export class FormControlAddComponent implements OnDestroy {
   @Input() public componentFormGroup: FormGroup;
   @Input() form: IDynamicForm;
-  @Output() formSubmitted: EventEmitter<FormRequest> = new EventEmitter<FormRequest>();
+  @Output() formSubmitted = new EventEmitter<{[index: string]: any}>();
   @Output() cancelSubmission: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() set controlViewState(
     value: { form: IDynamicForm, formgroup: FormGroup }) {
@@ -27,17 +26,18 @@ export class FormControlAddComponent extends AbstractAlertableComponent implemen
         ) as FormGroup);
     }
   }
+
+  uiState$ = this.uiState.uiState;
+
   /**
    * @description Component object instance initializer
    * @param builder [[FormBuilder]] Angular ReactiveForm FormBuilder
    * @param appUIStoreManager [[AppUIStoreManager]]
    */
   constructor(
-    uiStore: AppUIStoreManager,
+    private uiState: AppUIStateProvider,
     private controlParser: DynamicControlParser
-  ) {
-    super(uiStore); //
-  }
+  ) {}
 
   cancel() {
     this.cancelSubmission.emit(true);
@@ -66,13 +66,8 @@ export class FormControlAddComponent extends AbstractAlertableComponent implemen
     this.onFormRequestSubmittedSuccessfully();
   }
 
-  ngOnInit(): void {
-    this.subscribeToUIActions();
-  }
-
   ngOnDestroy(): void {
     this.resetFormGroup();
-    this.clearUIActionSubscriptions();
   }
 
 }

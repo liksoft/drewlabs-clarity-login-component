@@ -32,38 +32,26 @@ import {
   AddUserFormComponent
 } from '../users';
 import {
-  partialConfigs,
-  adminPath,
-  adminAuthorizations
+  partialConfigs
 } from '../../../partials/partials-configs';
-import { HttpRequestService } from 'src/app/lib/core/http/core';
-import { SessionStorage } from 'src/app/lib/core/storage/core';
-import { GenericPaginatorDatasource } from 'src/app/lib/core/helpers/paginator';
 import {
   ListDepartmentComponent,
   AddDepartementComponent,
   DepartmentComponent
 } from '../department';
-import { User } from 'src/app/lib/core/auth/contracts/v2';
-import { AppConfigs } from 'src/app/lib/bloc/models/app-configs';
-import { TypeUtilHelper } from 'src/app/lib/core/helpers/type-utils-helper';
-import { GlobalConfigurationsComponent } from './configurations/global-configurations/global-configurations.component';
-import { GlobalConfigurationsListComponent } from './configurations/global-configurations/global-configurations-list/global-configurations-list.component';
-import { GlobalConfigurationsFormComponent } from './configurations/global-configurations/global-configurations-form/global-configurations-form.component';
-import { ConfigurationsComponent } from './configurations/configurations.component';
-import { DefaultEntityHandler, AbstractEntityProvider } from 'src/app/lib/core/entity';
 import { AppNavComponent } from './app-nav/app-nav.component';
 import { SettingsComponent } from './settings/settings.component';
 import { UpdatePasswordViewComponent } from './settings/update-password-view/update-password-view.component';
 import { AuthorizationsGuard } from '../../../../core/auth/core/auth-guard.service';
-import { environment } from '../../../../../../environments/environment.prod';
+import { environment } from 'src/environments/environment';
+import { AUTH_RESOURCES_AUTHORIZATIONS } from '../../../authorizations';
 
-
-const DashboardRoutes: Routes = [
-
-];
 
 export const getRoutes = () => {
+
+  const adminPath = environment?.appRoutes;
+  const adminAuthorizations = AUTH_RESOURCES_AUTHORIZATIONS;
+
   const childRoutes: Routes = [
     {
       path: '',
@@ -86,14 +74,6 @@ export const getRoutes = () => {
     {
       path: `${adminPath.accountRoute}`,
       component: SettingsComponent,
-      canActivate: [AuthGuardService, AuthorizationsGuard],
-      data: {
-        authorizations: adminAuthorizations
-      }
-    },
-    {
-      path: `${adminPath.globalConfigurationsRoute}`,
-      component: ConfigurationsComponent,
       canActivate: [AuthGuardService, AuthorizationsGuard],
       data: {
         authorizations: adminAuthorizations
@@ -293,10 +273,6 @@ export const MODULE_DECLARATIONS = [
   ListDepartmentComponent,
   DepartmentComponent,
   AddDepartementComponent,
-  ConfigurationsComponent,
-  GlobalConfigurationsComponent,
-  GlobalConfigurationsListComponent,
-  GlobalConfigurationsFormComponent,
   AddUserFormComponent,
 
   // Navigation component
@@ -314,21 +290,5 @@ export const MODULE_DECLARATIONS = [
 
 export const COMPONENTS_PROVIDERS: Provider[] = [
   FormComponentService,
-  {
-    provide: 'appConfigsDataSource',
-    useFactory: (client: HttpRequestService) => {
-      return new GenericPaginatorDatasource<AppConfigs>(client);
-    },
-    deps: [HttpRequestService, SessionStorage],
-    multi: false
-  },
-  {
-    provide: 'appConfigsProvider',
-    useFactory: (client: HttpRequestService, typeHelper: TypeUtilHelper) => {
-      return new AbstractEntityProvider<User>(typeHelper, new DefaultEntityHandler()).setProvider(client);
-    },
-    deps: [HttpRequestService, TypeUtilHelper],
-    multi: false
-  },
   { provide: LOCALE_ID, useValue: 'fr' }
 ];

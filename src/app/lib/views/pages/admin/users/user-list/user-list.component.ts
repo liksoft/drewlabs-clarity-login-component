@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnDestroy, Inject } from '@angular/core';
 import { ClrDatagridStateInterface, ClrDatagrid } from '@clr/angular';
 import { Router } from '@angular/router';
-import { partialConfigs, adminPath, backendRoutePaths } from 'src/app/lib/views/partials/partials-configs';
+import { partialConfigs } from 'src/app/lib/views/partials/partials-configs';
 import { Dialog } from 'src/app/lib/core/utils';
 import { mapPaginatorStateWith } from 'src/app/lib/core/pagination/helpers';
 import { UsersProvider } from '../../../../../core/auth/core/providers/app-user';
@@ -12,6 +12,7 @@ import { paginateAppUsers, deleteUserAction } from '../../../../../core/auth/cor
 import { DrewlabsRessourceServerClient } from 'src/app/lib/core/http/core';
 import { TranslationService } from 'src/app/lib/core/translator';
 import { httpServerHost } from 'src/app/lib/core/utils/url/url';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-user-list',
@@ -87,18 +88,20 @@ export class UserListComponent implements OnDestroy {
   onDgRefresh = (state: ClrDatagridStateInterface) => this._datagridState$.next(mapPaginatorStateWith([])(state));
 
   handleEditEvent = (id: number | string) => {
-    this.router.navigate([`/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.adminModuleRoutes.managementsRoute}/${partialConfigs.routes.adminModuleRoutes.updatedUserRoute}`, id]);
+    const appRoutes = environment?.appRoutes;
+    this.router.navigate([`/${partialConfigs.routes.commonRoutes.dashboardRoute}/${appRoutes.managementsRoute}/${appRoutes.updatedUserRoute}`, id]);
   }
 
   handleDeleteEvent = async (id: number | string, translations: any) => {
     if (this.dialog.confirm(translations.prompt)) {
-      deleteUserAction(this.users.store$)(this.client, backendRoutePaths.users, id);
+      deleteUserAction(this.users.store$)(this.client, `${httpServerHost(this.host)}/${this.path}`, id);
     }
   }
 
   ngOnDestroy = () => this._destroy$.next();
 
   handleCreateEvent() {
-    this.router.navigateByUrl(`/${partialConfigs.routes.commonRoutes.dashboardRoute}/${adminPath.managementsRoute}/${adminPath.createUsersRoute}`);
+    const appRoutes = environment?.appRoutes;
+    this.router.navigateByUrl(`/${partialConfigs.routes.commonRoutes.dashboardRoute}/${appRoutes.managementsRoute}/${appRoutes.createUsersRoute}`);
   }
 }

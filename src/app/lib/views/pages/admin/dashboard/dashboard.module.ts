@@ -1,4 +1,4 @@
-import { NgModule} from '@angular/core';
+import { NgModule } from '@angular/core';
 import {
   MODULE_DECLARATIONS,
   AdminDashboardRoutingModule,
@@ -16,7 +16,9 @@ import { FormComponentService } from '../forms/form-component.service';
     SharedModule,
     RouterModule
   ],
-  declarations: [...MODULE_DECLARATIONS],
+  declarations: [
+    ...MODULE_DECLARATIONS
+  ],
   exports: [...MODULE_DECLARATIONS],
   providers: [...COMPONENTS_PROVIDERS, FormComponentService],
   entryComponents: []

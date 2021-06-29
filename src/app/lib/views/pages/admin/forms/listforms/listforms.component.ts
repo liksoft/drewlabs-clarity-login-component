@@ -11,6 +11,7 @@ import { doLog } from 'src/app/lib/core/rxjs/operators';
 import { partialConfigs } from 'src/app/lib/views/partials/partials-configs';
 import { FormV2 } from '../../../../../core/components/dynamic-inputs/core/v2/models/form';
 import { httpServerHost } from 'src/app/lib/core/utils/url/url';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-listforms',
@@ -62,6 +63,7 @@ export class ListformsComponent implements OnDestroy {
 
   @ViewChild('clrDataGrid', { static: false }) dataGrid: ClrDatagrid;
 
+
   constructor(
     private formsProvider: FormsProvider,
     private client: DrewlabsRessourceServerClient,
@@ -74,9 +76,10 @@ export class ListformsComponent implements OnDestroy {
 
   // tslint:disable-next-line: typedef
   editForm(item: FormV2) {
+    const appRoutes = environment?.appRoutes;
     selectFormAction(this.formsProvider.store$)(item.id);
     this.router.navigate([
-      `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.adminModuleRoutes.managementsRoute}/${partialConfigs.routes.adminModuleRoutes.createFormsRoute}`,
+      `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${appRoutes?.managementsRoute}/${appRoutes?.createFormsRoute}`,
       item.id]);
   }
 
@@ -86,7 +89,8 @@ export class ListformsComponent implements OnDestroy {
 
   // tslint:disable-next-line: typedef
   navigateToCreateFormView() {
-    this.router.navigateByUrl(`/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.adminModuleRoutes.managementsRoute}/${partialConfigs.routes.adminModuleRoutes.createFormsRoute}`);
+    const appRoutes = environment?.appRoutes;
+    this.router.navigateByUrl(`/${partialConfigs.routes.commonRoutes.dashboardRoute}/${appRoutes?.managementsRoute}/${appRoutes?.createFormsRoute}`);
   }
 
   onDgRefresh = (state: ClrDatagridStateInterface) => this._datagridState$.next(mapPaginatorStateWith([])(state));

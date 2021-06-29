@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { defaultPath, adminPath } from '../../../partials/partials-configs';
+import { environment } from 'src/environments/environment';
+import { defaultPath } from '../../../partials/partials-configs';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
   styles: []
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent {
 
   public createUserRoutePath: string;
   public listUserRoutePath: string;
@@ -15,14 +16,11 @@ export class UsersComponent implements OnInit {
   public manageModulesPath: string;
 
   constructor() {
-    this.createUserRoutePath = `/${defaultPath}/${adminPath.managementsRoute}/${adminPath.createUsersRoute}`;
-    this.listUserRoutePath = `/${defaultPath}/${adminPath.managementsRoute}/${adminPath.listUsersRoute}`;
-    this.manageRolesPath = `/${defaultPath}/${adminPath.managementsRoute}/${adminPath.rolesManagementRoute}`;
-    this.manageFormsPath = `/${defaultPath}/${adminPath.managementsRoute}/${adminPath.formsManagementRoute}`;
-    this.manageModulesPath = `/${defaultPath}/${adminPath.managementsRoute}/${adminPath.modulesManagementRoute}`;
+    const appRoutes = environment?.appRoutes;
+    this.createUserRoutePath = `/${defaultPath}/${appRoutes.managementsRoute}/${appRoutes.createUsersRoute}`;
+    this.listUserRoutePath = `/${defaultPath}/${appRoutes.managementsRoute}/${appRoutes.listUsersRoute}`;
+    this.manageRolesPath = `/${defaultPath}/${appRoutes.managementsRoute}/${appRoutes.rolesManagementRoute}`;
+    this.manageFormsPath = `/${defaultPath}/${appRoutes.managementsRoute}/${appRoutes.formsManagementRoute}`;
+    this.manageModulesPath = `/${defaultPath}/${appRoutes.managementsRoute}/${appRoutes.modulesManagementRoute}`;
   }
-
-  ngOnInit() {
-  }
-
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RoutesMap } from 'src/app/lib/core/routes';
-import { defaultPath, adminPath } from 'src/app/lib/views/partials/partials-configs';
-import { environment } from '../../../../../../../environments/environment.prod';
+import { defaultPath } from 'src/app/lib/views/partials/partials-configs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-nav',
@@ -16,6 +16,8 @@ export class AppNavComponent implements OnInit {
   public navbarRouteDefinitions: { [index: string]: string };
 
   public ngOnInit(): void {
+    const appRoutes = environment?.appRoutes;
+  
     this.navbarRouteDefinitions = {
       navbar_user_groups_header: 'Utilisateurs & groupes',
       navbar_forms_managenents_header: 'Formulaires',
@@ -44,11 +46,11 @@ export class AppNavComponent implements OnInit {
         children: [
           {
             key: 'navbar_users_management_list',
-            route: `/${defaultPath}/${adminPath.managementsRoute}/${adminPath.listUsersRoute}`
+            route: `/${defaultPath}/${appRoutes.managementsRoute}/${appRoutes.listUsersRoute}`
           },
           {
             key: 'navbar_roles_authorizations',
-            route: `/${defaultPath}/${adminPath.managementsRoute}/${adminPath.rolesManagementRoute}`
+            route: `/${defaultPath}/${appRoutes.managementsRoute}/${appRoutes.rolesManagementRoute}`
           }
         ]
       },
@@ -58,11 +60,11 @@ export class AppNavComponent implements OnInit {
         children: [
           {
             key: 'navbar_forms_list',
-            route: `/${defaultPath}/${adminPath.managementsRoute}/${adminPath.formsManagementRoute}`
+            route: `/${defaultPath}/${appRoutes.managementsRoute}/${appRoutes.formsManagementRoute}`
           },
           {
             key: 'navbar_form_control_options',
-            route: `/${defaultPath}/${adminPath.managementsRoute}/${adminPath.controlOptionsRoute}`
+            route: `/${defaultPath}/${appRoutes.managementsRoute}/${appRoutes.controlOptionsRoute}`
           }
         ]
       },
@@ -72,7 +74,7 @@ export class AppNavComponent implements OnInit {
         children: [
           {
             key: 'navbar_modules_list',
-            route: `/${defaultPath}/${adminPath.managementsRoute}/${adminPath.modulesManagementRoute}`
+            route: `/${defaultPath}/${appRoutes.managementsRoute}/${appRoutes.modulesManagementRoute}`
           }
         ]
       },
@@ -82,7 +84,7 @@ export class AppNavComponent implements OnInit {
         children: [
           {
             key: 'navbar_department_list',
-            route: `/${defaultPath}/${adminPath.managementsRoute}/${adminPath.departmentManagementRoute}`
+            route: `/${defaultPath}/${appRoutes.managementsRoute}/${appRoutes.departmentManagementRoute}`
           }
         ]
       },
@@ -93,7 +95,7 @@ export class AppNavComponent implements OnInit {
         children: [
           {
             key: 'navbar_global_config',
-            route: `/${defaultPath}/${adminPath.globalConfigurationsRoute}`
+            route: `/${defaultPath}/${appRoutes.globalConfigurationsRoute}`
           }
         ]
       },
@@ -103,7 +105,7 @@ export class AppNavComponent implements OnInit {
         children: [
           {
             key: 'navbar_personal_information',
-            route: `/${defaultPath}/${adminPath.accountRoute}`
+            route: `/${defaultPath}/${appRoutes.accountRoute}`
           },
         ]
       }

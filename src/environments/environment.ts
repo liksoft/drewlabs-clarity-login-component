@@ -18,15 +18,40 @@ export const environment = {
     departments: 18,
     modules: 15
   },
-  APP_SERVER_URL: 'http://127.0.0.1:8888/',
-  APP_FILE_SERVER_URL: 'http://127.0.0.1:8888/api/',
+  APP_SERVER_URL: 'http://127.0.0.1:8000/',
+  APP_FILE_SERVER_URL: 'http://127.0.0.1:8000/api/',
   APP_SECRET: 'V1HQkt03PoGdlxN',
-  AUTH_SERVER_URL: 'http://127.0.0.1:8888/',
-  FORM_SERVER_URL: 'http://127.0.0.1:8888/',
+  AUTH_SERVER_URL: 'http://127.0.0.1:8000/',
+  FORM_SERVER_URL: 'http://127.0.0.1:8000/',
   isDepartmentWorkspaceEnabled: false,
   isModulesWorkspaceEnabled: false,
   isFormsWorkspaceEnabled: true,
-  isConfigurationWorkspaceEnabled: false
+  isConfigurationWorkspaceEnabled: false,
+
+  endpoints: {
+    forms: 'api/v1/forms',
+    formControls: 'api/v1/form-controls',
+    controlOptions: 'api/v1/form-control-options'
+  },
+  appRoutes: {
+    managementsRoute: 'managements',
+    accountRoute: 'account',
+    rolesManagementRoute: 'roles',
+    createRole: 'roles/create',
+    updatedRoleRoute: 'roles/update',
+    createUsersRoute: 'users/create',
+    updatedUserRoute: 'users/update',
+    listUsersRoute: 'users/list',
+    formsManagementRoute: 'forms',
+    createFormsRoute: 'forms/create',
+    modulesManagementRoute: 'modules',
+    createModulesRoute: 'modules/create',
+    updateModulesRoute: 'modules/update',
+    departmentManagementRoute: 'departments',
+    createDepartmentRoute: 'department',
+    globalConfigurationsRoute: 'configurations-globales',
+    controlOptionsRoute: 'form-control-options',
+  }
 };
 
 

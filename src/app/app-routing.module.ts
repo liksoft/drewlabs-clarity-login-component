@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { partialConfigs, adminAuthorizations } from './lib/views/partials/partials-configs';
+import { AUTH_RESOURCES_AUTHORIZATIONS } from './lib/views/authorizations';
+import { partialConfigs } from './lib/views/partials/partials-configs';
 
 
 const routes: Routes = [
@@ -14,7 +15,7 @@ const routes: Routes = [
     loadChildren: () => import('./lib/views/login/login.module').then(m => m.LoginModule),
     data: {
       dashboardPath: partialConfigs.routes.commonRoutes.dashboardHomeRoute,
-      modulePermissions: adminAuthorizations,
+      modulePermissions: AUTH_RESOURCES_AUTHORIZATIONS,
       moduleName: 'Administration'
     }
   },

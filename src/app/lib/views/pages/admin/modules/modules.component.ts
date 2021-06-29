@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnDestroy, Input } from '@angular/core';
+import { Component, ViewChild, OnDestroy, Input, Inject } from '@angular/core';
 import { ClrDatagrid, ClrDatagridStateInterface } from '@clr/angular';
 import { TypeUtilHelper } from 'src/app/lib/core/helpers/type-utils-helper';
 import { ModulesProvider } from '../../../partials/app-modules/core/v2/providers/module';
@@ -9,9 +9,11 @@ import { createSubject, observableOf } from 'src/app/lib/core/rxjs/helpers';
 import { doLog } from 'src/app/lib/core/rxjs/operators';
 import { DrewlabsRessourceServerClient } from 'src/app/lib/core/http/core';
 import { poaginateModuleAction, deleteModuleAction } from '../../../partials/app-modules/core/v2/actions/module';
-import { backendRoutePaths, partialConfigs } from '../../../partials/partials-configs';
+import { partialConfigs } from '../../../partials/partials-configs';
 import { RoleV2 } from 'src/app/lib/core/auth/contracts/v2/authorizations/role';
 import { Dialog } from '../../../../core/utils/browser/window-ref';
+import { MODULE_RESOURCE_PATH_TOKEN } from '../../../partials/app-modules/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-modules',
@@ -55,7 +57,7 @@ export class ModulesComponent implements OnDestroy {
     ).pipe(
       map(state => {
         poaginateModuleAction(
-          this.modules.store$)(this.client, backendRoutePaths.modules, state);
+          this.modules.store$)(this.client, this.path, state);
       }),
     );
 
@@ -64,7 +66,8 @@ export class ModulesComponent implements OnDestroy {
     private router: Router,
     private client: DrewlabsRessourceServerClient,
     public readonly typeHelper: TypeUtilHelper,
-    private dialog: Dialog
+    private dialog: Dialog,
+    @Inject(MODULE_RESOURCE_PATH_TOKEN) private path?: string
   ) {
     this.gridState$.subscribe();
   }
@@ -77,18 +80,20 @@ export class ModulesComponent implements OnDestroy {
 
   handleDeleteEvent = async (id: number | string, translations: any) => {
     if (this.dialog.confirm(translations.prompt)) {
-      deleteModuleAction(this.modules.store$)(this.client, backendRoutePaths.users, id);
+      deleteModuleAction(this.modules.store$)(this.client, this.path, id);
     }
   }
 
   handleItemSelectEvent = async (id: number | string) => {
+    const appRoutes = environment?.appRoutes;
     // Navigate to edit view
-    this.router.navigateByUrl(`/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.adminModuleRoutes.managementsRoute}/${partialConfigs.routes.adminModuleRoutes.updateModulesRoute}/${id}`);
+    this.router.navigateByUrl(`/${partialConfigs.routes.commonRoutes.dashboardRoute}/${appRoutes.managementsRoute}/${appRoutes.updateModulesRoute}/${id}`);
   }
 
   handleCreateEvent() {
+    const appRoutes = environment?.appRoutes;
     // Navigate to create view
-    this.router.navigateByUrl(`/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.adminModuleRoutes.managementsRoute}/${partialConfigs.routes.adminModuleRoutes.createModulesRoute}`);
+    this.router.navigateByUrl(`/${partialConfigs.routes.commonRoutes.dashboardRoute}/${appRoutes.managementsRoute}/${appRoutes.createModulesRoute}`);
   }
 
   ngOnDestroy = () => this._destroy$.next();

@@ -1,11 +1,24 @@
 <ng-container *ngIf="componentFormGroup">
-    <app-dynamic-form-wapper [componentFormGroup]="componentFormGroup" [form]="form"></app-dynamic-form-wapper>
-    <div class="button-container">
-        <button class="btn btn-outline-primary" (click)="onFormSubmit()" [disabled]="performingAction">
-      <clr-icon shape="floppy"></clr-icon> Enregistrer
+  <app-dynamic-form-wapper
+    [componentFormGroup]="componentFormGroup"
+    [form]="form"
+  ></app-dynamic-form-wapper>
+  <div class="button-container" *ngIf="uiState$ | async as uistate">
+    <button
+      class="btn btn-outline-primary"
+      (click)="onFormSubmit()"
+      [disabled]="uistate?.performingAction"
+    >
+      <clr-icon shape="floppy"></clr-icon>
+      Enregistrer
     </button>
-        <button class="btn btn-outline-warning" [disabled]="performingAction" (click)="cancelFormSubmission()">
-      <clr-icon shape="undo"></clr-icon> Retour
+    <button
+      class="btn btn-outline-warning"
+      [disabled]="uistate?.performingAction"
+      (click)="cancelFormSubmission()"
+    >
+      <clr-icon shape="undo"></clr-icon>
+      Retour
     </button>
-    </div>
+  </div>
 </ng-container>

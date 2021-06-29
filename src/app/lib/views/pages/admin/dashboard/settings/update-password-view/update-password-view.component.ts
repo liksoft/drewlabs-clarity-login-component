@@ -6,13 +6,15 @@ import { createSubject } from 'src/app/lib/core/rxjs/helpers';
 import { AuthService } from 'src/app/lib/core/auth/core';
 import { TranslationService } from 'src/app/lib/core/translator';
 import { UsersProvider } from 'src/app/lib/core/auth/core/providers';
-import { AppUIStateProvider, ComponentReactiveFormHelpers, UIStateStatusCode } from 'src/app/lib/core/helpers';
 import { DrewlabsRessourceServerClient } from 'src/app/lib/core/http/core';
 import { doLog } from 'src/app/lib/core/rxjs/operators';
 import { isDefined } from 'src/app/lib/core/utils';
 import { updateUserAction, userUpdatedAction } from 'src/app/lib/core/auth/core/actions';
 import { AppUser } from 'src/app/lib/core/auth/contracts/v2/user/user';
 import { CustomValidators } from 'src/app/lib/core/validators';
+import { UIStateStatusCode } from 'src/app/lib/core/contracts/ui-state';
+import { AppUIStateProvider } from 'src/app/lib/core/ui-state';
+import { ComponentReactiveFormHelpers } from 'src/app/lib/core/components/dynamic-inputs/angular';
 
 @Component({
   selector: 'app-update-password-view',

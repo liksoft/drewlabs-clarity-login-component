@@ -5,8 +5,6 @@ import { DrewlabsRessourceServerClient } from 'src/app/lib/core/http/core';
 import { FormsViewComponent } from './forms-view.component';
 import { ActivatedRoute } from '@angular/router';
 import { IDissociateFormControlEvent } from './form-component.service';
-import { UIStateStatusCode } from 'src/app/lib/core/helpers/app-ui-store-manager.service';
-import { DynamicFormHelpers, FormRequest, UpdateRequest } from 'src/app/lib/core/helpers/component-reactive-form-helpers';
 import { TypeUtilHelper } from 'src/app/lib/core/helpers/type-utils-helper';
 import { isDefined, MomentUtils } from 'src/app/lib/core/utils';
 import { createSubject, observableFrom, observableOf } from '../../../../core/rxjs/helpers/index';
@@ -38,12 +36,14 @@ import { ISerializableBuilder } from 'src/app/lib/core/built-value/contracts';
 import { FormV2 } from 'src/app/lib/core/components/dynamic-inputs/core/v2/models/form';
 import { FORM_CONTROL_RESOURCES_PATH, FORM_FORM_CONTROL_RESOURCES_PATH, FORM_RESOURCES_PATH } from 'src/app/lib/core/components/dynamic-inputs/dynamic-form-control';
 import { doLog } from 'src/app/lib/core/rxjs/operators';
-import { AppUIStateProvider } from '../../../../core/helpers/app-ui-store-manager.service';
 import { sortFormFormControlsByIndex } from '../../../../core/components/dynamic-inputs/core';
 import { STATIC_FORMS } from '../../../../core/components/dynamic-inputs/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { DynamicFormControlInterface } from '../../../../core/components/dynamic-inputs/core/compact/types';
 import { httpServerHost } from 'src/app/lib/core/utils/url/url';
+import { DynamicFormHelpers } from 'src/app/lib/core/components/dynamic-inputs/angular';
+import { UIStateStatusCode } from 'src/app/lib/core/contracts/ui-state';
+import { AppUIStateProvider } from 'src/app/lib/core/ui-state';
 
 
 @Component({
@@ -152,11 +152,7 @@ export class FormsComponent implements OnDestroy {
         this._currentForm$.next(null);
       }
     }),
-    mergeMap(() => observableFrom(
-      DynamicFormHelpers.buildDynamicForm(
-        STATIC_FORMS.createForm, this.translate
-      )
-    ).pipe(
+    mergeMap(() => observableFrom(DynamicFormHelpers.buildDynamicForm(STATIC_FORMS.createForm)).pipe(
       map(form => ({ form }))
     )),
     map(state => ({
@@ -173,7 +169,6 @@ export class FormsComponent implements OnDestroy {
 
   formControlState$ = observableFrom(DynamicFormHelpers.buildDynamicForm(
     (FormV2.builder() as ISerializableBuilder<FormV2>).fromSerialized(STATIC_FORMS.createFormControl),
-    this.translate
   )).pipe(
     map(state => ({
       form: state,
@@ -309,16 +304,16 @@ export class FormsComponent implements OnDestroy {
     ).subscribe();
   }
 
-  async onFormviewFormSubmitted(event: FormRequest) {
+  async onFormviewFormSubmitted(event: { [index: string]: any }) {
     this.uiState.startAction();
     createFormAction(this.formsProvider.store$)(this.client, `${httpServerHost(this.host)}/${event.requestURL || this.path}`, event.body);
   }
 
-  onUpdateFormEvent(event: UpdateRequest) {
+  onUpdateFormEvent(event: { [index: string]: any }) {
     updateFormAction(this.formsProvider.store$)(this.client, `${httpServerHost(this.host)}/${event.requestURL || this.path}/${event.id}`, event.body);
   }
 
-  async updateOrCreateControl({ event, form }: { event: FormRequest | UpdateRequest, form: DynamicFormInterface }) {
+  async updateOrCreateControl({ event, form }: { event: { [index: string]: any }, form: DynamicFormInterface }) {
     this.uiState.startAction();
     if (isDefined(event.body)) {
       const formFormControlRequestBody = serializeFormFormControlRequestBodyUsing({
@@ -338,10 +333,10 @@ export class FormsComponent implements OnDestroy {
           form_form_controls: formFormControlRequestBody
         }
       );
-      if (this.typeHelper.isDefined((event as UpdateRequest).id)) {
+      if (this.typeHelper.isDefined((event as { [index: string]: any }).id)) {
         updateFormControlAction(this.formsProvider.store$)(
           this.client,
-          `${httpServerHost(this.host)}/${this.formControlsPath}/${(event as UpdateRequest).id}`,
+          `${httpServerHost(this.host)}/${this.formControlsPath}/${(event as { [index: string]: any }).id}`,
           body
         );
       } else {
@@ -377,7 +372,7 @@ export class FormsComponent implements OnDestroy {
     }
   }
 
-  controlComponentDropped(form: DynamicFormInterface, event: CdkDragDrop<string[]>) {}
+  controlComponentDropped(form: DynamicFormInterface, event: CdkDragDrop<string[]>) { }
 
   onControlDropped(event: CdkDragDrop<any>, control: DynamicFormControlInterface) {
     if (!(event.previousIndex === event.currentIndex)) {

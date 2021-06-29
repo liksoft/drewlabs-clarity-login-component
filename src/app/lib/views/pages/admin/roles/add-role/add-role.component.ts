@@ -1,7 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ComponentReactiveFormHelpers, DynamicFormHelpers } from 'src/app/lib/core/helpers/component-reactive-form-helpers';
 import { DynamicControlParser } from 'src/app/lib/core/helpers/dynamic-control-parser';
 import { TypeUtilHelper } from 'src/app/lib/core/helpers/type-utils-helper';
 import { isDefined } from 'src/app/lib/core/utils';
@@ -11,18 +10,19 @@ import { map, tap, takeUntil, filter, mergeMap, withLatestFrom } from 'rxjs/oper
 import { FormsProvider } from 'src/app/lib/core/components/dynamic-inputs/core/v2/providers/form';
 import { environment } from 'src/environments/environment';
 import { getRoleUsingID, resetRolesCacheAction, roleCreatedAction, roleUpdatedAction } from 'src/app/lib/core/auth/core/actions/roles';
-import { backendRoutePaths } from '../../../../partials/partials-configs';
 import { createStateful, createSubject } from 'src/app/lib/core/rxjs/helpers';
-import { TranslationService } from 'src/app/lib/core/translator';
 import { createRoleAction, updateRoleAction } from 'src/app/lib/core/auth/core/actions/roles';
 import { combineLatest, from } from 'rxjs';
 import { loadFormUsingIDAction } from 'src/app/lib/core/components/dynamic-inputs/core/v2/actions/form';
 import { onErrorAction } from 'src/app/lib/core/rxjs/state/rx-state';
-import { AppUIStateProvider, UIStateStatusCode } from 'src/app/lib/core/helpers';
 import { sortDynamicFormByIndex } from 'src/app/lib/core/components/dynamic-inputs/core/helpers';
 import { doLog } from 'src/app/lib/core/rxjs/operators';
 import { DynamicFormInterface } from 'src/app/lib/core/components/dynamic-inputs/core/compact';
 import { httpServerHost } from 'src/app/lib/core/utils/url/url';
+import { ComponentReactiveFormHelpers, DynamicFormHelpers } from 'src/app/lib/core/components/dynamic-inputs/angular';
+import { UIStateStatusCode } from 'src/app/lib/core/contracts/ui-state';
+import { AppUIStateProvider } from 'src/app/lib/core/ui-state';
+import { TranslationService } from 'src/app/lib/core/translator';
 
 @Component({
   selector: 'app-add-role',
@@ -48,7 +48,7 @@ export class AddRoleComponent implements OnInit, OnDestroy {
   componentFormState$ = this._buildComponentForm$.pipe(
     doLog('Add role Form state: '),
     filter(source => isDefined(source)),
-    mergeMap(state => from(DynamicFormHelpers.buildDynamicForm(state.form, this.translate)).pipe(
+    mergeMap(state => from(DynamicFormHelpers.buildDynamicForm(state.form)).pipe(
       map(form => {
         const formgroup = this.controlParser.buildFormGroupFromDynamicForm(
           form,

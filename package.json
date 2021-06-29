@@ -37,19 +37,17 @@
     "email-validator": "^2.0.4",
     "file-saver": "^2.0.2",
     "google-libphonenumber": "^3.2.10",
-    "immutable": "^4.0.0-rc.12",
     "lodash": "^4.17.15",
     "moment": "^2.29.1",
     "ngx-dropzone-wrapper": "^10.0.1",
-    "reflect-metadata": "^0.1.13",
     "rxjs": "~6.6.3",
     "rxjs-compat": "^6.5.5",
-    "service": "^0.1.4",
     "string.prototype.trimleft": "^2.1.2",
     "tslib": "^2.0.0",
     "web-animations-js": "^2.3.2",
     "xlsx": "^0.15.6",
-    "zone.js": "~0.10.3"
+    "zone.js": "~0.10.3",
+    "crypto-es": "^1.2.7"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1102.5",

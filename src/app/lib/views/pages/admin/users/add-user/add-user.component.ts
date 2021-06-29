@@ -3,16 +3,13 @@ import { FormGroup } from '@angular/forms';
 import { IDynamicForm } from 'src/app/lib/core/components/dynamic-inputs/core';
 import { ActivatedRoute } from '@angular/router';
 import { distinctUntilChanged, filter, map, takeUntil, tap } from 'rxjs/operators';
-import { UIStateStatusCode } from 'src/app/lib/core/helpers/app-ui-store-manager.service';
 import { DynamicControlParser } from 'src/app/lib/core/helpers/dynamic-control-parser';
 import { TypeUtilHelper } from 'src/app/lib/core/helpers/type-utils-helper';
-import { defaultPath, adminPath, backendRoutePaths } from 'src/app/lib/views/partials/partials-configs';
+import { defaultPath,  } from 'src/app/lib/views/partials/partials-configs';
 import { CustomValidators } from 'src/app/lib/core/validators';
 import { isDefined } from 'src/app/lib/core/utils';
 import { UsersProvider } from '../../../../../core/auth/core/providers/app-user';
 import { combineLatest } from 'rxjs';
-import { AppUIStateProvider } from '../../../../../core/helpers/app-ui-store-manager.service';
-import { FormHelperService } from 'src/app/lib/core/helpers';
 import { createStateful, createSubject } from 'src/app/lib/core/rxjs/helpers';
 import { getUserUsingID, userCreatedAction, userUpdatedAction } from '../../../../../core/auth/core/actions/app-users';
 import { DrewlabsRessourceServerClient } from 'src/app/lib/core/http/core';
@@ -22,6 +19,8 @@ import { TranslationService } from '../../../../../core/translator/translator.se
 import { doLog } from '../../../../../core/rxjs/operators/index';
 import { AppUser } from 'src/app/lib/core/auth/contracts/v2/user/user';
 import { httpServerHost } from 'src/app/lib/core/utils/url/url';
+import { UIStateStatusCode } from 'src/app/lib/core/contracts/ui-state';
+import { AppUIStateProvider } from 'src/app/lib/core/ui-state';
 
 @Component({
   selector: 'app-add-user',
@@ -29,7 +28,7 @@ import { httpServerHost } from 'src/app/lib/core/utils/url/url';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddUserComponent implements OnInit, OnDestroy {
+export class AddUserComponent implements OnDestroy {
 
   public loadCreateDepartmentForm: IDynamicForm;
   public listUserRoutePath: string;
@@ -62,22 +61,18 @@ export class AddUserComponent implements OnInit, OnDestroy {
   );
 
   // Form state definition
-  formState$ = combineLatest([
-    this.formHelper.formLoaded$.pipe(
-      filter((form) => this.typeHelper.isDefined(form.get('createUserFormID')))
-    ),
-    this.selectedUserID$
-  ]).pipe(
-    map(([state, selectedUserID]) => {
+  formState$ = combineLatest([this.selectedUserID$]).pipe(
+    map(([selectedUserID]) => {
       let formConfigs: { form: IDynamicForm, formgroup: FormGroup } = {} as any;
-      if (state) {
-        formConfigs.form = state.get('createUserFormID');
-        const formgroup = this.controlParser.buildFormGroupFromDynamicForm(
-          state.get('createUserFormID'), !this.typeHelper.isDefined(selectedUserID)
-        ) as FormGroup;
-        formgroup.setValidators(CustomValidators.Match('password', 'password_confirmation'));
-        formConfigs = { ...formConfigs, formgroup };
-      }
+      // TODO : Load the form using local resource
+      // if (state) {
+      //   formConfigs.form = state.get('createUserFormID');
+      //   const formgroup = this.controlParser.buildFormGroupFromDynamicForm(
+      //     state.get('createUserFormID'), !this.typeHelper.isDefined(selectedUserID)
+      //   ) as FormGroup;
+      //   formgroup.setValidators(CustomValidators.Match('password', 'password_confirmation'));
+      //   formConfigs = { ...formConfigs, formgroup };
+      // }
       return { selectedUserID, ...formConfigs };
     }),
     doLog('Form config state: ')
@@ -143,45 +138,21 @@ export class AddUserComponent implements OnInit, OnDestroy {
     public readonly typeHelper: TypeUtilHelper,
     private users: UsersProvider,
     private uiState: AppUIStateProvider,
-    private formHelper: FormHelperService,
     private client: DrewlabsRessourceServerClient,
     private translate: TranslationService,
     @Inject('AUTH_USERS_RESOURCE_PATH') private path: string,
     @Inject('AUTH_SERVER_HOST') private host: string,
   ) {
-    this.listUserRoutePath = `/${defaultPath}/${adminPath.managementsRoute}/${adminPath.listUsersRoute}`;
+    const appRoutes = environment?.appRoutes;
+    this.listUserRoutePath = `/${defaultPath}/${appRoutes.managementsRoute}/${appRoutes.listUsersRoute}`;
     this.selectedUserID$.pipe(
       takeUntil(this._destroy$))
       .subscribe();
     this.translations$.pipe(
       takeUntil(this._destroy$))
       .subscribe();
-  }
 
-  ngOnInit() {
-    this.formHelper.suscribe();
-    // Triggers form loading event
-    this.formHelper.loadForms.next({
-      configs: [
-        {
-          id: environment.forms.users as number,
-          label: 'createUserFormID',
-        },
-      ],
-      result: {
-        error: (error: any) => {
-          Err(error);
-          this.uiState.endAction();
-        },
-        success: () => {
-          this.uiState.endAction();
-        },
-        warnings: (errors: any) => {
-          Err(errors);
-          this.uiState.endAction();
-        }
-      }
-    });
+      // TODO : Load create user form from local configured forms
   }
 
   onSetFormTitle(user?: AppUser) {

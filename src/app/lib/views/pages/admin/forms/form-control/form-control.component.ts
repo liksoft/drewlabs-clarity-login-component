@@ -1,16 +1,13 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { IDynamicForm } from 'src/app/lib/core/components/dynamic-inputs/core/contracts/dynamic-form';
-import { ComponentReactiveFormHelpers } from 'src/app/lib/core/helpers/component-reactive-form-helpers';
-import { AppUIStoreManager } from 'src/app/lib/core/helpers/app-ui-store-manager.service';
-import { AbstractAlertableComponent, cloneAbstractControl } from 'src/app/lib/core/helpers/component-interfaces';
 import { DynamicControlParser } from 'src/app/lib/core/helpers/dynamic-control-parser';
 import { TypeUtilHelper } from 'src/app/lib/core/helpers/type-utils-helper';
 import { isDefined, MomentUtils } from 'src/app/lib/core/utils';
-import { UpdateRequest } from '../../../../../core/helpers/component-reactive-form-helpers';
 import { startsWith } from 'lodash';
 import { formControlViewModelBindings } from 'src/app/lib/core/components/dynamic-inputs/core/compact';
 import { DynamicFormControlInterface } from '../../../../../core/components/dynamic-inputs/core/compact/types';
+import { cloneAbstractControl, ComponentReactiveFormHelpers } from 'src/app/lib/core/components/dynamic-inputs/angular';
 
 @Component({
   selector: 'app-form-control',
@@ -43,7 +40,7 @@ export class FormControlComponent {
   @Input() public componentFormGroup: FormGroup;
   @Input() public form: IDynamicForm;
   @Output() dissociateFormControl: EventEmitter<DynamicFormControlInterface> = new EventEmitter();
-  @Output() formSubmitted: EventEmitter<UpdateRequest> = new EventEmitter<UpdateRequest>();
+  @Output() formSubmitted = new EventEmitter<{ [index: string]: any }>();
 
   @Input() set controlViewState(
     value: { form: IDynamicForm, formgroup: FormGroup }) {

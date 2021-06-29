@@ -2,25 +2,25 @@ import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { IDynamicForm } from 'src/app/lib/core/components/dynamic-inputs/core';
 import { FormComponentService } from './form-component.service';
-import { FormRequest, ComponentReactiveFormHelpers, UpdateRequest } from 'src/app/lib/core/helpers/component-reactive-form-helpers';
 import { DynamicControlParser } from 'src/app/lib/core/helpers/dynamic-control-parser';
 import { TypeUtilHelper } from 'src/app/lib/core/helpers/type-utils-helper';
 import { Dialog, isDefined } from 'src/app/lib/core/utils';
 import { DynamicFormInterface } from 'src/app/lib/core/components/dynamic-inputs/core/compact/types';
 import { formViewModelBindings } from 'src/app/lib/core/components/dynamic-inputs/core/compact';
+import { ComponentReactiveFormHelpers } from 'src/app/lib/core/components/dynamic-inputs/angular';
 
 @Component({
   selector: 'app-forms-view',
   templateUrl: './forms-view.component.html',
   styles: []
 })
-export class FormsViewComponent{
+export class FormsViewComponent {
   componentFormGroup: FormGroup;
   form: IDynamicForm;
-  @Output() formSubmitted: EventEmitter<FormRequest> = new EventEmitter<FormRequest>();
-  @Output() cancelSubmission: EventEmitter<boolean> = new EventEmitter<boolean>();
-  @Output() addFormControl: EventEmitter<object | Event> = new EventEmitter<object | Event>();
-  @Output() updateFormEvent: EventEmitter<UpdateRequest> = new EventEmitter();
+  @Output() formSubmitted = new EventEmitter<{ [index: string]: any }>();
+  @Output() cancelSubmission = new EventEmitter<boolean>();
+  @Output() addFormControl = new EventEmitter<object | Event>();
+  @Output() updateFormEvent = new EventEmitter<{ [index: string]: any }>();
   // tslint:disable-next-line: no-inferrable-types
   @Input() performingAction: boolean = false;
 

@@ -3,13 +3,13 @@ import { List } from 'immutable';
 import { TypeBuilder } from 'src/app/lib/core/built-value/contracts/type';
 import { ISerializableBuilder } from 'src/app/lib/core/built-value/contracts/serializers';
 import { TranslationService } from 'src/app/lib/core/translator';
-import { DynamicFormHelpers } from 'src/app/lib/core/helpers/component-reactive-form-helpers';
 import { isDefined } from 'src/app/lib/core/utils';
 import { DynamicFormInterface } from 'src/app/lib/core/components/dynamic-inputs/core/compact/types';
 import { STATIC_FORMS } from '../../../../core/components/dynamic-inputs/core';
 import { ControlOptionInterface, DynamicFormControlInterface } from '../../../../core/components/dynamic-inputs/core/compact/types';
 import { FormControlV2 } from '../../../../core/components/dynamic-inputs/core/v2/models/form-control';
 import { FormV2 } from '../../../../core/components/dynamic-inputs/core/v2/models/form';
+import { DynamicFormHelpers } from 'src/app/lib/core/components/dynamic-inputs/angular';
 
 /**
  * @description Interface definition for dissociate form control event
@@ -104,7 +104,6 @@ export class FormComponentService {
         'parent_id',
         'options',
         forms.map((f: DynamicFormInterface) => Object.assign({}, { id: f.id, title: f.title }))),
-      this.translate
     );
   }
 
@@ -115,9 +114,6 @@ export class FormComponentService {
       'selectable_model',
       'options',
       formcontrolOptions.map((f: ControlOptionInterface) => ({ ...{ id: f.table, value: f.table } })));
-    return DynamicFormHelpers.buildDynamicForm(
-      form,
-      this.translate
-    );
+    return DynamicFormHelpers.buildDynamicForm(form);
   }
 }

@@ -6,8 +6,8 @@ import { Location } from '@angular/common';
 import 'moment/locale/fr';
 import 'moment/locale/en-gb';
 import * as lodash from 'lodash';
-import { AppUIStateProvider } from './lib/core/helpers';
 import { doLog } from './lib/core/rxjs/operators';
+import { AppUIStateProvider } from './lib/core/ui-state';
 
 @Component({
   selector: 'app-root',

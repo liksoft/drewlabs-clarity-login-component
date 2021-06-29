@@ -7,11 +7,12 @@ import { ControlOptionInterface } from 'src/app/lib/core/components/dynamic-inpu
 import { createControlOptionAction, deleteControlOptionAction, selectControlOptionAction, updateControlOptionAction } from 'src/app/lib/core/components/dynamic-inputs/core/v2/actions';
 import { ControlOption } from 'src/app/lib/core/components/dynamic-inputs/core/v2/models';
 import { ControlOptionsProvider } from 'src/app/lib/core/components/dynamic-inputs/core/v2/providers';
-import { AppUIStateProvider, DynamicControlParser, TranslatorHelperService, TypeUtilHelper } from 'src/app/lib/core/helpers';
+import { DynamicControlParser, TranslatorHelperService, TypeUtilHelper } from 'src/app/lib/core/helpers';
 import { UIStateStatusCode } from 'src/app/lib/core/contracts/ui-state';
 import { combineLatest } from 'rxjs';
 import { ControlOptionViewComponent } from './control-options-view.component';
 import { Dialog, KEY_NAMES } from 'src/app/lib/core/utils/browser';
+import { AppUIStateProvider } from 'src/app/lib/core/ui-state';
 
 @Component({
   selector: 'app-control-options',

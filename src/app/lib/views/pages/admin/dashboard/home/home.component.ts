@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../../../../../core/auth/core';
-import { defaultPath, adminPath } from '../../../../partials/partials-configs';
+import { defaultPath } from '../../../../partials/partials-configs';
 import { RoutesMap } from 'src/app/lib/core/routes';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-admin-dashboard-home',
@@ -19,6 +20,7 @@ export class AdminDashboardHomeComponent {
   public manageGeneralConfigPath: string;
 
   constructor(private auth: AuthService) {
+    const adminPath = environment.appRoutes;
     this.listUserRoutePath = `/${defaultPath}/${adminPath.managementsRoute}/${adminPath.listUsersRoute}`;
     this.manageRolesPath = `/${defaultPath}/${adminPath.managementsRoute}/${adminPath.rolesManagementRoute}`;
     this.manageFormsPath = `/${defaultPath}/${adminPath.managementsRoute}/${adminPath.formsManagementRoute}`;

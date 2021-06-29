@@ -23,9 +23,15 @@ import { TranslationService } from './lib/core/translator';
 import { DROPZONE_CONFIG } from 'ngx-dropzone-wrapper';
 import { AppComponentsLoadingComponent } from './lib/views/partials/ui-state-components/app-component-loader.component';
 import { AppUINotificationComponent } from './lib/views/partials/ui-state-components/app-ui-notification.component';
-import { DrewlabsV2LoginResultHandlerFunc } from './lib/core/rxjs/operators';
 import { parseV2HttpResponse } from './lib/core/http/core/v2/http-response';
 import { DynamicFormControlModule } from './lib/core/components/dynamic-inputs/dynamic-form-control';
+import { DrewlabsV2_1LoginResultHandlerFunc } from './lib/core/auth/rxjs/operators';
+import { LoginV2_1Response } from './lib/core/auth/contracts/v2/login.response';
+
+
+export function AppDrewlabsV2_1LoginResultHandlerFunc(response: any) {
+  return DrewlabsV2_1LoginResultHandlerFunc(LoginV2_1Response)(response);
+}
 
 registerLocaleData(localeFr, 'fr', localeFrExtra);
 
@@ -69,18 +75,21 @@ export class TranslateHandler implements MissingTranslationHandler {
     StorageModule.forRoot({ secretKey: environment.APP_SECRET }),
     AuthTokenModule.forRoot({}),
     AuthModule.forRoot({
-      loginResponseHandler: DrewlabsV2LoginResultHandlerFunc,
+      loginResponseHandler: AppDrewlabsV2_1LoginResultHandlerFunc,
       serverConfigs: {
         host: null,
-        loginPath: 'auth/login',
-        logoutPath: 'auth/logout',
+        loginPath: 'auth/v1/login',
+        logoutPath: 'auth/v1/logout',
         usersPath: 'admin/users'
       }
     }),
     BrowserAnimationsModule,
     DynamicFormControlModule.forRoot({
       serverConfigs: {
-        host: environment.FORM_SERVER_URL
+        host: environment.FORM_SERVER_URL,
+        formsPath: environment.endpoints?.forms,
+        controlsPath: environment?.endpoints?.formControls,
+        controlOptionsPath: environment?.endpoints?.controlOptions
       }
     })
   ],

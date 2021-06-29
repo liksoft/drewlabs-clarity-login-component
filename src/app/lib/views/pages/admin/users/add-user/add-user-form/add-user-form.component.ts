@@ -1,8 +1,7 @@
-import { Component, Input, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy, ViewChild, Inject } from '@angular/core';
 import { IDynamicForm } from '../../../../../../core/components/dynamic-inputs/core/contracts/dynamic-form';
 import { FormGroup, Validators } from '@angular/forms';
 import { createUserAction, updateUserAction } from 'src/app/lib/core/auth/core/actions';
-import { ComponentReactiveFormHelpers } from 'src/app/lib/core/helpers';
 import { DrewlabsRessourceServerClient } from 'src/app/lib/core/http/core';
 import { DepartmentsProvider } from 'src/app/lib/core/auth/core/providers/department';
 import { UsersProvider } from 'src/app/lib/core/auth/core/providers/app-user';
@@ -11,7 +10,6 @@ import { IHTMLFormControl, ISelectItem } from 'src/app/lib/core/components/dynam
 import { distinctUntilChanged, map, takeUntil, tap } from 'rxjs/operators';
 import { createSubject, createStateful } from '../../../../../../core/rxjs/helpers/index';
 import { getDepartmentUsingID } from 'src/app/lib/core/auth/core/actions/department';
-import { backendRoutePaths } from 'src/app/lib/views/partials/partials-configs';
 import { User } from 'src/app/lib/core/auth/contracts/v2';
 import { TypeUtilHelper } from '../../../../../../core/helpers/type-utils-helper';
 import { combineLatest } from 'rxjs';
@@ -19,6 +17,7 @@ import { doLog } from '../../../../../../core/rxjs/operators/index';
 import { DynamicFormWapperComponent } from '../../../../../../core/components/dynamic-inputs/dynamic-form-control/dynamic-form-wapper/dynamic-form-wapper.component';
 import { userCreatedAction, userUpdatedAction } from '../../../../../../core/auth/core/actions/app-users';
 import { userFormViewModel } from 'src/app/lib/core/auth/contracts/v2/user/user';
+import { ComponentReactiveFormHelpers } from 'src/app/lib/core/components/dynamic-inputs/angular';
 
 @Component({
   selector: 'app-add-user-form',
@@ -69,7 +68,7 @@ export class AddUserFormComponent implements OnDestroy {
                     // this._formgroup.get('roles').disable({ onlySelf: true });
                     getDepartmentUsingID(this.departments.store$)(
                       this.client,
-                      backendRoutePaths.departmentPath,
+                      this.departmentsBackendPath,
                       valueState
                     );
                   }
@@ -129,7 +128,8 @@ export class AddUserFormComponent implements OnDestroy {
     private departments: DepartmentsProvider,
     private users: UsersProvider,
     public readonly typeHelper: TypeUtilHelper,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    @Inject('AUTH_DEPARTMENTS_RESOURCE_PATH') private departmentsBackendPath: string
   ) { }
 
   ngOnDestroy() {
