@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, ViewChild } from '@angular/core';
 import { ClrDatagridStateInterface, ClrDatagrid } from '@clr/angular';
 import { Router } from '@angular/router';
-import { defaultPath, adminPath, backendRoutePaths } from 'src/app/lib/views/partials/partials-configs';
+import { defaultPath } from 'src/app/lib/views/partials/partials-configs';
 import { debounceTime, distinctUntilChanged, map, switchMap, takeUntil } from 'rxjs/operators';
 import { Dialog } from 'src/app/lib/core/utils';
 import { DepartmentsProvider } from '../../../../../core/auth/core/providers/department';
@@ -12,6 +12,7 @@ import { mapPaginatorStateWith } from 'src/app/lib/core/pagination/helpers';
 import { paginateDepartmentV2Action } from '../../../../../core/auth/core/actions/department';
 import { doLog } from 'src/app/lib/core/rxjs/operators';
 import { httpServerHost } from 'src/app/lib/core/utils/url/url';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-list-department',
@@ -80,13 +81,15 @@ export class ListDepartmentComponent implements OnDestroy {
   }
 
   handleItemSelectEvent = async (id: number | string) => {
+    const appRoutes = environment?.appRoutes;
     // Navigate to edit view
-    this.router.navigate([`/${defaultPath}/${adminPath.managementsRoute}/${adminPath.createDepartmentRoute}`, id]);
+    this.router.navigate([`/${defaultPath}/${appRoutes.managementsRoute}/${appRoutes.createDepartmentRoute}`, id]);
   }
 
   handleCreateEvent() {
+    const appRoutes = environment?.appRoutes;
     // Navigate to create view
-    this.router.navigateByUrl(`/${defaultPath}/${adminPath.managementsRoute}/${adminPath.createDepartmentRoute}`);
+    this.router.navigateByUrl(`/${defaultPath}/${appRoutes.managementsRoute}/${appRoutes.createDepartmentRoute}`);
   }
 
   ngOnDestroy = () => this._destroy$.next();

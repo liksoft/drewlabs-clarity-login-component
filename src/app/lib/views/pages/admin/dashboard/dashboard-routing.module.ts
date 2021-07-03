@@ -4,7 +4,6 @@ import { AdminDashboardComponent } from './dashboard.component';
 import { AuthGuardService } from 'src/app/lib/core/auth/core';
 import { AdminDashboardHomeComponent } from './home/home.component';
 import {
-  FormComponentService,
   FormsComponent,
   ListformsComponent,
   FormControlAddComponent,
@@ -20,7 +19,6 @@ import {
 import {
   RolesComponent,
   RoleListComponent,
-  PermissionListComponent,
   AddRoleComponent,
   AddRoleFormComponent,
   RoleListPresenterComponent
@@ -49,7 +47,7 @@ import { AUTH_RESOURCES_AUTHORIZATIONS } from '../../../authorizations';
 
 export const getRoutes = () => {
 
-  const adminPath = environment?.appRoutes;
+  const appRoutes = environment?.appRoutes;
   const adminAuthorizations = AUTH_RESOURCES_AUTHORIZATIONS;
 
   const childRoutes: Routes = [
@@ -72,7 +70,7 @@ export const getRoutes = () => {
       }
     }, // account component route
     {
-      path: `${adminPath.accountRoute}`,
+      path: `${appRoutes.accountRoute}`,
       component: SettingsComponent,
       canActivate: [AuthGuardService, AuthorizationsGuard],
       data: {
@@ -80,7 +78,7 @@ export const getRoutes = () => {
       }
     },
     {
-      path: adminPath.managementsRoute,
+      path: appRoutes.managementsRoute,
       component: UsersComponent,
       canActivate: [AuthGuardService, AuthorizationsGuard],
       data: {
@@ -88,7 +86,7 @@ export const getRoutes = () => {
       }
     },
     {
-      path: `${adminPath.managementsRoute}/${adminPath.createUsersRoute}`,
+      path: `${appRoutes.managementsRoute}/${appRoutes.createUsersRoute}`,
       component: AddUserComponent,
       canActivate: [AuthGuardService, AuthorizationsGuard],
       data: {
@@ -96,7 +94,7 @@ export const getRoutes = () => {
       }
     },
     {
-      path: `${adminPath.managementsRoute}/${adminPath.updatedUserRoute}/:id`,
+      path: `${appRoutes.managementsRoute}/${appRoutes.updatedUserRoute}/:id`,
       component: AddUserComponent,
       canActivate: [AuthGuardService, AuthorizationsGuard],
       data: {
@@ -104,7 +102,7 @@ export const getRoutes = () => {
       }
     },
     {
-      path: `${adminPath.managementsRoute}/${adminPath.listUsersRoute}`,
+      path: `${appRoutes.managementsRoute}/${appRoutes.listUsersRoute}`,
       component: UserListComponent,
       canActivate: [AuthGuardService, AuthorizationsGuard],
       data: {
@@ -112,7 +110,7 @@ export const getRoutes = () => {
       }
     },
     {
-      path: `${adminPath.managementsRoute}/${adminPath.rolesManagementRoute}`,
+      path: `${appRoutes.managementsRoute}/${appRoutes.rolesManagementRoute}`,
       component: RolesComponent,
       canActivate: [AuthGuardService, AuthorizationsGuard],
       data: {
@@ -120,7 +118,7 @@ export const getRoutes = () => {
       }
     },
     {
-      path: `${adminPath.managementsRoute}/${adminPath.createRole}`,
+      path: `${appRoutes.managementsRoute}/${appRoutes.createRole}`,
       component: AddRoleComponent,
       canActivate: [AuthGuardService, AuthorizationsGuard],
       data: {
@@ -128,7 +126,7 @@ export const getRoutes = () => {
       }
     },
     {
-      path: `${adminPath.managementsRoute}/${adminPath.updatedRoleRoute}/:id`,
+      path: `${appRoutes.managementsRoute}/${appRoutes.updatedRoleRoute}/:id`,
       component: AddRoleComponent,
       canActivate: [AuthGuardService, AuthorizationsGuard],
       data: {
@@ -139,7 +137,7 @@ export const getRoutes = () => {
   if (environment.isDepartmentWorkspaceEnabled) {
     childRoutes.push(...[
       {
-        path: `${adminPath.managementsRoute}/${adminPath.departmentManagementRoute}`,
+        path: `${appRoutes.managementsRoute}/${appRoutes.departmentManagementRoute}`,
         component: ListDepartmentComponent,
         canActivate: [AuthGuardService, AuthorizationsGuard],
         data: {
@@ -147,7 +145,7 @@ export const getRoutes = () => {
         }
       },
       {
-        path: `${adminPath.managementsRoute}/${adminPath.createDepartmentRoute}`,
+        path: `${appRoutes.managementsRoute}/${appRoutes.createDepartmentRoute}`,
         component: DepartmentComponent,
         canActivate: [AuthGuardService, AuthorizationsGuard],
         data: {
@@ -155,7 +153,7 @@ export const getRoutes = () => {
         }
       },
       {
-        path: `${adminPath.managementsRoute}/${adminPath.createDepartmentRoute}/:id`,
+        path: `${appRoutes.managementsRoute}/${appRoutes.createDepartmentRoute}/:id`,
         component: DepartmentComponent,
         canActivate: [AuthGuardService, AuthorizationsGuard],
         data: {
@@ -169,7 +167,7 @@ export const getRoutes = () => {
       ...[
 
         {
-          path: `${adminPath.managementsRoute}/${adminPath.modulesManagementRoute}`,
+          path: `${appRoutes.managementsRoute}/${appRoutes.modulesManagementRoute}`,
           component: ModulesComponent,
           canActivate: [AuthGuardService, AuthorizationsGuard],
           data: {
@@ -177,7 +175,7 @@ export const getRoutes = () => {
           }
         },
         {
-          path: `${adminPath.managementsRoute}/${adminPath.createModulesRoute}`,
+          path: `${appRoutes.managementsRoute}/${appRoutes.createModulesRoute}`,
           component: AddmoduleComponent,
           canActivate: [AuthGuardService, AuthorizationsGuard],
           data: {
@@ -185,7 +183,7 @@ export const getRoutes = () => {
           }
         },
         {
-          path: `${adminPath.managementsRoute}/${adminPath.updateModulesRoute}/:id`,
+          path: `${appRoutes.managementsRoute}/${appRoutes.updateModulesRoute}/:id`,
           component: AddmoduleComponent,
           canActivate: [AuthGuardService, AuthorizationsGuard],
           data: {
@@ -200,7 +198,7 @@ export const getRoutes = () => {
       ...[
 
         {
-          path: `${adminPath.managementsRoute}/${adminPath.formsManagementRoute}`,
+          path: `${appRoutes.managementsRoute}/${appRoutes.formsManagementRoute}`,
           component: ListformsComponent,
           canActivate: [AuthGuardService, AuthorizationsGuard],
           data: {
@@ -208,7 +206,7 @@ export const getRoutes = () => {
           }
         },
         {
-          path: `${adminPath.managementsRoute}/${adminPath.createFormsRoute}`,
+          path: `${appRoutes.managementsRoute}/${appRoutes.createFormsRoute}`,
           component: FormsComponent,
           canActivate: [AuthGuardService, AuthorizationsGuard],
           data: {
@@ -216,7 +214,7 @@ export const getRoutes = () => {
           }
         },
         {
-          path: `${adminPath.managementsRoute}/${adminPath.createFormsRoute}/:id`,
+          path: `${appRoutes.managementsRoute}/${appRoutes.createFormsRoute}/:id`,
           component: FormsComponent,
           canActivate: [AuthGuardService, AuthorizationsGuard],
           data: {
@@ -224,7 +222,7 @@ export const getRoutes = () => {
           }
         },
         {
-          path: `${adminPath.managementsRoute}/${adminPath.controlOptionsRoute}`,
+          path: `${appRoutes.managementsRoute}/${appRoutes.controlOptionsRoute}`,
           component: ControlOptionsComponent,
           canActivate: [AuthGuardService, AuthorizationsGuard],
           data: {
@@ -266,7 +264,6 @@ export const MODULE_DECLARATIONS = [
   RoleListComponent,
   AddRoleComponent,
   AddRoleFormComponent,
-  PermissionListComponent,
   RoleListPresenterComponent,
   UserListComponent,
   FormControlAddComponent,
@@ -289,6 +286,5 @@ export const MODULE_DECLARATIONS = [
 ];
 
 export const COMPONENTS_PROVIDERS: Provider[] = [
-  FormComponentService,
   { provide: LOCALE_ID, useValue: 'fr' }
 ];

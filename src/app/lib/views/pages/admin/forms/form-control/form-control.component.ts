@@ -62,7 +62,6 @@ export class FormControlComponent {
    * @description Component object instance initializer
    * @param uiStore [[AppUIStoreManager]]
    * @param formService [[FormService]]
-   * @param formComponentService [[FormComponentService]]
    * @param dialog [[Dialog]]
    */
   constructor(

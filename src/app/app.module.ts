@@ -23,10 +23,10 @@ import { TranslationService } from './lib/core/translator';
 import { DROPZONE_CONFIG } from 'ngx-dropzone-wrapper';
 import { AppComponentsLoadingComponent } from './lib/views/partials/ui-state-components/app-component-loader.component';
 import { AppUINotificationComponent } from './lib/views/partials/ui-state-components/app-ui-notification.component';
-import { parseV2HttpResponse } from './lib/core/http/core/v2/http-response';
 import { DynamicFormControlModule } from './lib/core/components/dynamic-inputs/dynamic-form-control';
 import { DrewlabsV2_1LoginResultHandlerFunc } from './lib/core/auth/rxjs/operators';
 import { LoginV2_1Response } from './lib/core/auth/contracts/v2/login.response';
+import { parseV3HttpResponse } from './lib/core/http/core/v3/http-response';
 
 
 export function AppDrewlabsV2_1LoginResultHandlerFunc(response: any) {
@@ -70,7 +70,7 @@ export class TranslateHandler implements MissingTranslationHandler {
     CoreComponentModule.forRoot(),
     DrewlabsHttpModule.forRoot({
       serverURL: environment.APP_SERVER_URL,
-      requestResponseHandler: parseV2HttpResponse // Modifiable
+      requestResponseHandler: parseV3HttpResponse // Modifiable
     }),
     StorageModule.forRoot({ secretKey: environment.APP_SECRET }),
     AuthTokenModule.forRoot({}),
@@ -89,7 +89,8 @@ export class TranslateHandler implements MissingTranslationHandler {
         host: environment.FORM_SERVER_URL,
         formsPath: environment.endpoints?.forms,
         controlsPath: environment?.endpoints?.formControls,
-        controlOptionsPath: environment?.endpoints?.controlOptions
+        controlOptionsPath: environment?.endpoints?.controlOptions,
+        controlBindingsPath: environment?.endpoints?.controlBindings
       }
     })
   ],

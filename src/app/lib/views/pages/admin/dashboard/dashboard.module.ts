@@ -7,7 +7,6 @@ import {
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../../shared.module';
 import { PartialsModule } from '../../../partials/partials.module';
-import { FormComponentService } from '../forms/form-component.service';
 
 @NgModule({
   imports: [
@@ -20,7 +19,7 @@ import { FormComponentService } from '../forms/form-component.service';
     ...MODULE_DECLARATIONS
   ],
   exports: [...MODULE_DECLARATIONS],
-  providers: [...COMPONENTS_PROVIDERS, FormComponentService],
+  providers: [...COMPONENTS_PROVIDERS],
   entryComponents: []
 })
 export class DashboardModule {

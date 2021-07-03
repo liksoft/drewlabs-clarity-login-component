@@ -148,7 +148,9 @@ export class ControlOptionViewComponent implements OnDestroy {
     private _provider: ControlOptionsProvider,
     private _uiState: AppUIStateProvider,
     public readonly typeHelper: TypeUtilHelper
-  ) { }
+  ) {
+    this.onDgRefresh();
+  }
 
   editBtnClicked(event: ControlOptionInterface) {
     this.editingEvent.emit(event);

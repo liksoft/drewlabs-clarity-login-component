@@ -13,6 +13,8 @@ import { combineLatest } from 'rxjs';
 import { ControlOptionViewComponent } from './control-options-view.component';
 import { Dialog, KEY_NAMES } from 'src/app/lib/core/utils/browser';
 import { AppUIStateProvider } from 'src/app/lib/core/ui-state';
+import { doLog } from 'src/app/lib/core/rxjs/operators';
+import { Log } from 'src/app/lib/core/utils/logger';
 
 @Component({
   selector: 'app-control-options',
@@ -43,7 +45,9 @@ export class ControlOptionsComponent implements OnInit {
   formgroup: FormGroup;
   form: IDynamicForm;
   state$ = combineLatest([
-    this._provider.state$,
+    this._provider.state$.pipe(
+      doLog('Provider state: ')
+    ),
     this.translate.loadTranslations()
   ]).pipe(
     map(([state, translations]) => ({
@@ -105,8 +109,10 @@ export class ControlOptionsComponent implements OnInit {
   ) { }
 
   public async ngOnInit() {
-    this.formgroup = this._parser.buildFormGroupFromDynamicForm(
-      this.form = await DynamicFormHelpers.buildDynamicForm(STATIC_FORMS.createControlOptions));
+    const form = await DynamicFormHelpers.buildDynamicForm(STATIC_FORMS.createControlOptions);
+    this.formgroup = this._parser.buildFormGroupFromDynamicForm(form);
+    this.form = form;
+    Log('Hello');
   }
 
   public onEditingEvent(event: ControlOptionInterface) {

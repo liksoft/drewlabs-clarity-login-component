@@ -1,7 +1,6 @@
 import { Component, OnInit, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
 import { IDynamicForm } from 'src/app/lib/core/components/dynamic-inputs/core/contracts/dynamic-form';
 import { FormGroup } from '@angular/forms';
-import { ComponentReactiveFormHelpers } from 'src/app/lib/core/helpers/component-reactive-form-helpers';
 import { IHTMLFormControl, SelectInput } from 'src/app/lib/core/components/dynamic-inputs/core';
 import { TypeUtilHelper } from '../../../../../core/helpers/type-utils-helper';
 import { updateDepartmentV2Action, createDepartmentV2Action, departmentUpdatedAction, departmentCreated } from '../../../../../core/auth/core/actions/department';
@@ -12,8 +11,9 @@ import { departmentFormViewModelBindings, DepartmentV2 } from '../../../../../co
 import { TranslationService } from 'src/app/lib/core/translator';
 import { createSubject } from 'src/app/lib/core/rxjs/helpers';
 import { combineLatest } from 'rxjs';
-import { UIStateStatusCode } from 'src/app/lib/core/helpers';
-import { AppUIStateProvider } from '../../../../../core/helpers/app-ui-store-manager.service';
+import { UIStateStatusCode } from 'src/app/lib/core/contracts/ui-state';
+import { AppUIStateProvider } from 'src/app/lib/core/ui-state';
+import { ComponentReactiveFormHelpers } from 'src/app/lib/core/components/dynamic-inputs/angular';
 
 @Component({
   selector: 'app-add-departement',

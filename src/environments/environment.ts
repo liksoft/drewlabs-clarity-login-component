@@ -31,7 +31,8 @@ export const environment = {
   endpoints: {
     forms: 'api/v1/forms',
     formControls: 'api/v1/form-controls',
-    controlOptions: 'api/v1/form-control-options'
+    controlOptions: 'api/v1/form-control-options',
+    controlBindings: 'api/v1/control-bindings'
   },
   appRoutes: {
     managementsRoute: 'managements',

@@ -1,13 +1,13 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { IDynamicForm } from 'src/app/lib/core/components/dynamic-inputs/core';
-import { FormComponentService } from './form-component.service';
 import { DynamicControlParser } from 'src/app/lib/core/helpers/dynamic-control-parser';
 import { TypeUtilHelper } from 'src/app/lib/core/helpers/type-utils-helper';
 import { Dialog, isDefined } from 'src/app/lib/core/utils';
 import { DynamicFormInterface } from 'src/app/lib/core/components/dynamic-inputs/core/compact/types';
 import { formViewModelBindings } from 'src/app/lib/core/components/dynamic-inputs/core/compact';
 import { ComponentReactiveFormHelpers } from 'src/app/lib/core/components/dynamic-inputs/angular';
+import { TranslationService } from 'src/app/lib/core/translator';
 
 @Component({
   selector: 'app-forms-view',
@@ -53,7 +53,7 @@ export class FormsViewComponent {
    * @param appUIStoreManager [[AppUIStoreManager]]
    */
   constructor(
-    private formComponentService: FormComponentService,
+    private translate: TranslationService,
     private controlParser: DynamicControlParser,
     private dialog: Dialog,
     private typeHelper: TypeUtilHelper
@@ -106,7 +106,7 @@ export class FormsViewComponent {
   }
 
   async dissociateForm(id: number | string) {
-    const translations = await this.formComponentService.loadTranslations();
+    const translations = await this.translate.loadTranslations();
     if (this.dialog.confirm(translations.prompt)) {
       this.updateFormEvent.emit({ requestURL: this.form.endpointURL, id, body: { dissociate_parent: true } });
     }

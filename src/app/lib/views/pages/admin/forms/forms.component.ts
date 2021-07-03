@@ -4,7 +4,6 @@ import { FormService } from 'src/app/lib/core/components/dynamic-inputs/core/for
 import { DrewlabsRessourceServerClient } from 'src/app/lib/core/http/core';
 import { FormsViewComponent } from './forms-view.component';
 import { ActivatedRoute } from '@angular/router';
-import { IDissociateFormControlEvent } from './form-component.service';
 import { TypeUtilHelper } from 'src/app/lib/core/helpers/type-utils-helper';
 import { isDefined, MomentUtils } from 'src/app/lib/core/utils';
 import { createSubject, observableFrom, observableOf } from '../../../../core/rxjs/helpers/index';
@@ -44,6 +43,7 @@ import { httpServerHost } from 'src/app/lib/core/utils/url/url';
 import { DynamicFormHelpers } from 'src/app/lib/core/components/dynamic-inputs/angular';
 import { UIStateStatusCode } from 'src/app/lib/core/contracts/ui-state';
 import { AppUIStateProvider } from 'src/app/lib/core/ui-state';
+import { IDissociateFormControlEvent } from './types';
 
 
 @Component({
