@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { filter, map, takeUntil, delay, tap } from 'rxjs/operators';
+import { map, takeUntil, delay, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { IDynamicForm, IHTMLFormControl, SelectInput, CheckBoxInput } from 'src/app/lib/core/components/dynamic-inputs/core';
 import { DynamicControlParser } from 'src/app/lib/core/helpers/dynamic-control-parser';

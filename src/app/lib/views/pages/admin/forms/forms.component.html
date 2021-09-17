@@ -2,55 +2,106 @@
   <div class="card">
     <div class="form-view-container">
       <div class="card-block">
-        <div class="card-title" *ngIf="vm.formState?.model;  else defaultTitle"> Édition du formulaire :
-          <strong>{{vm.formState?.model?.title }}</strong>
+        <div class="card-title" *ngIf="vm.formState?.model; else defaultTitle">
+          Édition du formulaire :
+          <strong>{{ vm.formState?.model?.title }}</strong>
         </div>
         <ng-template #defaultTitle>
           <div class="card-title">Créer un nouveau formulaire</div>
         </ng-template>
         <ng-container *ngIf="!typeHelper.isDefined(vm?.formState)">
-          <div class="p3">Ajouter un nouveau formulaire à votre système. Les formulaires vous permet de
-            collecter des données saisies depuis les interfaces utiliteurs.</div>
+          <div class="p3">
+            Ajouter un nouveau formulaire à votre système. Les formulaires vous
+            permet de collecter des données saisies depuis les interfaces
+            utiliteurs.
+          </div>
         </ng-container>
         <div class="card-text">
           <form>
             <div class="clr-row">
               <div [class]="formViewContainerClass">
-                <app-forms-view (updateFormEvent)="onUpdateFormEvent($event)" [performingAction]="vm?.performingAction"
-                  *ngIf="vm?.formState?.form" [formViewState]="vm?.formState" #appFormView
-                  (formSubmitted)="onFormviewFormSubmitted($event)" (addFormControl)="loadFormControlComponent($event)">
-                </app-forms-view>
+                <app-forms-view
+                  (updateFormEvent)="onUpdateFormEvent($event)"
+                  [performingAction]="vm?.performingAction"
+                  *ngIf="vm?.formState?.form"
+                  [formViewState]="vm?.formState"
+                  #appFormView
+                  (formSubmitted)="onFormviewFormSubmitted($event)"
+                  (addFormControl)="loadFormControlComponent($event)"
+                ></app-forms-view>
               </div>
               <div [class]="formControlsContainerClass">
                 <div class="fields-container">
-                  <div class="loader-container" [hidden]="!vm?.performingAction">
-                    <clr-spinner class="spinner" [clrMedium]="true"></clr-spinner>
+                  <div
+                    class="loader-container"
+                    [hidden]="!vm?.performingAction"
+                  >
+                    <clr-spinner
+                      class="spinner"
+                      [clrMedium]="true"
+                    ></clr-spinner>
                   </div>
                   <div class="field-content">
                     <div class="field-title section-title">
                       Champs du formulaire
                     </div>
-                    <ng-container *ngIf="vm?.formState?.model?.formControls?.length > 0">
-                      <div cdkDropList class="example-list"
-                        (cdkDropListDropped)="controlComponentDropped(vm?.formState?.model, $event)">
-                        <div *ngFor="let item of sortControlsByIndex()(vm?.formState?.model)?.formControls">
+                    <ng-container
+                      *ngIf="vm?.formState?.model?.formControls?.length > 0"
+                    >
+                      <div
+                        cdkDropList
+                        class="example-list"
+                        (cdkDropListDropped)="
+                          controlComponentDropped(vm?.formState?.model, $event)
+                        "
+                      >
+                        <div
+                          *ngFor="
+                            let item of sortControlsByIndex()(
+                              vm?.formState?.model
+                            )?.formControls
+                          "
+                        >
                           <!-- Review isExpanded bindings-->
-                          <app-form-control (cdkDragDropped)="onControlDropped($event, item)" class="example-box"
-                            cdkDrag *ngIf="vm?.controlState?.form" [title]="item.label" [badge]="item.controlIndex"
-                            [control]="item" [controlViewState]="vm?.controlState" [isExpanded]="false"
-                            (formSubmitted)="updateOrCreateControl({event: $event, form: vm?.formState?.model})"
-                            (dissociateFormControl)="onDissociateFormControl({control: $event, form: vm?.formState?.model})">
-                          </app-form-control>
+                          <app-form-control
+                            (cdkDragDropped)="onControlDropped($event, item)"
+                            class="example-box"
+                            cdkDrag
+                            *ngIf="vm?.controlState?.form"
+                            [title]="item.label"
+                            [badge]="item.controlIndex"
+                            [control]="item"
+                            [controlViewState]="vm?.controlState"
+                            [isExpanded]="false"
+                            (formSubmitted)="
+                              updateOrCreateControl({
+                                event: $event,
+                                form: vm?.formState?.model
+                              })
+                            "
+                            (dissociateFormControl)="
+                              onDissociateFormControl({
+                                control: $event,
+                                form: vm?.formState?.model
+                              })
+                            "
+                          ></app-form-control>
                         </div>
                       </div>
                     </ng-container>
                   </div>
                 </div>
               </div>
-              <ng-container *ngIf="(vm?.performingAction) && !typeHelper.isDefined(vm?.formState.form)">
+              <ng-container
+                *ngIf="
+                  vm?.performingAction &&
+                  !typeHelper.isDefined(vm?.formState.form)
+                "
+              >
                 <div class="clr-col-12 top-32">
                   <div class="text-center">
-                    <span class="spinner spinner-inline"></span> {{ "loadingform" | translate }}
+                    <span class="spinner spinner-inline"></span>
+                    {{ 'loadingform' | translate }}
                   </div>
                 </div>
               </ng-container>
@@ -60,17 +111,24 @@
       </div>
     </div>
   </div>
-  <clr-modal [(clrModalOpen)]="showFormControlCreateModal" [clrModalClosable]="false" [clrModalSize]="'lg'">
+  <clr-modal
+    [(clrModalOpen)]="showFormControlCreateModal"
+    [clrModalClosable]="false"
+    [clrModalSize]="'lg'"
+  >
     <div class="modal-title">
       <h3>{{ vm?.controlState?.form?.title }}</h3>
-      <span class="title-desc">{{
-        vm?.controlState?.form?.description
-        }}</span>
+      <span class="title-desc">{{ vm?.controlState?.form?.description }}</span>
     </div>
     <div class="modal-body">
-      <app-form-control-add #appFormControlAddComponent [controlViewState]="vm?.controlState"
-        (formSubmitted)="updateOrCreateControl({event: $event, form: vm?.formState?.model})"
-        (cancelSubmission)="onCancelCreateFormControl($event)"></app-form-control-add>
+      <app-form-control-add
+        #appFormControlAddComponent
+        [controlViewState]="vm?.controlState"
+        (formSubmitted)="
+          updateOrCreateControl({ event: $event, form: vm?.formState?.model })
+        "
+        (cancelSubmission)="onCancelCreateFormControl($event)"
+      ></app-form-control-add>
     </div>
   </clr-modal>
 </ng-container>

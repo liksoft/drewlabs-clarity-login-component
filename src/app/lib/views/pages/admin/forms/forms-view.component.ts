@@ -1,18 +1,18 @@
-import { Component, Input, EventEmitter, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { IDynamicForm } from 'src/app/lib/core/components/dynamic-inputs/core';
-import { DynamicControlParser } from 'src/app/lib/core/helpers/dynamic-control-parser';
-import { TypeUtilHelper } from 'src/app/lib/core/helpers/type-utils-helper';
-import { Dialog, isDefined } from 'src/app/lib/core/utils';
-import { DynamicFormInterface } from 'src/app/lib/core/components/dynamic-inputs/core/compact/types';
-import { formViewModelBindings } from 'src/app/lib/core/components/dynamic-inputs/core/compact';
-import { ComponentReactiveFormHelpers } from 'src/app/lib/core/components/dynamic-inputs/angular';
-import { TranslationService } from 'src/app/lib/core/translator';
+import { Component, Input, EventEmitter, Output } from "@angular/core";
+import { FormGroup } from "@angular/forms";
+import { IDynamicForm } from "src/app/lib/core/components/dynamic-inputs/core";
+import { DynamicControlParser } from "src/app/lib/core/helpers/dynamic-control-parser";
+import { TypeUtilHelper } from "src/app/lib/core/helpers/type-utils-helper";
+import { Dialog, isDefined } from "src/app/lib/core/utils";
+import { DynamicFormInterface } from "src/app/lib/core/components/dynamic-inputs/core/compact/types";
+import { formViewModelBindings } from "src/app/lib/core/components/dynamic-inputs/core/compact";
+import { ComponentReactiveFormHelpers } from "src/app/lib/core/components/dynamic-inputs/angular";
+import { TranslationService } from "src/app/lib/core/translator";
 
 @Component({
-  selector: 'app-forms-view',
-  templateUrl: './forms-view.component.html',
-  styles: []
+  selector: "app-forms-view",
+  templateUrl: "./forms-view.component.html",
+  styles: [],
 })
 export class FormsViewComponent {
   componentFormGroup: FormGroup;
@@ -30,11 +30,17 @@ export class FormsViewComponent {
   // tslint:disable-next-line: variable-name
   _currentForm: DynamicFormInterface;
 
-  @Input() set formViewState(value: { form: IDynamicForm, model: DynamicFormInterface, formgroup: FormGroup }) {
+  @Input() set formViewState(value: {
+    form: IDynamicForm;
+    model: DynamicFormInterface;
+    formgroup: FormGroup;
+  }) {
     if (value) {
       this._formViewState = value;
       this.form = value.form ? value.form : this.form;
-      this.componentFormGroup = value.formgroup ? value.formgroup : this.componentFormGroup;
+      this.componentFormGroup = value.formgroup
+        ? value.formgroup
+        : this.componentFormGroup;
       this._currentForm = value.model ? value.model : this._currentForm;
       this.prefilForm();
     }
@@ -43,7 +49,11 @@ export class FormsViewComponent {
     return this._formViewState;
   }
   // tslint:disable-next-line: variable-name
-  _formViewState: { form: IDynamicForm, model: DynamicFormInterface, formgroup: FormGroup };
+  _formViewState: {
+    form: IDynamicForm;
+    model: DynamicFormInterface;
+    formgroup: FormGroup;
+  };
 
   public requestError: Error;
 
@@ -57,8 +67,7 @@ export class FormsViewComponent {
     private controlParser: DynamicControlParser,
     private dialog: Dialog,
     private typeHelper: TypeUtilHelper
-  ) {
-  }
+  ) {}
 
   cancel() {
     this.cancelSubmission.emit(true);
@@ -70,7 +79,10 @@ export class FormsViewComponent {
     );
     if (this.componentFormGroup.valid) {
       // Fire formSubmitted event with the formGroup value
-      this.formSubmitted.emit({ body: this.componentFormGroup.getRawValue(), requestURL: this.form.endpointURL });
+      this.formSubmitted.emit({
+        body: this.componentFormGroup.getRawValue(),
+        requestURL: this.form.endpointURL,
+      });
     }
   }
 
@@ -86,8 +98,7 @@ export class FormsViewComponent {
 
   onFormRequestSubmittedSuccessfully() {
     this.componentFormGroup = this.controlParser.buildFormGroupFromDynamicForm(
-      this.form,
-      !this.typeHelper.isDefined(this.currentForm)
+      this.form
     ) as FormGroup;
   }
 
@@ -101,14 +112,22 @@ export class FormsViewComponent {
       this.componentFormGroup
     );
     if (this.componentFormGroup.valid) {
-      this.updateFormEvent.emit({ requestURL: this.form.endpointURL, id: form.id, body: this.componentFormGroup.getRawValue() });
+      this.updateFormEvent.emit({
+        requestURL: this.form.endpointURL,
+        id: form.id,
+        body: this.componentFormGroup.getRawValue(),
+      });
     }
   }
 
   async dissociateForm(id: number | string) {
     const translations = await this.translate.loadTranslations();
     if (this.dialog.confirm(translations.prompt)) {
-      this.updateFormEvent.emit({ requestURL: this.form.endpointURL, id, body: { dissociate_parent: true } });
+      this.updateFormEvent.emit({
+        requestURL: this.form.endpointURL,
+        id,
+        body: { dissociate_parent: true },
+      });
     }
   }
 }

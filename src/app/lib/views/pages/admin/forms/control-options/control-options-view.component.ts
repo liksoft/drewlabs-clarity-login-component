@@ -6,16 +6,15 @@ import { debounceTime, distinctUntilChanged, map, switchMap, takeUntil, tap } fr
 import { startWith } from 'rxjs/operators';
 import { Collection } from 'src/app/lib/core/collections';
 import { ComponentReactiveFormHelpers } from 'src/app/lib/core/components/dynamic-inputs/angular';
+import { OptionsService } from 'src/app/lib/core/components/dynamic-inputs/angular/services';
 import { IDynamicForm, IHTMLFormControl } from 'src/app/lib/core/components/dynamic-inputs/core';
 import { ControlOptionInterface } from 'src/app/lib/core/components/dynamic-inputs/core/compact/types';
-import { ControlOptionsProvider } from 'src/app/lib/core/components/dynamic-inputs/core/v2/providers/control-options';
 import { ICollection } from 'src/app/lib/core/contracts/collection-interface';
 import { TypeUtilHelper } from 'src/app/lib/core/helpers';
 import { mapPaginatorStateWith } from 'src/app/lib/core/pagination/helpers';
 import { createSubject } from 'src/app/lib/core/rxjs/helpers';
 import { doLog } from 'src/app/lib/core/rxjs/operators';
 import { AppUIStateProvider } from 'src/app/lib/core/ui-state';
-import { Log } from 'src/app/lib/core/utils/logger';
 
 @Component({
   selector: 'app-control-options-view',
@@ -76,7 +75,7 @@ import { Log } from 'src/app/lib/core/utils/logger';
         border: none;
         min-width: 2.5rem !important;
       }
-      
+
       .cell-last {
         position: relative;
       }
@@ -145,7 +144,7 @@ export class ControlOptionViewComponent implements OnDestroy {
   @ViewChild('clrDataGrid', { static: false }) dataGrid: ClrDatagrid;
 
   constructor(
-    private _provider: ControlOptionsProvider,
+    private _provider: OptionsService,
     private _uiState: AppUIStateProvider,
     public readonly typeHelper: TypeUtilHelper
   ) {
@@ -165,7 +164,6 @@ export class ControlOptionViewComponent implements OnDestroy {
     ComponentReactiveFormHelpers.validateFormGroupFields(this.formgroup);
     // Check if the formGroup is valid
     if (!this.formgroup.valid) {
-      Log('Form contains validation errors');
       return;
     }
 
