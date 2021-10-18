@@ -25,7 +25,7 @@ import { HttpClient } from "@angular/common/http";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { TranslationService } from "./lib/core/translator";
 import { DynamicFormControlModule } from "./lib/core/components/dynamic-inputs/dynamic-form-control";
-import { DrewlabsV2_1LoginResultHandlerFunc } from "./lib/core/auth/rxjs/operators";
+import { DrewlabsV2LoginResultHandlerFunc, DrewlabsV2_1LoginResultHandlerFunc } from "./lib/core/auth/rxjs/operators";
 import { LoginV2_1Response } from "./lib/core/auth/contracts/v2/login.response";
 import { parseV3HttpResponse } from "./lib/core/http/core/v3/http-response";
 import { HttpModule } from "./lib/core/http";
@@ -42,11 +42,8 @@ import {
   DROPZONE_DICT,
 } from "./lib/core/components/dropzone";
 import { map } from "rxjs/operators";
+import { parseV2HttpResponse } from "./lib/core/http/core/v2/http-response";
 // #endregion Dropzone configuration
-
-export function AppDrewlabsV2_1LoginResultHandlerFunc(response: any) {
-  return DrewlabsV2_1LoginResultHandlerFunc(LoginV2_1Response)(response);
-}
 
 registerLocaleData(localeFr, "fr", localeFrExtra);
 
@@ -130,17 +127,17 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
     SharedModule.forRoot(),
     HttpModule.forRoot({
       serverURL: environment.APP_SERVER_URL,
-      requestResponseHandler: parseV3HttpResponse, // Modifiable
+      requestResponseHandler: parseV2HttpResponse, // Modifiable
     }),
     StorageModule.forRoot({ secretKey: environment.APP_SECRET }),
     AuthTokenModule.forRoot({}),
     AuthModule.forRoot({
-      loginResponseHandler: AppDrewlabsV2_1LoginResultHandlerFunc,
+      loginResponseHandler: DrewlabsV2LoginResultHandlerFunc,
       serverConfigs: {
         host: null,
-        loginPath: "auth/v1/login",
-        logoutPath: "auth/v1/logout",
-        usersPath: "auth/v1/users",
+        loginPath: "auth/login",
+        logoutPath: "auth/logout",
+        usersPath: "auth/users",
       },
     }),
     BrowserAnimationsModule,
@@ -163,7 +160,7 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
     DynamicFormControlModule.forRoot({
       serverConfigs: {
         host: environment.FORM_SERVER_URL,
-        controlBindingsPath: "api/v1/control-bindings",
+        controlBindingsPath: "api/control-bindings",
       },
     }),
     DynamicFormControlModule.forRoot({

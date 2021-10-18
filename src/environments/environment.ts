@@ -19,21 +19,21 @@ export const environment = {
     controls: "2a841446-c9a5-4328-bf7d-a2a071afdb75-12619",
     controlOptions: "d85dddce-7418-4313-9d54-218950ca4395-12619"
   },
-  APP_SERVER_URL: 'http://127.0.0.1:8000/',
-  APP_FILE_SERVER_URL: 'http://127.0.0.1:8000/api/',
+  APP_SERVER_URL: 'http://127.0.0.1:8888/',
+  APP_FILE_SERVER_URL: 'http://127.0.0.1:8888/api/',
   APP_SECRET: 'V1HQkt03PoGdlxN',
-  AUTH_SERVER_URL: 'http://127.0.0.1:8000/',
-  FORM_SERVER_URL: 'http://127.0.0.1:8000/',
+  AUTH_SERVER_URL: 'http://127.0.0.1:8888/',
+  FORM_SERVER_URL: 'http://127.0.0.1:8888/',
   isDepartmentWorkspaceEnabled: false,
   isModulesWorkspaceEnabled: false,
   isFormsWorkspaceEnabled: true,
   isConfigurationWorkspaceEnabled: false,
 
   endpoints: {
-    forms: 'api/v1/forms',
-    formControls: 'api/v1/form-controls',
-    controlOptions: 'api/v1/form-control-options',
-    controlBindings: 'api/v1/control-bindings'
+    forms: 'api/forms',
+    formControls: 'api/form-controls',
+    controlOptions: 'api/form-control-options',
+    controlBindings: 'api/control-bindings'
   },
   appRoutes: {
     managementsRoute: 'managements',
