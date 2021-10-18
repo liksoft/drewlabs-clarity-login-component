@@ -91,7 +91,7 @@ export class TranslateHandler implements MissingTranslationHandler {
         host: null,
         loginPath: "auth/v1/login",
         logoutPath: "auth/v1/logout",
-        usersPath: "admin/users",
+        usersPath: "auth/v1/users",
       },
     }),
     BrowserAnimationsModule,

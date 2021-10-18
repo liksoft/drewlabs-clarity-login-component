@@ -11,6 +11,7 @@ import {
   cloneAbstractControl,
   ComponentReactiveFormHelpers,
 } from "src/app/lib/core/components/dynamic-inputs/angular";
+import { before } from "src/app/lib/core/utils/types/strings";
 
 @Component({
   selector: "app-form-control",
@@ -111,13 +112,15 @@ export class FormControlComponent {
             continue;
           }
           if (k === "selectable_model" && isDefined(this.control[value])) {
-            const configParts = (this.control[value] as string).split("|");
+            const config: string = this.control[value] || "";
+            const configParts = config.split("|");
             const filters = configParts.find((item) =>
               startsWith(item.trim(), "filters:")
             );
-            const tableFilters = configParts.find((item) =>
-              startsWith(item.trim(), "table:")
-            );
+            const tableFilters = config.includes("table:")
+              ? configParts.find((item) => startsWith(item.trim(), "table:"))
+              : before("|filters", config);
+
             if (
               filters &&
               isDefined(this.componentFormGroup.get("model_filters"))
@@ -148,7 +151,7 @@ export class FormControlComponent {
             continue;
           }
           if (k === "selectable_values" && isDefined(this.control[value])) {
-            this.componentFormGroup.get("data_source").setValue(1);
+            this.componentFormGroup.get("data_source").setValue("1");
           }
           this.componentFormGroup.get(k).setValue(this.control[value]);
         }

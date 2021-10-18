@@ -90,7 +90,8 @@ export const getRoutes = () => {
       component: AddUserComponent,
       canActivate: [AuthGuardService, AuthorizationsGuard],
       data: {
-        authorizations: adminAuthorizations
+        authorizations: adminAuthorizations,
+        formID: environment.forms.users
       }
     },
     {
@@ -98,7 +99,8 @@ export const getRoutes = () => {
       component: AddUserComponent,
       canActivate: [AuthGuardService, AuthorizationsGuard],
       data: {
-        authorizations: adminAuthorizations
+        authorizations: adminAuthorizations,
+        formID: environment.forms.users
       }
     },
     {
@@ -210,7 +212,9 @@ export const getRoutes = () => {
           component: FormsComponent,
           canActivate: [AuthGuardService, AuthorizationsGuard],
           data: {
-            authorizations: adminAuthorizations
+            authorizations: adminAuthorizations,
+            formID: environment.forms.forms,
+            controlsFormID: environment.forms.controls
           }
         },
         {
@@ -218,7 +222,9 @@ export const getRoutes = () => {
           component: FormsComponent,
           canActivate: [AuthGuardService, AuthorizationsGuard],
           data: {
-            authorizations: adminAuthorizations
+            authorizations: adminAuthorizations,
+            formID: environment.forms.forms,
+            controlsFormID: environment.forms.controls
           }
         },
         {
@@ -226,7 +232,8 @@ export const getRoutes = () => {
           component: ControlOptionsComponent,
           canActivate: [AuthGuardService, AuthorizationsGuard],
           data: {
-            authorizations: adminAuthorizations
+            authorizations: adminAuthorizations,
+            formID: environment.forms.controlOptions
           }
         }
       ]

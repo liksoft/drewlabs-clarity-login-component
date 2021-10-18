@@ -14,8 +14,8 @@ const routes: Routes = [
     path: 'login',
     loadChildren: () => import('./lib/views/login/login.module').then(m => m.LoginModule),
     data: {
-      dashboardPath: partialConfigs.routes.commonRoutes.dashboardHomeRoute,
-      modulePermissions: AUTH_RESOURCES_AUTHORIZATIONS,
+      path: partialConfigs.routes.commonRoutes.dashboardHomeRoute,
+      authorizations: AUTH_RESOURCES_AUTHORIZATIONS,
       moduleName: 'Administration'
     }
   },

@@ -1,9 +1,8 @@
 import { Component, HostListener, OnInit, ViewChild } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { map, tap } from "rxjs/operators";
+import { filter, map, take, tap } from "rxjs/operators";
 import {
   IDynamicForm,
-  STATIC_FORMS,
 } from "src/app/lib/core/components/dynamic-inputs/core";
 import { ControlOptionInterface } from "src/app/lib/core/components/dynamic-inputs/core/compact/types";
 import {
@@ -24,8 +23,17 @@ import { ControlOptionViewComponent } from "./control-options-view.component";
 import { Dialog, KEY_NAMES } from "src/app/lib/core/utils/browser";
 import { AppUIStateProvider } from "src/app/lib/core/ui-state";
 import { doLog } from "src/app/lib/core/rxjs/operators";
-import { OptionsService } from "src/app/lib/core/components/dynamic-inputs/angular/services";
-import { DynamicFormHelpers } from "src/app/lib/core/components/dynamic-inputs/core/helpers";
+import {
+  AbstractDynamicFormService,
+  OptionsService,
+} from "src/app/lib/core/components/dynamic-inputs/angular/services";
+import {
+  DynamicFormHelpers,
+  sortRawFormControls,
+} from "src/app/lib/core/components/dynamic-inputs/core/helpers";
+import { select_form } from "src/app/lib/core/components/dynamic-inputs/core/v2/operators";
+import { ActivatedRoute } from "@angular/router";
+import { environment } from "src/environments/environment";
 
 @Component({
   selector: "app-control-options",
@@ -55,9 +63,24 @@ import { DynamicFormHelpers } from "src/app/lib/core/components/dynamic-inputs/c
   styles: [],
 })
 export class ControlOptionsComponent implements OnInit {
-
   formgroup: FormGroup;
   form: IDynamicForm;
+
+  formState$ = this._formsService.state$.pipe(
+    select_form(
+      this.route.snapshot.data.formID || environment.forms.controlOptions
+    ),
+    filter((state) => (state ? true : false)),
+    take(1),
+    map((state) =>
+      DynamicFormHelpers.buildFormSync(sortRawFormControls(state))
+    ),
+    map((state) => ({
+      form: state,
+      formgroup: this._parser.buildFormGroupFromDynamicForm(state),
+    }))
+  );
+
   state$ = combineLatest([
     this._provider.state$.pipe(doLog("Provider state: ")),
     this.translate.loadTranslations(),
@@ -99,6 +122,12 @@ export class ControlOptionsComponent implements OnInit {
           UIStateStatusCode.STATUS_OK
         );
         this.controlOptionViewComponent.onDgRefresh();
+        if (this.typeHelper.isDefined(this.formgroup)) {
+          this.formgroup.reset();
+        }
+        setTimeout(() => {
+          selectControlOptionAction(this._provider.store$)(null);
+        }, 3000);
       }
 
       if (state?.deleteResult) {
@@ -129,15 +158,15 @@ export class ControlOptionsComponent implements OnInit {
     private _provider: OptionsService,
     private _uiState: AppUIStateProvider,
     public readonly translate: TranslatorHelperService,
-    private dialog: Dialog
+    private dialog: Dialog,
+    private _formsService: AbstractDynamicFormService,
+    private route: ActivatedRoute
   ) {}
 
   public async ngOnInit() {
-    const form = await DynamicFormHelpers.buildDynamicForm(
-      STATIC_FORMS.createControlOptions
-    );
-    this.formgroup = this._parser.buildFormGroupFromDynamicForm(form);
+    const { form, formgroup } = await this.formState$.toPromise();
     this.form = form;
+    this.formgroup = formgroup;
   }
 
   public onEditingEvent(event: ControlOptionInterface) {

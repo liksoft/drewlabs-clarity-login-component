@@ -113,7 +113,7 @@ export class ControlOptionViewComponent implements OnDestroy {
     'groupfield'
   ];
 
-  initialGridState = { page: { current: 1, size: 20 } };
+  initialGridState = { page: { current: 1, size: 10 } };
   // tslint:disable-next-line: variable-name
   private _destroy$ = createSubject<{}>();
 

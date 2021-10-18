@@ -1,9 +1,7 @@
 <clr-main-container>
     <app-app-top-bar [routesMap]="routesMap" [applicationName]="'ELEWOU'" [moduleName]="'Administration'" [routeDescriptions]="routeDefinitions"></app-app-top-bar>
     <div class="content-container">
-      <clr-vertical-nav [clrVerticalNavCollapsible]="true" class="nav-trigger--bottom" [clr-nav-level]="1">
-        <app-nav></app-nav>
-      </clr-vertical-nav>
+      <app-nav></app-nav>
       <main class="content-area">
           <router-outlet></router-outlet>
       </main>

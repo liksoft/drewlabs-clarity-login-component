@@ -7,7 +7,6 @@ import { TypeUtilHelper } from "src/app/lib/core/helpers/type-utils-helper";
 import { isDefined, MomentUtils } from "src/app/lib/core/utils";
 import {
   createSubject,
-  observableFrom,
   observableOf,
 } from "../../../../core/rxjs/helpers/index";
 import {
@@ -18,9 +17,11 @@ import { DynamicControlParser } from "src/app/lib/core/helpers";
 import { FormGroup } from "@angular/forms";
 import { Dialog } from "../../../../core/utils/browser/window-ref";
 import {
+  filter,
   map,
   mergeMap,
   switchMap,
+  take,
   takeUntil,
   tap,
   withLatestFrom,
@@ -28,8 +29,6 @@ import {
 import { combineLatest } from "rxjs";
 import { DynamicFormInterface } from "src/app/lib/core/components/dynamic-inputs/core/compact/types";
 import {
-  createFormAction,
-  createFormControlAction,
   deleteFormFormControl,
   formControlCreatedAction,
   formControlRemovedAction,
@@ -37,19 +36,13 @@ import {
   formCreatedAction,
   formUpdatedAction,
   onNewFormAction,
-  updateFormAction,
-  updateFormControlAction,
 } from "src/app/lib/core/components/dynamic-inputs/core/v2/actions/form";
 import { TranslationService } from "src/app/lib/core/translator";
-import { ISerializableBuilder } from "src/app/lib/core/built-value/contracts";
-import { FormV2 } from "src/app/lib/core/components/dynamic-inputs/core/v2/models/form";
 import {
   FORM_CONTROL_RESOURCES_PATH,
   FORM_FORM_CONTROL_RESOURCES_PATH,
   FORM_RESOURCES_PATH,
 } from "src/app/lib/core/components/dynamic-inputs/dynamic-form-control";
-import { doLog } from "src/app/lib/core/rxjs/operators";
-import { STATIC_FORMS } from "../../../../core/components/dynamic-inputs/core";
 import { CdkDragDrop } from "@angular/cdk/drag-drop";
 import { DynamicFormControlInterface } from "../../../../core/components/dynamic-inputs/core/compact/types";
 import { httpServerHost } from "src/app/lib/core/utils/url/url";
@@ -61,6 +54,9 @@ import {
   DynamicFormHelpers,
   sortRawFormControls,
 } from "src/app/lib/core/components/dynamic-inputs/core/helpers";
+import { select_form } from "src/app/lib/core/components/dynamic-inputs/core/v2/operators";
+import { environment } from "src/environments/environment";
+import { Log } from "src/app/lib/core/utils/logger";
 
 @Component({
   selector: "app-forms",
@@ -166,7 +162,6 @@ export class FormsComponent implements OnDestroy {
         ? this.provider.get(paramMap.get("id"))
         : observableOf(undefined)
     ),
-    doLog("Emitted value: "),
     tap((model) => {
       // Send the model to the forms store if form is defined
       if (model) {
@@ -177,9 +172,14 @@ export class FormsComponent implements OnDestroy {
       }
     }),
     mergeMap(() =>
-      observableFrom(
-        DynamicFormHelpers.buildDynamicForm(STATIC_FORMS.createForm)
-      ).pipe(map((form) => ({ form })))
+      this.provider.state$.pipe(
+        select_form(this.route.snapshot.data.formID || environment.forms.forms),
+        filter((state) => (state ? true : false)),
+        take(1),
+        map((state) => ({
+          form: DynamicFormHelpers.buildFormSync(sortRawFormControls(state)),
+        }))
+      )
     ),
     map((state) => ({
       ...state,
@@ -193,29 +193,33 @@ export class FormsComponent implements OnDestroy {
     })
   );
 
-  formControlState$ = observableFrom(
-    DynamicFormHelpers.buildDynamicForm(
-      (FormV2.builder() as ISerializableBuilder<FormV2>).fromSerialized(
-        STATIC_FORMS.createFormControl
+  formControlState$ = this.provider.state$
+    .pipe(
+      select_form(
+        this.route.snapshot.data.controlsFormID || environment?.forms.controls
+      ),
+      filter((state) => (state ? true : false)),
+      take(1),
+      map((state) =>
+        DynamicFormHelpers.buildFormSync(sortRawFormControls(state))
       )
     )
-  ).pipe(
-    map((state) => ({
-      form: state,
-      formgroup: this.controlParser.buildFormGroupFromDynamicForm(
-        state
-      ) as FormGroup,
-    }))
-  );
+    .pipe(
+      map((state) => ({
+        form: state,
+        formgroup: this.controlParser.buildFormGroupFromDynamicForm(
+          state
+        ) as FormGroup,
+      }))
+    );
 
   uiState$ = this.uiState.uiState;
 
   state$ = combineLatest([
-    this._currentForm$.pipe(doLog("Current Form value: ")),
-    this.formState$.pipe(doLog("Form state: ")),
-    this.formControlState$.pipe(doLog("Form Control state: ")),
+    this._currentForm$,
+    this.formState$,
+    this.formControlState$,
   ]).pipe(
-    doLog("Create form component state: "),
     map(([model, formState, controlState]) => ({
       formState: { ...formState, model },
       controlState,
@@ -313,11 +317,6 @@ export class FormsComponent implements OnDestroy {
   // tslint:disable-next-line: variable-name
   private _destroy$ = createSubject();
 
-  // Function for sorting form controls by their index
-  public sortControlsByIndex = () => {
-    return (value: DynamicFormInterface) => sortRawFormControls(value);
-  };
-
   constructor(
     private uiState: AppUIStateProvider,
     private route: ActivatedRoute,
@@ -340,16 +339,14 @@ export class FormsComponent implements OnDestroy {
 
   async onFormviewFormSubmitted(event: { [index: string]: any }) {
     this.uiState.startAction();
-    createFormAction(this.provider.store$)(
-      this.client,
+    this.provider.create(
       `${httpServerHost(this.host)}/${event.requestURL || this.path}`,
       event.body
     );
   }
 
   onUpdateFormEvent(event: { [index: string]: any }) {
-    updateFormAction(this.provider.store$)(
-      this.client,
+    this.provider.update(
       `${httpServerHost(this.host)}/${event.requestURL || this.path}/${
         event.id
       }`,
@@ -364,51 +361,50 @@ export class FormsComponent implements OnDestroy {
     event: { [index: string]: any };
     form: DynamicFormInterface;
   }) {
-    this.uiState.startAction();
     if (isDefined(event.body)) {
+      let { id, body } = {
+        body: event?.body,
+        id: event?.id,
+      };
+      this.uiState.startAction();
+      // #region Create FormControl and FormFormControl request body
       const formFormControlRequestBody =
         serializeFormFormControlRequestBodyUsing({
-          ...event.body,
+          ...body,
           form_id: form.id,
         });
       const formControlsRequestBody = serializeControlRequestBodyUsing(
         event.body
       );
-      const body = Object.assign(
-        formControlsRequestBody,
-        {
-          min_date: this.typeHelper.isDefined(formControlsRequestBody.min_date)
-            ? MomentUtils.parseDate(
-                formControlsRequestBody.min_date,
-                "YYYY-MM-DD"
-              )
-            : null,
-          max_date: this.typeHelper.isDefined(formControlsRequestBody.max_date)
-            ? MomentUtils.parseDate(
-                formControlsRequestBody.max_date,
-                "YYYY-MM-DD"
-              )
-            : null,
-        },
-        {
-          form_form_controls: formFormControlRequestBody,
-        }
-      );
-      if (this.typeHelper.isDefined((event as { [index: string]: any }).id)) {
-        updateFormControlAction(this.provider.store$)(
-          this.client,
-          `${httpServerHost(this.host)}/${this.formControlsPath}/${
-            (event as { [index: string]: any }).id
-          }`,
-          body
-        );
-      } else {
-        createFormControlAction(this.provider.store$)(
-          this.client,
-          `${httpServerHost(this.host)}/${this.formControlsPath}`,
-          body
-        );
-      }
+      //!#endregion Create FormControl and FormFormControl request body
+      body = {
+        ...formControlsRequestBody,
+        min_date: formControlsRequestBody.min_date
+          ? MomentUtils.parseDate(
+              formControlsRequestBody.min_date,
+              "YYYY-MM-DD"
+            )
+          : null,
+        max_date: formControlsRequestBody.max_date
+          ? MomentUtils.parseDate(
+              formControlsRequestBody.max_date,
+              "YYYY-MM-DD"
+            )
+          : null,
+        multiple: formControlsRequestBody?.multiple || false,
+        form_form_controls: { ...formFormControlRequestBody },
+      };
+      id
+        ? this.provider.updateControl(
+            `${httpServerHost(this.host)}/${this.formControlsPath}/${
+              (event as { [index: string]: any }).id
+            }`,
+            body
+          )
+        : this.provider.createControl(
+            `${httpServerHost(this.host)}/${this.formControlsPath}`,
+            body
+          );
     }
   }
 
@@ -437,18 +433,12 @@ export class FormsComponent implements OnDestroy {
     }
   }
 
-  controlComponentDropped(
-    form: DynamicFormInterface,
-    event: CdkDragDrop<string[]>
-  ) {}
-
   onControlDropped(
     event: CdkDragDrop<any>,
     control: DynamicFormControlInterface
   ) {
     if (!(event.previousIndex === event.currentIndex)) {
-      updateFormControlAction(this.provider.store$)(
-        this.client,
+      this.provider.updateControl(
         `${httpServerHost(this.host)}/${this.formControlsPath}/${control.id}`,
         {
           form_form_controls: serializeFormFormControlRequestBodyUsing({

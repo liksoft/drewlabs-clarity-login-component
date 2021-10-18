@@ -12,11 +12,12 @@ export const environment = {
   authRememberTokenStorageKey: 'ELEWOU_ADMIN_AUTH_REMEMBER_TOKEN',
   forms: {
     roles: 13,
-    authorizations: 2,
-    identification_employeur: 2,
-    users: 14,
+    users: "c7205502-1883-11ec-9621-0242ac130002-12619",
     departments: 18,
-    modules: 15
+    modules: 15,
+    forms: "4f25087d-a5e7-4439-9fde-2c48dda4898b-12619",
+    controls: "2a841446-c9a5-4328-bf7d-a2a071afdb75-12619",
+    controlOptions: "d85dddce-7418-4313-9d54-218950ca4395-12619"
   },
   APP_SERVER_URL: 'http://127.0.0.1:8000/',
   APP_FILE_SERVER_URL: 'http://127.0.0.1:8000/api/',

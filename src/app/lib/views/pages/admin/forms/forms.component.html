@@ -48,18 +48,10 @@
                     <ng-container
                       *ngIf="vm?.formState?.model?.formControls?.length > 0"
                     >
-                      <div
-                        cdkDropList
-                        class="example-list"
-                        (cdkDropListDropped)="
-                          controlComponentDropped(vm?.formState?.model, $event)
-                        "
-                      >
+                      <div cdkDropList class="example-list">
                         <div
                           *ngFor="
-                            let item of sortControlsByIndex()(
-                              vm?.formState?.model
-                            )?.formControls
+                            let item of vm?.formState?.model?.formControls
                           "
                         >
                           <!-- Review isExpanded bindings-->
