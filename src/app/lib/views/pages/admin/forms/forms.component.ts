@@ -409,12 +409,12 @@ export class FormsComponent implements OnDestroy {
   }
 
   onCancelCreateFormControl(event: boolean) {
-    this.uiState.intialize();
+    this.uiState.endAction();
     this.showFormControlCreateModal = false;
   }
 
   loadFormControlComponent(event: Event) {
-    this.uiState.intialize();
+    this.uiState.endAction();
     event.preventDefault();
     this.showFormControlCreateModal = true;
   }
@@ -459,7 +459,7 @@ export class FormsComponent implements OnDestroy {
       createResult: null,
       currentForm: null,
     });
-    this.uiState.intialize();
+    this.uiState.endAction();
     this._destroy$.next({});
   }
 }
