@@ -6,12 +6,10 @@ import {
 } from './dashboard-routing.module';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../../shared.module';
-import { PartialsModule } from '../../../partials/partials.module';
 
 @NgModule({
   imports: [
     AdminDashboardRoutingModule,
-    PartialsModule,
     SharedModule,
     RouterModule
   ],

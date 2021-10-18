@@ -10,8 +10,6 @@ import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { registerLocaleData } from "@angular/common";
 import localeFr from "@angular/common/locales/fr";
 import localeFrExtra from "@angular/common/locales/extra/fr";
-import { CoreComponentModule } from "./lib/core/components";
-import { DrewlabsHttpModule } from "./lib/core/http";
 import { StorageModule } from "./lib/core/storage";
 import { AuthTokenModule } from "./lib/core/auth-token";
 import { AuthModule } from "./lib/core/auth";
@@ -26,13 +24,25 @@ import {
 import { HttpClient } from "@angular/common/http";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { TranslationService } from "./lib/core/translator";
-import { DROPZONE_CONFIG } from "ngx-dropzone-wrapper";
-import { AppComponentsLoadingComponent } from "./lib/views/partials/ui-state-components/app-component-loader.component";
-import { AppUINotificationComponent } from "./lib/views/partials/ui-state-components/app-ui-notification.component";
 import { DynamicFormControlModule } from "./lib/core/components/dynamic-inputs/dynamic-form-control";
 import { DrewlabsV2_1LoginResultHandlerFunc } from "./lib/core/auth/rxjs/operators";
 import { LoginV2_1Response } from "./lib/core/auth/contracts/v2/login.response";
 import { parseV3HttpResponse } from "./lib/core/http/core/v3/http-response";
+import { HttpModule } from "./lib/core/http";
+
+// #region UI state module imports
+import { UIStateComponentsModule } from "./lib/views/partials/ui-state-components";
+import { UIStateModule } from "./lib/core/ui-state";
+// #endregion UI state module imports
+
+// #region Dropzone configuration
+import {
+  DropzoneDict,
+  DropzoneModule,
+  DROPZONE_DICT,
+} from "./lib/core/components/dropzone";
+import { map } from "rxjs/operators";
+// #endregion Dropzone configuration
 
 export function AppDrewlabsV2_1LoginResultHandlerFunc(response: any) {
   return DrewlabsV2_1LoginResultHandlerFunc(LoginV2_1Response)(response);
@@ -51,12 +61,52 @@ export class TranslateHandler implements MissingTranslationHandler {
   };
 }
 
+export const DropzoneDictLoader = async (translate: TranslateService) => {
+  return await translate
+    .get(
+      [
+        "dictAcceptedFilesLabel",
+        "dictFallbackMessageLabel",
+        "dictFileTooBigLabel",
+        "dictInvalidFileTypeLabel",
+        "dictCancelUploadLabel",
+        "dictResponseErrorLabel",
+        "dictCancelUploadConfirmationLabel",
+        "dictRemoveFileConfirmationLabel",
+        "dictRemoveFileLabel",
+        "dictMaxFilesExceededLabel",
+        "dictUploadCanceled",
+      ],
+      {
+        maxFilesize: "{{maxFilesize}}",
+        filesize: "{{filesize}}",
+      }
+    )
+    .pipe(
+      map(
+        (translations) =>
+          ({
+            dictFallbackMessage: translations?.dictFallbackMessageLabel,
+            dictFileTooBig: translations?.dictFileTooBigLabel,
+            dictInvalidFileType: translations?.dictInvalidFileTypeLabel,
+            dictResponseError: translations?.dictResponseErrorLabel,
+            dictCancelUpload: translations?.dictCancelUploadLabel,
+            dictCancelUploadConfirmation:
+              translations?.dictCancelUploadConfirmationLabel,
+            dictRemoveFile: translations?.dictRemoveFileLabel,
+            dictRemoveFileConfirmation:
+              translations?.dictRemoveFileConfirmationLabel,
+            dictMaxFilesExceeded: translations?.dictMaxFilesExceededLabel,
+            dictUploadCanceled: translations?.dictUploadCanceled,
+            dictAcceptedFiles: translations?.dictAcceptedFilesLabel,
+          } as DropzoneDict)
+      )
+    )
+    .toPromise();
+};
+
 @NgModule({
-  declarations: [
-    AppComponent,
-    AppComponentsLoadingComponent,
-    AppUINotificationComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     FormsModule,
@@ -78,8 +128,7 @@ export class TranslateHandler implements MissingTranslationHandler {
           ],
     }),
     SharedModule.forRoot(),
-    CoreComponentModule.forRoot(),
-    DrewlabsHttpModule.forRoot({
+    HttpModule.forRoot({
       serverURL: environment.APP_SERVER_URL,
       requestResponseHandler: parseV3HttpResponse, // Modifiable
     }),
@@ -95,6 +144,28 @@ export class TranslateHandler implements MissingTranslationHandler {
       },
     }),
     BrowserAnimationsModule,
+
+    // UI State module
+    UIStateModule.forRoot(),
+    UIStateComponentsModule.forRoot(),
+    // Configure Dropzone module for root
+    DropzoneModule.forRoot({
+      dropzoneConfig: {
+        url: environment.APP_FILE_SERVER_URL,
+        maxFilesize: 10,
+        acceptedFiles: "image/*",
+        autoProcessQueue: false,
+        uploadMultiple: false,
+        maxFiles: 1,
+        addRemoveLinks: true,
+      },
+    }),
+    DynamicFormControlModule.forRoot({
+      serverConfigs: {
+        host: environment.FORM_SERVER_URL,
+        controlBindingsPath: "api/v1/control-bindings",
+      },
+    }),
     DynamicFormControlModule.forRoot({
       serverConfigs: {
         host: environment.FORM_SERVER_URL,
@@ -110,16 +181,11 @@ export class TranslateHandler implements MissingTranslationHandler {
     TranslationService,
     TranslateService,
     {
-      provide: DROPZONE_CONFIG,
-      useValue: {
-        url: environment.APP_FILE_SERVER_URL,
-        maxFilesize: 10,
-        acceptedFiles: null,
-        autoProcessQueue: false,
-        uploadMultiple: false,
-        maxFiles: 1,
-        addRemoveLinks: true,
+      provide: DROPZONE_DICT,
+      useFactory: async (translate: TranslateService) => {
+        return await DropzoneDictLoader(translate);
       },
+      deps: [TranslateService],
     },
     {
       provide: "FILE_STORE_PATH",
