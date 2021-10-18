@@ -2,11 +2,18 @@
   <div class="clr-col-12">
     <div class="card">
       <div class="card-block" *ngIf="performingAction$ | async as vm">
-        <p *ngIf="!vm?.performingAction && !typeHelper.isDefined(form)" class="text-center">
-          <span [translate]="'unavailableForm'"> </span>
+        <p
+          *ngIf="!vm?.performingAction && !typeHelper.isDefined(form)"
+          class="text-center"
+        >
+          <span [translate]="'unavailableForm'"></span>
         </p>
-        <div class="text-center top-24" *ngIf="vm?.performingAction && !typeHelper.isDefined(form)">
-          <span class="spinner spinner-inline"></span> {{ "loadingform" | translate }}
+        <div
+          class="text-center top-24"
+          *ngIf="vm?.performingAction && !typeHelper.isDefined(form)"
+        >
+          <span class="spinner spinner-inline"></span>
+          {{ 'loadingform' | translate }}
         </div>
         <ng-container>
           <div class="card-title top-24">
@@ -16,19 +23,38 @@
             {{ form?.description }}
           </div>
         </ng-container>
-        <div *ngIf="typeHelper.isDefined(form) && typeHelper.isDefined(componentFormGroup)">
+        <div
+          *ngIf="
+            typeHelper.isDefined(form) &&
+            typeHelper.isDefined(componentFormGroup)
+          "
+        >
           <ng-container class="form">
             <form class="clr-form" [formGroup]="componentFormGroup">
-              <app-dynamic-form-wapper [componentFormGroup]="componentFormGroup" [form]="form">
-              </app-dynamic-form-wapper>
+              <app-dynamic-form-wapper
+                [componentFormGroup]="componentFormGroup"
+                [form]="form"
+              ></app-dynamic-form-wapper>
               <div class="button-container">
-                <button *ngIf="!typeHelper.isDefined(selectedModule)" (click)="onFormSubmit()" type="button"
-                  class="btn btn-outline-primary" [disabled]="vm?.performingAction">
-                  <clr-icon shape="floppy"></clr-icon> Ajouter le module
+                <button
+                  *ngIf="!typeHelper.isDefined(selectedModule)"
+                  (click)="onFormSubmit()"
+                  type="button"
+                  class="btn btn-outline-primary"
+                  [disabled]="vm?.performingAction"
+                >
+                  <clr-icon shape="floppy"></clr-icon>
+                  Ajouter le module
                 </button>
-                <button *ngIf="typeHelper.isDefined(selectedModule)" (click)="onFormSubmit()" type="button"
-                  class="btn btn-outline-primary" [disabled]="vm?.performingAction">
-                  <clr-icon shape="floppy"></clr-icon> Modifier le module
+                <button
+                  *ngIf="typeHelper.isDefined(selectedModule)"
+                  (click)="onFormSubmit()"
+                  type="button"
+                  class="btn btn-outline-primary"
+                  [disabled]="vm?.performingAction"
+                >
+                  <clr-icon shape="floppy"></clr-icon>
+                  Modifier le module
                 </button>
               </div>
             </form>

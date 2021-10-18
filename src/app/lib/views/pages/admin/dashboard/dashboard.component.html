@@ -1,9 +1,14 @@
 <clr-main-container>
-    <app-app-top-bar [routesMap]="routesMap" [applicationName]="'ELEWOU'" [moduleName]="'Administration'" [routeDescriptions]="routeDefinitions"></app-app-top-bar>
-    <div class="content-container">
-      <app-nav></app-nav>
-      <main class="content-area">
-          <router-outlet></router-outlet>
-      </main>
-    </div>
+  <app-top-bar
+    [routesMap]="routesMap"
+    [applicationName]="'ELEWOU'"
+    [moduleName]="'Administration'"
+    [routeDescriptions]="routeDefinitions"
+  ></app-top-bar>
+  <div class="content-container">
+    <app-nav></app-nav>
+    <main class="content-area">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
 </clr-main-container>
