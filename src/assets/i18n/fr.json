@@ -96,7 +96,7 @@
       "authenticationFailed": "La connexion a échouée, veuillez vérifier vos crédentiels et réessayez.",
       "authenticating": "Authentification en cours, veuillez patienter...",
       "loginMaintext": "Bienvenue sur",
-      "loginSubText": "Accédez à l'application avec vos paramètres de connexion.",
+      "loginSubText": "Accédez à votre espace de travail avec vos identifiants.",
       "rememberMe": "Se souvenir de moi",
       "successful": "Vous êtes connecté avec succès. Redirection en cours...",
       "registerBtnText": "S'inscrire"

@@ -96,7 +96,7 @@
     "authenticationFailed": "Authentication failed, Please check your credentials and retry.",
     "authenticating": "Authenticating, please wait...",
     "loginMaintext": "Welcome on",
-    "loginSubText": "Use your Company ID to sign in or create one",
+    "loginSubText": "Access your workspace with your credentials",
     "rememberMe": "Remember me",
     "successful": "You are successfully logged in. Redirecting ...",
     "registerBtnText": "Register"
