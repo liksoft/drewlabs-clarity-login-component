@@ -1,8 +1,16 @@
 <ng-container *ngIf="uiState$ | async as state">
-  <app-ui-notification [uiState]="state" (endActionEvent)="onEndActionEvent($event)"></app-ui-notification>
-  <app-progress-bar [performingAction]="state.performingAction" [indeterminate]="true" [overlay]="true">
-  </app-progress-bar>
+  <app-ui-notification
+    [uiState]="state"
+    (endActionEvent)="onEndActionEvent($event)"
+  ></app-ui-notification>
+  <app-progress-bar
+    [performingAction]="state.performingAction"
+    [indeterminate]="true"
+    [overlay]="true"
+  ></app-progress-bar>
 </ng-container>
-<app-components-loading *ngIf="showComponentLoadingDirective" (isAuthenticated)="onIsAuthenticated($event)">
-</app-components-loading>
+<app-components-loading
+  *ngIf="false"
+  (isAuthenticated)="onIsAuthenticated($event)"
+></app-components-loading>
 <router-outlet></router-outlet>

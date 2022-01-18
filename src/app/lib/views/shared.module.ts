@@ -9,16 +9,16 @@ import { AuthModule } from "../core/auth";
 import { TranslateModule } from "@ngx-translate/core";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { HttpModule } from "../core/http";
-import { PipesModule } from './partials/pipes';
-import { DynamicFormControlModule } from '../core/components/dynamic-inputs/angular';
-import { ProgressBarModule } from './partials/progress-bar';
-import { DropzoneModule } from '../core/components/dropzone';
-import { UIStateComponentsModule } from './partials/ui-state-components';
-import { DatagridHeaderModule } from './partials/datgrid-header';
-import { TopBarModule } from './partials/topbar';
-import { DetailedTablePreviewModule } from './partials/detailed-table-preview';
-import { SidebarModule } from './partials/sidebar';
-import { AppModulesModule } from './partials/app-modules';
+import { PipesModule } from "./partials/pipes";
+import { DynamicFormControlModule } from "../core/components/dynamic-inputs/angular";
+import { ProgressBarModule } from "./partials/progress-bar";
+import { DropzoneModule } from "../core/components/dropzone";
+import { UIStateComponentsModule } from "./partials/ui-state-components";
+import { DatagridHeaderModule } from "./partials/datgrid-header";
+import { TopBarModule } from "./partials/topbar";
+import { DetailedTablePreviewModule } from "./partials/detailed-table-preview";
+import { SidebarModule } from "./partials/sidebar";
+import { AppModulesModule } from "./partials/app-modules";
 
 @NgModule({
   imports: [
@@ -52,7 +52,7 @@ import { AppModulesModule } from './partials/app-modules';
     TopBarModule,
     DetailedTablePreviewModule,
     SidebarModule,
-    AppModulesModule
+    AppModulesModule,
   ],
   declarations: [],
   providers: [{ provide: LOCALE_ID, useValue: "fr" }],

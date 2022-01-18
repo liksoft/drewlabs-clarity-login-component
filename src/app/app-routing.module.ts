@@ -21,7 +21,7 @@ const routes: Routes = [
   },
   {
     path: partialConfigs.routes.commonRoutes.dashboardRoute,
-    loadChildren: () => import('./lib/views/pages/admin/dashboard/dashboard.module').then(m => m.DashboardModule)
+    loadChildren: () => import('./lib/views/dashboard/dashboard.module').then(m => m.DashboardModule)
   }
 ];
 

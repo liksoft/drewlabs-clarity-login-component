@@ -1,5 +1,0 @@
-<app-role-list-presenter *ngIf="state$ | async as vm" #roleListPresenter (selectItemEvent)="selectedItem.emit($event)"
-  [showDgHeader]="true" [total]="vm?.dataSource?.total" [items]="vm?.dataSource?.data"
-  [showLoader]="vm?.performingAction" (refresh)="onDgRefresh($event)" (dgRefresh)="onDgHeaderRefresh()"
-  (navigateToCreateView)="create.emit()">
-</app-role-list-presenter>
