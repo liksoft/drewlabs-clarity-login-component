@@ -5,6 +5,20 @@
         Accédez aux transactions financières effectuées via l'API de collecte.
     </div>
     <div class="dashboard-content">
+      <div class="select-partner-network">
+        <form action="">
+          <clr-select-container>
+            <label>Sélection du partenaire</label>
+            <select clrSelect>
+              <option value="53021">BTCI</option>
+              <option value="54021">UTB</option>
+              <option value="55021">ECOBANK</option>
+              <option value="55021">ORABANK</option>
+              <option value="55021">AFRICAN LEASE</option>
+            </select>
+          </clr-select-container>
+        </form>
+      </div>
       <clr-datagrid class="lik-datagrid" *ngIf="transactions">
         <clr-dg-column>ID</clr-dg-column>
         <clr-dg-column>Date</clr-dg-column>
