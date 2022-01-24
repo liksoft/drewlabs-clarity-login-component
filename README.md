@@ -4,9 +4,9 @@ Cette application permet d'effectuer la gestion des clients dans le système d'i
 ### Fonctionnalités de l'application : 
 
 - [ ] **TABLEAU DE BORD**
-  - [] Mise en place des liens et icônes sur le tableau de bord de l'application.
-  - [] TOPBAR Elements .
-  - [] SIDEBAR Elements .
+  - [ ] Mise en place des liens et icônes sur le tableau de bord de l'application.
+  - [ ] TOPBAR Elements .
+  - [ ] SIDEBAR Elements .
 - [ ] **MODULE MEMBRE/CLIENT (UI)**
   - [ ] Deux types de MEMBRE : Personne physique / Personne Morale
 - [ ] **ADHÉSION**  (Adhésion de nouveau MEMBRE dans le SI)
