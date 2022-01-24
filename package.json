@@ -51,6 +51,7 @@
     "@angular/cli": "~12.2.10",
     "@angular/compiler-cli": "~12.2.10",
     "@angular/language-service": "~12.2.10",
+    "@schematics/angular": "^13.1.4",
     "@types/crypto-js": "^3.1.45",
     "@types/file-saver": "^2.0.1",
     "@types/google-libphonenumber": "^7.4.17",

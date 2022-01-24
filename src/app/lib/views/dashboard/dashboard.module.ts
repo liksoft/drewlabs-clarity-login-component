@@ -6,6 +6,7 @@ import {
 } from './dashboard-routing.module';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared.module';
+import { AdhesionMembreComponent } from './pages/adhesion-membre/adhesion-membre.component';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { SharedModule } from '../shared.module';
     RouterModule
   ],
   declarations: [
-    ...MODULE_DECLARATIONS
+    ...MODULE_DECLARATIONS,
+    AdhesionMembreComponent
   ],
   exports: [...MODULE_DECLARATIONS],
   providers: [...COMPONENTS_PROVIDERS],

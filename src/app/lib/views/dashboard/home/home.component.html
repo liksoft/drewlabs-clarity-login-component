@@ -1,44 +1,19 @@
 <div class="clr-row">
   <div class="clr-col-12 lik-card">
-    <div class="lik-card-title">Gestion des opérations de paiement</div>
+    <div class="lik-card-title">Gestion de la clientèle</div>
     <div class="lik-card-description">
-        Accédez aux transactions financières effectuées via l'API de collecte.
+        Assurer les opérations sur les clients.
+    </div>
+    <div class="home-callout clr-row">
+      <div class="clr-col">
+        <div class="card">
+          <div class="card-header">
+
+          </div>
+        </div>
+      </div>
     </div>
     <div class="dashboard-content">
-      <div class="select-partner-network">
-        <form action="">
-          <clr-select-container>
-            <label>Sélection du partenaire</label>
-            <select clrSelect>
-              <option value="53021">BTCI</option>
-              <option value="54021">UTB</option>
-              <option value="55021">ECOBANK</option>
-              <option value="55021">ORABANK</option>
-              <option value="55021">AFRICAN LEASE</option>
-            </select>
-          </clr-select-container>
-        </form>
-      </div>
-      <clr-datagrid class="lik-datagrid" *ngIf="transactions">
-        <clr-dg-column>ID</clr-dg-column>
-        <clr-dg-column>Date</clr-dg-column>
-        <clr-dg-column>Partenaire</clr-dg-column>
-        <clr-dg-column>Transactions</clr-dg-column>
-        <clr-dg-column>Fichier</clr-dg-column>
-
-        <clr-dg-row *ngFor="let transaction of transactions">
-          <clr-dg-cell>{{transaction.id}}</clr-dg-cell>
-          <clr-dg-cell>{{transaction.date | date }}</clr-dg-cell>
-          <clr-dg-cell>{{transaction.partenaire}}</clr-dg-cell>
-          <clr-dg-cell>{{transaction.transaction}}</clr-dg-cell>
-          <clr-dg-cell>
-              <ng-container *ngIf="transaction.transaction"><button class="btn btn-primary btn-sm"><clr-icon shape="arrow" dir="down"></clr-icon> Télécharger</button></ng-container>
-              <ng-container *ngIf="!transaction.transaction">Aucun fichier</ng-container>
-          </clr-dg-cell>
-        </clr-dg-row>
-
-        <clr-dg-footer>{{transactions.length}} transactions</clr-dg-footer>
-      </clr-datagrid>
 
     </div>
   </div>
