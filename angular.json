@@ -39,7 +39,8 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/app/lib/views/global-styles/assets"
             ],
             "styles": [
               "node_modules/@clr/icons/clr-icons.min.css",
