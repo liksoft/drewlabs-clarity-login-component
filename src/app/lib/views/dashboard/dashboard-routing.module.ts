@@ -1,3 +1,4 @@
+import { AdhesionMembreComponent } from './pages/adhesion-membre/adhesion-membre.component';
 import { NgModule, LOCALE_ID, Provider } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { AdminDashboardComponent } from "./dashboard.component";
@@ -32,6 +33,14 @@ export const getRoutes = () => {
         authorizations: adminAuthorizations,
       },
     },
+    {
+      path: partialConfigs.routes.commonRoutes.registrationsRoute,
+      component: AdhesionMembreComponent,
+      canActivate: [AuthGuardService, AuthorizationsGuard],
+      data: {
+        authorizations: adminAuthorizations,
+      },
+    },
   ];
   return [
     {
@@ -44,6 +53,7 @@ export const getRoutes = () => {
     },
   ] as Routes;
 };
+
 
 @NgModule({
   imports: [RouterModule.forChild(getRoutes())],
