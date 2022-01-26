@@ -5,8 +5,8 @@ Cette application permet d'effectuer la gestion des clients dans le système d'i
 
 - [x] **TABLEAU DE BORD**
   - [ ] Mise en place des liens et icônes sur le tableau de bord de l'application.
-  - [ ] TOPBAR Elements .
-  - [ ] SIDEBAR Elements .
+  - [x] TOPBAR Elements .
+  - [x] SIDEBAR Elements .
 - [ ] **MODULE MEMBRE/CLIENT (UI)**
   - [ ] Deux types de MEMBRE : Personne physique / Personne Morale
 - [ ] **ADHÉSION**  (Adhésion de nouveau MEMBRE dans le SI)
