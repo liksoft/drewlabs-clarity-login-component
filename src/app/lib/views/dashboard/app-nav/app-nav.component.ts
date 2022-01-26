@@ -19,10 +19,9 @@ export class AppNavComponent implements OnInit {
   public ngOnInit(): void {
     this.routeDefinitions = {
       navbar_dashboard: "Tableau de Bord",
-      registration_home: "Clients",
+      registration_home: "Membres",
       members_add: "Ajouter",
       members_list: "Annuaire",
-      member_view: "Consulter",
       procuration_list: "Procurations",
     };
     this.routesMap = [
@@ -37,24 +36,19 @@ export class AppNavComponent implements OnInit {
         routeIcon: "users",
         children: [
           {
-            key: "members_add",
-            routeIcon: "add-text",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.registrationsRoute}`
-          },
-          {
             key: "members_list",
-            routeIcon: "list",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.registrationsRoute}`
+            routeIcon: "add-text",
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.clientsHomeRoute}`
           },
           {
-            key: "member_view",
-            routeIcon: "id-badge",
-            // route: ``
+            key: "members_add",
+            routeIcon: "list",
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.clientsAddEditRoute}`
           },
           {
             key: "procuration_list",
             routeIcon: "paste",
-            // route: ``,
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.procurationsManageRoute}`,
           },
 
         ],

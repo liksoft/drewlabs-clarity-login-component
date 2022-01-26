@@ -1,3 +1,4 @@
+import { MemberViewComponent } from './pages/adhesion-membre/member-view/member-view.component';
 import { AdhesionMembreComponent } from './pages/adhesion-membre/adhesion-membre.component';
 import { NgModule, LOCALE_ID, Provider } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
@@ -10,6 +11,8 @@ import { SettingsComponent } from "./settings/settings.component";
 import { UpdatePasswordViewComponent } from "./settings/update-password-view/update-password-view.component";
 import { AuthorizationsGuard } from "../../core/auth/core/auth-guard.service";
 import { AUTH_RESOURCES_AUTHORIZATIONS } from "../authorizations";
+import { MemberAddEditComponent } from './pages/adhesion-membre/member-add-edit/member-add-edit.component';
+import { ProcurationsComponent } from './pages/procurations/procurations.component';
 
 export const getRoutes = () => {
   const adminAuthorizations = AUTH_RESOURCES_AUTHORIZATIONS;
@@ -34,8 +37,32 @@ export const getRoutes = () => {
       },
     },
     {
-      path: partialConfigs.routes.commonRoutes.registrationsRoute,
+      path: partialConfigs.routes.commonRoutes.clientsHomeRoute,
       component: AdhesionMembreComponent,
+      canActivate: [AuthGuardService, AuthorizationsGuard],
+      data: {
+        authorizations: adminAuthorizations,
+      },
+    },
+    {
+      path: partialConfigs.routes.commonRoutes.clientsAddEditRoute,
+      component: MemberAddEditComponent,
+      canActivate: [AuthGuardService, AuthorizationsGuard],
+      data: {
+        authorizations: adminAuthorizations,
+      },
+    },
+    {
+      path: partialConfigs.routes.commonRoutes.clientsViewRoute,
+      component: MemberViewComponent,
+      canActivate: [AuthGuardService, AuthorizationsGuard],
+      data: {
+        authorizations: adminAuthorizations,
+      },
+    },
+    {
+      path: partialConfigs.routes.commonRoutes.procurationsManageRoute,
+      component: ProcurationsComponent,
       canActivate: [AuthGuardService, AuthorizationsGuard],
       data: {
         authorizations: adminAuthorizations,

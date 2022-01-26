@@ -1,1 +1,70 @@
-<p>adhesion-membre works!</p>
+<div class="clr-row">
+  <div class="clr-col-12 lik-card">
+    <div class="lik-card-title">Annuaire des Membres</div>
+    <div class="lik-card-description">
+        Consulter, modifier des informations et des statuts des membres
+    </div>
+    <div class="clients-list clr-row">
+      <!-- Card Start -->
+      <div class="clr-col-12 clr-data">
+        <clr-tabs clrLayout="horizontal">
+          <clr-tab>
+            <button clrTabLink>Personnes physiques</button>
+            <clr-tab-content *clrIfActive>
+              <clr-datagrid class="lik-datagrid" *ngIf="individuals"  [clrDgLoading]="loading"  [(clrDgSelected)]="rowsSelected">
+                <clr-dg-column>N° membre</clr-dg-column>
+                <clr-dg-column>Date Ouv.</clr-dg-column>
+                <clr-dg-column>Nom</clr-dg-column>
+                <clr-dg-column>Prénoms</clr-dg-column>
+                <clr-dg-column>Lien d'affaires</clr-dg-column>
+                <clr-dg-column>Type</clr-dg-column>
+                <clr-dg-column>Téléphone</clr-dg-column>
+                <clr-dg-column>Sexe</clr-dg-column>
+                <clr-dg-column>Etat-Civil</clr-dg-column>
+                <clr-dg-column>Statut</clr-dg-column>
+                <clr-dg-column></clr-dg-column>
+
+                <clr-dg-row *ngFor="let member of individuals" [clrDgItem]="member.id">
+                  <clr-dg-action-overflow>
+                    <button class="action-item" >
+                      <clr-icon shape="user"></clr-icon> Fiche signalétique</button>
+                    <button class="action-item" >
+                      <clr-icon shape="edit"></clr-icon> Modifier infos</button>
+                    <button class="action-item">
+                      <clr-icon shape="tasks"></clr-icon> Changer statut</button>
+                    <button class="action-item">
+                      <clr-icon shape="close"></clr-icon>
+                      Clotûrer Dossier</button>
+                  </clr-dg-action-overflow>
+
+                  <clr-dg-cell>{{member.number}}</clr-dg-cell>
+                  <clr-dg-cell>{{member.opening_date | date }}</clr-dg-cell>
+                  <clr-dg-cell>{{member.lastname}}</clr-dg-cell>
+                  <clr-dg-cell>{{member.firstname}}</clr-dg-cell>
+                  <clr-dg-cell>{{member.business_relation}}</clr-dg-cell>
+                  <clr-dg-cell>{{member.type}}</clr-dg-cell>
+                  <clr-dg-cell>{{member.phone}}</clr-dg-cell>
+                  <clr-dg-cell>{{member.sex}}</clr-dg-cell>
+                  <clr-dg-cell>{{member.civil_state}}</clr-dg-cell>
+                  <clr-dg-cell>{{member.member_status}}</clr-dg-cell>
+                  <clr-dg-cell>
+                      <ng-container *ngIf="member.id"><button class="btn btn-primary btn-sm"><clr-icon shape="user"></clr-icon> Fiche</button></ng-container>
+                  </clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>{{individuals.length}} membres</clr-dg-footer>
+              </clr-datagrid>
+            </clr-tab-content>
+          </clr-tab>
+          <clr-tab>
+            <button clrTabLink>Personnes Morales</button>
+            <clr-tab-content>
+              Personnes morales
+            </clr-tab-content>
+          </clr-tab>
+        </clr-tabs>
+      </div>
+      <!-- Card End -->
+    </div>
+  </div>
+</div>

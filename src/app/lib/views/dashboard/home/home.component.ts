@@ -9,6 +9,5 @@ import { RoutesMap } from "src/app/lib/core/routes";
 })
 export class AdminDashboardHomeComponent {
   public navbarRoutesMap: RoutesMap[];
-
   constructor(private auth: AuthService) {}
 }
