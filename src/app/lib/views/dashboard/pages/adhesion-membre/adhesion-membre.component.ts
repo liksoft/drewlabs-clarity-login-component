@@ -435,4 +435,38 @@ export class AdhesionMembreComponent {
       "children_count" : 0,
     },
   ];
+
+  public morals = [
+    {
+      "id" : 1,
+      "number" : 1,
+      "opening_date" : "2018-05-15 12:45:44",
+      "firstname" : 'RODRIGUE',
+      "lastname" : "KOLANI",
+      "business_relation" : "RÉGULIER",
+      "type" : "MORAL",
+      "category" : "MEMBRE RÉGULIER",
+      "phone" : "+22892146591",
+      "sex" : "M",
+      "nationality" : "TG",
+      "birthdate" : "1988-04-10 00:00:00",
+      "id_type" : "PASSEPORT",
+      "id_number" : "EB2257546",
+      "id_authority" : "DGDN",
+      "id_country" : "TG",
+      "id_expiration" : "2025-11-12 12:45:44",
+      "member_status" : "ACTIF",
+      "reactivation_date" : "",
+      "second_lastname" : "",
+      "second_firstname" : "MAGANAWE",
+      "common_name" : "RODRIGO",
+      "job" : "ARCHITECTE",
+      "activity" : "PROFESSION LIBERALE",
+      "activity_sector" : "URBANISME & CONSTRUCTION",
+      "civil_state" : "CELIBATAIRE",
+      "spouse_firstname" : "",
+      "spouse_lastname" : "",
+      "children_count" : 0,
+    },
+  ];
 }
