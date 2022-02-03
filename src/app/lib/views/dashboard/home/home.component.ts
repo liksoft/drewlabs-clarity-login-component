@@ -119,7 +119,67 @@ export class AdminDashboardHomeComponent {
       {
         name: 'TSEVIE',
         y: 357
-      }
+      },
+      {
+        name: 'AGOE',
+        y: 1014
+      },
+      {
+        name: 'ADIDOGOME',
+        y: 521
+      },
+      {
+        name: 'BAGUIDA',
+        y: 156
+      },
+      {
+        name: 'KPOTA',
+        y: 243
+      },
+      {
+        name: 'NYEKONAKPOE',
+        y: 260
+      },
+      {
+        name: 'AGBALEPEDO',
+        y: 131
+      },
+      {
+        name: 'AMADAHOME',
+        y: 28
+      },
+      {
+        name: 'AVEPOZO',
+        y: 82
+      },
+      {
+        name: 'TOTSI',
+        y: 97
+      },
+      {
+        name: 'ADAMAVO',
+        y: 124
+      },
+      {
+        name: 'KPOGAN',
+        y: 80
+      },
+      {
+        name: 'ADETIKOPE',
+        y: 134
+      },
+      {
+        name: 'TOKOIN',
+        y: 397
+      },
+      {
+        name: 'HANOUKOPE',
+        y: 184
+      },
+      {
+        name: 'KEGUE',
+        y: 124
+      },
     ]
     }]
   }
