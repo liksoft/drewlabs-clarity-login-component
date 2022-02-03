@@ -10,12 +10,14 @@ import { AdhesionMembreComponent } from './pages/adhesion-membre/adhesion-membre
 import { ProcurationsComponent } from './pages/procurations/procurations.component';
 import { MemberViewComponent } from './pages/adhesion-membre/member-view/member-view.component';
 import { MemberAddEditComponent } from './pages/adhesion-membre/member-add-edit/member-add-edit.component';
+import { HighchartsChartModule } from 'highcharts-angular';
 
 @NgModule({
   imports: [
     AdminDashboardRoutingModule,
     SharedModule,
-    RouterModule
+    RouterModule,
+    HighchartsChartModule
   ],
   declarations: [
     ...MODULE_DECLARATIONS,

@@ -4,31 +4,48 @@
     <div class="lik-card-description">
         Assurer les opérations sur les clients.
     </div>
-    <div class="clients-list clr-row">
-      <!-- Card Start -->
-      <div class="clr-col">
-        <div class="card big-card">
-          <div class="card-header">
-            <clr-icon shape="users"></clr-icon> Statistiques des clients
-          </div>
-          <div class="card-block">
-            <div class="card-text">
-
-            </div>
-          </div>
-          <div class="card-footer">
-
-          </div>
-        </div>
+    <div class="hero-area clr-row">
+      <div class="clr-col-6">
+        <highcharts-chart
+            [Highcharts] = "highcharts" 
+            [options] = "chartOptions" 
+            style = "width: 100%; height: 300px; display: block;">
+        </highcharts-chart>
       </div>
-      <!-- Card End -->
+      <div class="clr-col-6">
+        <highcharts-chart
+            [Highcharts] = "highcharts" 
+            [options] = "secondOptions" 
+            style = "width: 100%; height: 300px; display: block;">
+        </highcharts-chart>
+      </div>
     </div>
+
     <div class="home-actions clr-row">
       <!-- Card Start -->
       <div class="clr-col">
         <div class="card big-card">
           <div class="card-header">
-            <clr-icon shape="add-text"></clr-icon> Nouveau Client
+            <clr-icon shape="users" size="32"></clr-icon> Annuaire
+          </div>
+          <div class="card-block">
+            <div class="card-text">
+            Parcourir, gérer et faire des opérations sur la liste des membres de la coopêrative
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-primary">
+              <clr-icon shape="arrow" dir="right" class="has-badge"></clr-icon> Ajouter
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Card End -->
+      <!-- Card Start -->
+      <div class="clr-col">
+        <div class="card big-card">
+          <div class="card-header">
+            <clr-icon shape="add-text"  size="32"></clr-icon> Nouveau Client
           </div>
           <div class="card-block">
             <div class="card-text">
@@ -36,7 +53,7 @@
             </div>
           </div>
           <div class="card-footer">
-            <button class="btn btn-primary btn-sm">
+            <button class="btn btn-primary">
               <clr-icon shape="arrow" dir="right" class="has-badge"></clr-icon> Ajouter
             </button>
           </div>
@@ -48,7 +65,7 @@
       <div class="clr-col">
         <div class="card big-card">
           <div class="card-header">
-            <clr-icon shape="paste"></clr-icon> Procurations
+            <clr-icon shape="paste"  size="32"></clr-icon> Procurations
           </div>
           <div class="card-block">
             <div class="card-text">
@@ -56,7 +73,7 @@
             </div>
           </div>
           <div class="card-footer">
-            <button class="btn btn-primary btn-sm">
+            <button class="btn btn-primary">
               <clr-icon shape="arrow" dir="right" class="has-badge"></clr-icon> Ajouter
             </button>
           </div>
