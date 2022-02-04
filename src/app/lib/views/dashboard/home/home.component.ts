@@ -8,16 +8,18 @@ import * as Highcharts from 'highcharts';
   templateUrl: "./home.component.html",
   styles: [],
 })
+
 export class AdminDashboardHomeComponent {
   
   public navbarRoutesMap: RoutesMap[];
-
   constructor(private auth: AuthService) {
   }
+
   highcharts = Highcharts;
+  // line chart
   chartOptions: Highcharts.Options = {
     title: {
-      text: "Evolution des adhésions à la COOPECTRASSTO"
+      text: "Evolution des adhésions"
     },
     xAxis: {
       categories: ["Jan", "Fev", "Mar", "Avr", "Mai", "Juin",
@@ -29,7 +31,7 @@ export class AdminDashboardHomeComponent {
       }
     },
     series: [{
-      data: [800, 890, 920, 1022, 789, 2450, 3200, 600, 1890, 2500, 3200, 3400, 3500, 3520],
+      data: [800, 890, 920, 1022, 789, 2450, 3200, 5200, 1890, 2500, 3200, 3400, 3500, 5520],
       type: 'line',
       name: 'Personnes physiques'
     },
@@ -41,6 +43,7 @@ export class AdminDashboardHomeComponent {
   ],
     
   }
+  // Pie Chart
   secondOptions: Highcharts.Options = {
     chart: {
       plotBackgroundColor: 'white',
@@ -71,8 +74,6 @@ export class AdminDashboardHomeComponent {
       data: [{
         name: 'ATAKPAME',
         y: 508,
-        sliced: true,
-        selected: true
       }, {
         name: 'KPALIME',
         y: 328
@@ -122,7 +123,9 @@ export class AdminDashboardHomeComponent {
       },
       {
         name: 'AGOE',
-        y: 1014
+        y: 1014,
+        sliced: true,
+        selected: true
       },
       {
         name: 'ADIDOGOME',

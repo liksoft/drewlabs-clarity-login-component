@@ -11,6 +11,7 @@ import { ProcurationsComponent } from './pages/procurations/procurations.compone
 import { MemberViewComponent } from './pages/adhesion-membre/member-view/member-view.component';
 import { MemberAddEditComponent } from './pages/adhesion-membre/member-add-edit/member-add-edit.component';
 import { HighchartsChartModule } from 'highcharts-angular';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   imports: [

@@ -4,7 +4,8 @@
     <div class="lik-card-description">
         Consulter, modifier des informations et des statuts des membres
     </div>
-    <div class="clients-list clr-row">
+    <div class="divider"></div>
+    <div class="data-container clr-row">
       <!-- Card Start -->
       <div class="clr-col-12 clr-data">
         <clr-tabs clrLayout="horizontal">
@@ -56,10 +57,50 @@
               </clr-datagrid>
             </clr-tab-content>
           </clr-tab>
+
           <clr-tab>
             <button clrTabLink>Personnes Morales</button>
             <clr-tab-content>
-              Personnes morales
+              <clr-datagrid class="lik-datagrid" *ngIf="morals"  [clrDgLoading]="loading"  [(clrDgSelected)]="rowsSelected">
+              
+                <clr-dg-column>N° membre</clr-dg-column>
+                <clr-dg-column>Date Ouv.</clr-dg-column>
+                <clr-dg-column>Nom commercial</clr-dg-column>
+                <clr-dg-column>Raison Sociale</clr-dg-column>
+                <clr-dg-column>Secteur activité</clr-dg-column>
+                <clr-dg-column>Type</clr-dg-column>
+                <clr-dg-column>Télëphone</clr-dg-column>
+                <clr-dg-column>Statut</clr-dg-column>
+                <clr-dg-column></clr-dg-column>
+
+                <clr-dg-row *ngFor="let member of morals" [clrDgItem]="member.id">
+                  <clr-dg-action-overflow>
+                    <button class="action-item" >
+                      <clr-icon shape="user"></clr-icon> Fiche signalétique</button>
+                    <button class="action-item" >
+                      <clr-icon shape="edit"></clr-icon> Modifier infos</button>
+                    <button class="action-item">
+                      <clr-icon shape="tasks"></clr-icon> Changer statut</button>
+                    <button class="action-item">
+                      <clr-icon shape="close"></clr-icon>
+                      Clotûrer Dossier</button>
+                  </clr-dg-action-overflow>
+
+                  <clr-dg-cell>{{member.number}}</clr-dg-cell>
+                  <clr-dg-cell>{{member.opening_date | date }}</clr-dg-cell>
+                  <clr-dg-cell>{{member.commercial}}</clr-dg-cell>
+                  <clr-dg-cell>{{member.social}}</clr-dg-cell>
+                  <clr-dg-cell>{{member.activity_sector}}</clr-dg-cell>
+                  <clr-dg-cell>{{member.activity}}</clr-dg-cell>
+                  <clr-dg-cell>{{member.phone}}</clr-dg-cell>
+                  <clr-dg-cell>{{member.member_status}}</clr-dg-cell>
+                  <clr-dg-cell>
+                      <ng-container *ngIf="member.id"><button class="btn btn-primary btn-sm"><clr-icon shape="user"></clr-icon> Fiche</button></ng-container>
+                  </clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>{{morals.length}} membres</clr-dg-footer>
+              </clr-datagrid>
             </clr-tab-content>
           </clr-tab>
         </clr-tabs>

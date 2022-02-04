@@ -1,1 +1,63 @@
-<p>procurations works!</p>
+<div class="clr-row">
+    <div class="lik-card">
+        <div class="lik-card-title">Gestion des Procurations</div>
+        <div class="lik-card-description">
+            Enregistrer, modifier des Procurations de membres. A l’aide d’une procuration, les mandataires agissent au nom et pour le compte du titulaire du compte (mandat). 
+        </div>
+        <div class="divider"></div>
+        <div class="form-container clr-row">
+        <!-- Card Start -->
+        <div class="clr-col-12 clr-data">
+            <h3>Ajouter / modifier une procuration</h3>
+            <div class="form-footer">
+                <button class="btn btn-primary">
+                    <clr-icon shape="floppy" dir="right" class="has-badge"></clr-icon> Enregistrer
+                </button>
+            </div>
+        </div>
+        <!-- Card End -->
+        </div>
+        <div class="divider"></div>
+        <div class="data-container clr-row">
+        <!-- Card Start -->
+        <div class="clr-col-12 clr-data">
+            <h3>Liste des procurations</h3>
+            <clr-datagrid class="lik-datagrid" *ngIf="procurationsList"  [clrDgLoading]="loading"  [(clrDgSelected)]="rowsSelected">
+              
+                <clr-dg-column>N°</clr-dg-column>
+                <clr-dg-column>Date Enr.</clr-dg-column>
+                <clr-dg-column>Membre</clr-dg-column>
+                <clr-dg-column>Nom Mandat</clr-dg-column>
+                <clr-dg-column>Prénoms Mandat</clr-dg-column>
+                <clr-dg-column>Téléphone Mandat</clr-dg-column>
+                <clr-dg-column>Statut</clr-dg-column>
+
+                <clr-dg-row *ngFor="let item of procurationsList" [clrDgItem]="item.id">
+                  <clr-dg-action-overflow>
+                    <button class="action-item" >
+                      <clr-icon shape="user"></clr-icon> Afficher procuration</button>
+                    <button class="action-item" >
+                      <clr-icon shape="edit"></clr-icon> Modifier</button>
+                    <button class="action-item">
+                      <clr-icon shape="trash"></clr-icon>
+                      Supprimer </button>
+                  </clr-dg-action-overflow>
+
+                  <clr-dg-cell>{{item.id}}</clr-dg-cell>
+                  <clr-dg-cell>{{item.date | date }}</clr-dg-cell>
+                  <clr-dg-cell>{{item.memberId}}</clr-dg-cell>
+                  <clr-dg-cell>{{item.lastName}}</clr-dg-cell>
+                  <clr-dg-cell>{{item.firstName}}</clr-dg-cell>
+                  <clr-dg-cell>{{item.phone}}</clr-dg-cell>
+                  <clr-dg-cell>{{item.status}}</clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>{{procurationsList.length}} procurations</clr-dg-footer>
+              </clr-datagrid>
+        </div>
+        <!-- Card End -->
+        </div>
+
+    </div>
+  </div>
+  
