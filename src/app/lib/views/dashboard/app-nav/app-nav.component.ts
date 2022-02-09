@@ -19,10 +19,17 @@ export class AppNavComponent implements OnInit {
   public ngOnInit(): void {
     this.routeDefinitions = {
       navbar_dashboard: "Tableau de Bord",
-      registration_home: "Membres",
+      members_menu: "Membres",
       members_add: "Ajouter",
       members_list: "Annuaire",
       procuration_list: "Procurations",
+      account_menu: "Comptes",
+      cashier_menu: "Caisse",
+      cashier_home: "Gestion Caisses",
+      cashier_new_operation: "Nouvelle opération",
+      credits_home: "Crédits",
+      dat_home: "Dépôts à terme",
+      bank_home: "Banque",
     };
     this.routesMap = [
       {
@@ -31,8 +38,9 @@ export class AppNavComponent implements OnInit {
         route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.homeRoute}`
         // children: [],
       },
+     
       {
-        key: "registration_home",
+        key: "members_menu",
         routeIcon: "users",
         children: [
           {
@@ -52,6 +60,47 @@ export class AppNavComponent implements OnInit {
           },
 
         ],
+      },
+      {
+        key: "account_menu",
+        routeIcon: "wallet",
+        route: ``
+        // children: [],
+      },
+      {
+        key: "credits_home",
+        routeIcon: "sync",
+        route: ``
+        // children: [],
+      },
+      {
+        key: "cashier_menu",
+        routeIcon: "store",
+        route: ``,
+        children: [
+          {
+            key: "cashier_home",
+            routeIcon: "plus-circle",
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.clientsHomeRoute}`
+          },
+          {
+            key: "cashier_new_operation",
+            routeIcon: "plus-circle",
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.clientsHomeRoute}`
+          },
+        ],
+      },
+      {
+        key: "dat_home",
+        routeIcon: "volume",
+        route: ``
+        // children: [],
+      },
+      {
+        key: "bank_home",
+        routeIcon: "bank",
+        route: ``
+        // children: [],
       },
     ];
   }
