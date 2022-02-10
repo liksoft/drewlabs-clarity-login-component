@@ -2,13 +2,15 @@
     <div class="lik-card">
         <div class="lik-card-title">Gestion des Procurations</div>
         <div class="lik-card-description">
-            Enregistrer, modifier des Procurations de membres. A l’aide d’une procuration, les mandataires agissent au nom et pour le compte du titulaire du compte (mandat). 
+            Enregistrer, modifier des Procurations de membres. A l’aide d’une procuration, les mandataires agissent au nom et pour le compte du titulaire du compte (mandat).
         </div>
         <div class="divider"></div>
         <div class="form-container clr-row">
         <!-- Card Start -->
         <div class="clr-col-12 clr-data">
             <h3>Ajouter / modifier une procuration</h3>
+            <div class="form-loading">Chargement du formulaire en cours...</div>
+
             <div class="form-footer">
                 <button class="btn btn-primary">
                     <clr-icon shape="floppy" dir="right" class="has-badge"></clr-icon> Enregistrer
@@ -23,7 +25,7 @@
         <div class="clr-col-12 clr-data">
             <h3>Liste des procurations</h3>
             <clr-datagrid class="lik-datagrid" *ngIf="procurationsList"  [clrDgLoading]="loading"  [(clrDgSelected)]="rowsSelected">
-              
+
                 <clr-dg-column>N°</clr-dg-column>
                 <clr-dg-column>Date Enr.</clr-dg-column>
                 <clr-dg-column>Membre</clr-dg-column>
@@ -60,4 +62,3 @@
 
     </div>
   </div>
-  

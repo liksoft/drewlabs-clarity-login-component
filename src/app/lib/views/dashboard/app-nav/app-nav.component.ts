@@ -19,17 +19,38 @@ export class AppNavComponent implements OnInit {
   public ngOnInit(): void {
     this.routeDefinitions = {
       navbar_dashboard: "Tableau de Bord",
-      members_menu: "Membres",
+      // CLIENTS
+      clients_menu: "Clients",
+      clients_home: "Aperçu Clients",
+      clients_list: "Clients",
       members_add: "Ajouter",
       members_list: "Annuaire",
       procuration_list: "Procurations",
+      // COMPTES
       account_menu: "Comptes",
+      account_home:"Aperçu des comptes",
+      account_list: "Liste des comptes",
+      // CAISSE
       cashier_menu: "Caisse",
-      cashier_home: "Gestion Caisses",
-      cashier_new_operation: "Nouvelle opération",
-      credits_home: "Crédits",
-      dat_home: "Dépôts à terme",
-      bank_home: "Banque",
+      cashier_home: "Aperçu de la Caisse",
+      cashier_list: "Liste des Caisses",
+      cashier_operation_add: "Enregistrer opération",
+      cashier_add: "Créer caisse",
+      // CREDITS
+      credits_menu: "Crédits",
+      credits_home: "Aperçu des Crédits",
+      credits_list: "Liste des crédits",
+      credit_add : "Enregistrer un crédit",
+      // BANQUES
+      bank_menu: "Banques",
+      bank_home: "Aperçu des banques",
+      bank_list: "Liste des Banques",
+      bank_add: "Enregistrer une banque",
+      // DAT
+      dat_menu: "Dépôts à terme",
+      dat_home: "Aperçu des DAT",
+      dat_list: "Liste des DAT",
+      dat_add: "Enregister un DAT",
     };
     this.routesMap = [
       {
@@ -38,15 +59,20 @@ export class AppNavComponent implements OnInit {
         route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.homeRoute}`
         // children: [],
       },
-     
+
       {
-        key: "members_menu",
+        key: "clients_menu",
         routeIcon: "users",
         children: [
           {
+            key: "clients_home",
+            routeIcon: "tools",
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.clientsHomeRoute}`
+          },
+          {
             key: "members_list",
             routeIcon: "add-text",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.clientsHomeRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.clientsListRoute}`
           },
           {
             key: "members_add",
@@ -55,7 +81,7 @@ export class AppNavComponent implements OnInit {
           },
           {
             key: "procuration_list",
-            routeIcon: "paste",
+            routeIcon: "list",
             route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.procurationsManageRoute}`,
           },
 
@@ -64,14 +90,41 @@ export class AppNavComponent implements OnInit {
       {
         key: "account_menu",
         routeIcon: "wallet",
-        route: ``
-        // children: [],
+        route: ``,
+        children: [
+          {
+            key: "account_home",
+            routeIcon: "tools",
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.accountHomeRoute}`
+          },
+          {
+            key: "account_list",
+            routeIcon: "list",
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.accountListRoute}`
+          },
+        ],
       },
       {
-        key: "credits_home",
+        key: "credits_menu",
         routeIcon: "sync",
-        route: ``
-        // children: [],
+        route: ``,
+        children: [
+          {
+            key: "credits_home",
+            routeIcon: "tools",
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.creditsHomeRoute}`
+          },
+          {
+            key: "credit_add",
+            routeIcon: "add-text",
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.creditAddRoute}`
+          },
+          {
+            key: "credits_list",
+            routeIcon: "list",
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.creditsListRoute}`
+          },
+        ],
       },
       {
         key: "cashier_menu",
@@ -81,26 +134,68 @@ export class AppNavComponent implements OnInit {
           {
             key: "cashier_home",
             routeIcon: "plus-circle",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.clientsHomeRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.cashierHomeRoute}`
           },
           {
-            key: "cashier_new_operation",
-            routeIcon: "plus-circle",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.clientsHomeRoute}`
+            key: "cashier_add",
+            routeIcon: "list",
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.cashierAddRoute}`
+          },
+          {
+            key: "cashier_operation_add",
+            routeIcon: "add-text",
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.cashierOperationAddRoute}`
+          },
+          {
+            key: "cashier_list",
+            routeIcon: "list",
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.cashierListRoute}`
           },
         ],
       },
       {
-        key: "dat_home",
+        key: "dat_menu",
         routeIcon: "volume",
-        route: ``
-        // children: [],
+        route: ``,
+        children: [
+          {
+            key: "dat_home",
+            routeIcon: "tools",
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.datHomeRoute}`
+          },
+          {
+            key: "dat_add",
+            routeIcon: "plus-circle",
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.datAddRoute}`
+          },
+          {
+            key: "dat_list",
+            routeIcon: "list",
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.datListRoute}`
+          },
+        ],
       },
       {
-        key: "bank_home",
+        key: "bank_menu",
         routeIcon: "bank",
-        route: ``
-        // children: [],
+        route: ``,
+        children: [
+          {
+            key: "bank_home",
+            routeIcon: "tools",
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.bankHomeRoute}`
+          },
+          {
+            key: "bank_add",
+            routeIcon: "plus-circle",
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.bankAddRoute}`
+          },
+          {
+            key: "bank_list",
+            routeIcon: "list",
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.bankListRoute}`
+          },
+        ],
       },
     ];
   }
