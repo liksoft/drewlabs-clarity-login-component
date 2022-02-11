@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { RoutesMap } from "src/app/lib/core/routes";
 import { partialConfigs } from "../../partials/partials-configs";
+import { routes } from "../../routes";
 
 @Component({
   selector: "app-nav",
@@ -13,8 +14,8 @@ import { partialConfigs } from "../../partials/partials-configs";
   styles: [],
 })
 export class AppNavComponent implements OnInit {
-  public routesMap: RoutesMap[];
-  public routeDefinitions: { [index: string]: string };
+  public routesMap!: RoutesMap[];
+  public routeDefinitions!: { [index: string]: string };
 
   public ngOnInit(): void {
     this.routeDefinitions = {
@@ -28,7 +29,7 @@ export class AppNavComponent implements OnInit {
       {
         key: "navbar_dashboard",
         routeIcon: "home",
-        route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.homeRoute}`
+        route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.homeRoute}`,
         // children: [],
       },
       {
@@ -38,19 +39,18 @@ export class AppNavComponent implements OnInit {
           {
             key: "members_list",
             routeIcon: "add-text",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.clientsHomeRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.clients}`,
           },
           {
             key: "members_add",
             routeIcon: "list",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.clientsAddEditRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.clients}`,
           },
           {
             key: "procuration_list",
             routeIcon: "paste",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.procurationsManageRoute}`,
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.acquisitions}`,
           },
-
         ],
       },
     ];

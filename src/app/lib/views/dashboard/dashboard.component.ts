@@ -1,34 +1,43 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { partialConfigs } from '../partials/partials-configs';
-import { UsersProvider } from '../../core/auth/core/providers/app-user';
-import { DepartmentsProvider } from '../../core/auth/core/providers/department';
-import { RolesProvider } from '../../core/auth/core/providers/role';
-import { AuthorizationsProvider } from '../../core/auth/core/providers/authorizations';
-import { CompaniesProvider } from '../../core/auth/core/providers/organisation';
-import { RoutesMap } from 'src/app/lib/core/routes';
-import { AppUIStateProvider } from 'src/app/lib/core/ui-state';
+import { Component, OnDestroy } from "@angular/core";
+import { partialConfigs } from "../partials/partials-configs";
+import { UsersProvider } from "../../core/auth/core/providers/app-user";
+import { DepartmentsProvider } from "../../core/auth/core/providers/department";
+import { RolesProvider } from "../../core/auth/core/providers/role";
+import { AuthorizationsProvider } from "../../core/auth/core/providers/authorizations";
+import { CompaniesProvider } from "../../core/auth/core/providers/organisation";
+import { RoutesMap } from "src/app/lib/core/routes";
+import { AppUIStateProvider } from "src/app/lib/core/ui-state";
 
-const resetProvidersStores = (providers: { destroy(): void; }[]) => {
-  providers.forEach(provider => provider.destroy());
+const resetProvidersStores = (providers: { destroy(): void }[]) => {
+  providers.forEach((provider) => provider.destroy());
 };
 
 @Component({
-  selector: 'app-admin-dashboard-dashboard',
-  templateUrl: './dashboard.component.html',
-  styles: []
+  selector: "app-dashboard-dashboard",
+  templateUrl: "./dashboard.component.html",
+  styles: [],
 })
-export class AdminDashboardComponent implements OnInit, OnDestroy {
-
-  public routesMap: RoutesMap[];
-  public routeDefinitions: { [index: string]: string };
-  public loading: boolean = undefined;
+export class DashboardComponent implements OnDestroy {
+  // Routes Mapping
+  public routesMap: RoutesMap[] = [
+    {
+      key: "topbar_dashboard",
+      route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.homeRoute}`,
+    },
+  ];
+  // Routes definitions
+  public routeDefinitions = {
+    topbar_dashboard: "Tableau de bord",
+  };
+  //
+  public loading: boolean = false;
 
   statefulProviders: { destroy: () => void }[] = [
     this.users,
     this.departments,
     this.roles,
     this.authorizations,
-    this.companies
+    this.companies,
   ];
 
   constructor(
@@ -43,21 +52,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   // tslint:disable-next-line: typedef
-  ngOnInit() {
-    this.routeDefinitions = {
-      topbar_dashboard: 'Tableau de bord',
-    };
-    this.routesMap = [
-      {
-        key: 'topbar_dashboard',
-        route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.homeRoute}`
-      }
-    ];
-  }
-
-  // tslint:disable-next-line: typedef
   ngOnDestroy() {
     resetProvidersStores(this.statefulProviders);
   }
-
 }

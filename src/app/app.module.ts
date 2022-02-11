@@ -163,13 +163,13 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
         useFactory: (uiState: UIStateProvider, router: Router) => {
           return {
             onAuthenticationFailure: () => {
-              console.log("Unauthenticated.");
               uiState.endAction(
                 "login.authenticationFailed",
                 UIStateStatusCode.BAD
               );
             },
             onAuthenticaltionSuccessful: () => {
+              console.log("Redirecting...");
               uiState.endAction(
                 "login.successful",
                 UIStateStatusCode.AUTHENTICATED

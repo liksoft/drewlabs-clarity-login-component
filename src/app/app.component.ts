@@ -5,9 +5,9 @@ import * as moment from "moment";
 import { Location } from "@angular/common";
 import "moment/locale/fr";
 import "moment/locale/en-gb";
-import * as lodash from "lodash";
 import { doLog } from "./lib/core/rxjs/operators";
 import { AppUIStateProvider } from "./lib/core/ui-state";
+import { isEmpty } from "lodash";
 
 @Component({
   selector: "app-root",
@@ -26,12 +26,12 @@ export class AppComponent implements AfterViewInit {
     private uiState: AppUIStateProvider
   ) {
     this.translate.provider.addLangs(["en", "fr"]);
-    const browserLang = this.translate.provider.getBrowserLang();
+    const browserLang = this.translate.provider.getBrowserLang() ?? "fr";
     // Log(browserLang);
     this.translate.provider.setDefaultLang(browserLang);
     // Insure that translation provider use the user browser language
     this.translate.provider.use(
-      browserLang.match(/en|fr/) ? browserLang : "en"
+      browserLang.match(/en|fr/) ? browserLang : "fr"
     );
     // Set moment locale
     moment.locale(browserLang);
@@ -42,14 +42,14 @@ export class AppComponent implements AfterViewInit {
   onIsAuthenticated(value: boolean) {
     setTimeout(() => {
       const currentPath = this.location.path();
-      if (value && lodash.isEmpty(currentPath)) {
+      if (value && isEmpty(currentPath)) {
         this.router.navigateByUrl("/dashboard");
         return;
       }
     }, 1000);
   }
 
-  onEndActionEvent({ status, message }: { status: number; message: string }) {
+  onEndActionEvent({ status, message }: { status?: number; message?: string }) {
     this.uiState.endAction(message, status);
   }
 }

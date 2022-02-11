@@ -8,10 +8,10 @@ export const environment = {
   userInfoStorageKey: "CNSS_PAYMENTS_ADMIN_USER_INFO",
   authTokenStorageKey: "CNSS_PAYMENTS_ADMIN_X_AUTH_TOKEN",
   authRememberTokenStorageKey: "CNSS_PAYMENTS_ADMIN_AUTH_REMEMBER_TOKEN",
-  APP_FILE_SERVER_URL: "https://cnss.payments.lik.tg/",
+  APP_FILE_SERVER_URL: "https://auth.lik.tg/",
   APP_SECRET: "V1HQkt03PoGdlxN",
   forms: {
-    host: "https://cnss.payments.lik.tg/",
+    host: "https://auth.lik.tg/",
     endpoints: {
       forms: "api/forms",
       formControls: "api/form-controls",
@@ -20,13 +20,13 @@ export const environment = {
     },
   },
   api: {
-    host: "https://cnss.payments.lik.tg/",
+    host: "https://auth.lik.tg/",
   },
   auth: {
-    host: "https://cnss.payments.lik.tg/",
-    clientID: "50C6D414-BB92-48F8-B878-155861525EF4",
+    host: "https://auth.lik.tg/",
+    clientID: "859782E1-9A2F-49A4-9D42-B59A78E520FB",
     clientSecret:
-      "1xR.h7DoqKesCMlweGoMgQI3t.5AAjV84ORld3n6FxspouXBXZ7O.GVitXhONGZuYv1vUEcQ9yNNgcIisfhqNA",
+      "wJa60mWPUK2W8AycfziCrWeMWSus4HLAoSV9cq2qb6FTMlmEudoItlbUHwdUw15peIXmF2b2q2LwCYSO0fvvgQ",
   },
 };
 

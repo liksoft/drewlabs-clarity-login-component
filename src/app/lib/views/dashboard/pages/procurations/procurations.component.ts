@@ -1,13 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/lib/core/auth/core';
-import { RoutesMap } from 'src/app/lib/core/routes';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-procurations',
-  templateUrl: './procurations.component.html',
-  styleUrls: ['./procurations.component.scss']
+  selector: "app-procurations",
+  templateUrl: "./procurations.component.html",
+  styleUrls: ["./procurations.component.scss"],
 })
-export class ProcurationsComponent {
-  public navbarRoutesMap: RoutesMap[];
-  constructor(private auth: AuthService) {}
-}
+export class ProcurationsComponent {}

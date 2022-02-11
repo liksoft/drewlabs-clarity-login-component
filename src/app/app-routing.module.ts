@@ -16,7 +16,8 @@ const routes: Routes = [
     data: {
       path: partialConfigs.routes.commonRoutes.dashboardHomeRoute,
       authorizations: AUTH_RESOURCES_AUTHORIZATIONS,
-      moduleName: 'EPay WorkSpace'
+      moduleName: 'SIM',
+      logoAssetPath: "/assets/images/sim.png",
     }
   },
   {

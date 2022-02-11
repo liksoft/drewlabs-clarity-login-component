@@ -2,7 +2,7 @@
   <div class="app-page-header">
     <h2 [translate]="'settings.accountSettings'"></h2>
     <div class="app-intro">
-      {{ 'settings.profileInformationAsideDescription' | translate }}
+      {{ "settings.profileInformationAsideDescription" | translate }}
     </div>
   </div>
   <ng-container *ngIf="state$ | async as vm">
@@ -27,17 +27,23 @@
             <ng-container *ngIf="!vm?.showUpdatePWordView">
               <td>*********</td>
               <td>
-                <clr-icon shape="edit" (click)="showUpdatePasswordUI()"></clr-icon>
+                <clr-icon
+                  shape="edit"
+                  (click)="showUpdatePasswordUI()"
+                ></clr-icon>
               </td>
             </ng-container>
             <td>
-              <app-update-password-view *ngIf="vm?.showUpdatePWordView" (cancelEvent)="hideUpdatePasswordUI()">
+              <app-update-password-view
+                *ngIf="vm?.showUpdatePWordView"
+                (cancelEvent)="hideUpdatePasswordUI()"
+              >
               </app-update-password-view>
             </td>
           </tr>
           <tr>
             <th><span [translate]="'settings.email'"></span></th>
-            <td>{{ vm?.user?.userDetails?.emails[0] }}</td>
+            <td>{{ (vm?.user?.userDetails?.emails ?? [])[0] }}</td>
           </tr>
           <tr>
             <th><span [translate]="'settings.phoneNumber'"></span></th>
