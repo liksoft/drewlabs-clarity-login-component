@@ -29,7 +29,7 @@ export class AppNavComponent implements OnInit {
       procuration_list: "Procurations",
       // COMPTES
       account_menu: "Comptes",
-      account_home:"Aperçu des comptes",
+      account_home: "Aperçu des comptes",
       account_list: "Liste des comptes",
       // CAISSE
       cashier_menu: "Caisse",
@@ -41,7 +41,7 @@ export class AppNavComponent implements OnInit {
       credits_menu: "Crédits",
       credits_home: "Aperçu des Crédits",
       credits_list: "Liste des crédits",
-      credit_add : "Enregistrer un crédit",
+      credit_add: "Enregistrer un crédit",
       // BANQUES
       bank_menu: "Banques",
       bank_home: "Aperçu des banques",
@@ -68,22 +68,22 @@ export class AppNavComponent implements OnInit {
           {
             key: "clients_home",
             routeIcon: "tools",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.clientsHomeRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.clientsHomeRoute}`,
           },
           {
             key: "members_list",
             routeIcon: "add-text",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.clientsListRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.clientsListRoute}`,
           },
           {
             key: "members_add",
             routeIcon: "list",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.clients}`,
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.clientsAddEditRoute}`,
           },
           {
             key: "procuration_list",
             routeIcon: "list",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.procurationsManageRoute}`,
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.procurationsManageRoute}`,
           },
         ],
       },
@@ -95,12 +95,12 @@ export class AppNavComponent implements OnInit {
           {
             key: "account_home",
             routeIcon: "tools",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.accountHomeRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.accountHomeRoute}`,
           },
           {
             key: "account_list",
             routeIcon: "list",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.accountListRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.accountListRoute}`,
           },
         ],
       },
@@ -112,17 +112,17 @@ export class AppNavComponent implements OnInit {
           {
             key: "credits_home",
             routeIcon: "tools",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.creditsHomeRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.creditsHomeRoute}`,
           },
           {
             key: "credit_add",
             routeIcon: "add-text",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.creditAddRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.creditAddRoute}`,
           },
           {
             key: "credits_list",
             routeIcon: "list",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.creditsListRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.creditsListRoute}`,
           },
         ],
       },
@@ -134,22 +134,22 @@ export class AppNavComponent implements OnInit {
           {
             key: "cashier_home",
             routeIcon: "plus-circle",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.cashierHomeRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.cashierHomeRoute}`,
           },
           {
             key: "cashier_add",
             routeIcon: "list",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.cashierAddRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.cashierAddRoute}`,
           },
           {
             key: "cashier_operation_add",
             routeIcon: "add-text",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.cashierOperationAddRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.cashierOperationAddRoute}`,
           },
           {
             key: "cashier_list",
             routeIcon: "list",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.cashierListRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.cashierListRoute}`,
           },
         ],
       },
@@ -161,17 +161,17 @@ export class AppNavComponent implements OnInit {
           {
             key: "dat_home",
             routeIcon: "tools",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.datHomeRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.datHomeRoute}`,
           },
           {
             key: "dat_add",
             routeIcon: "plus-circle",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.datAddRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.datAddRoute}`,
           },
           {
             key: "dat_list",
             routeIcon: "list",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.datListRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.datListRoute}`,
           },
         ],
       },
@@ -183,17 +183,17 @@ export class AppNavComponent implements OnInit {
           {
             key: "bank_home",
             routeIcon: "tools",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.bankHomeRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.bankHomeRoute}`,
           },
           {
             key: "bank_add",
             routeIcon: "plus-circle",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.bankAddRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.bankAddRoute}`,
           },
           {
             key: "bank_list",
             routeIcon: "list",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.bankListRoute}`
+            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.bankListRoute}`,
           },
         ],
       },

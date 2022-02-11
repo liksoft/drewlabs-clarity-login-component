@@ -27,6 +27,7 @@ import { DatComponent } from "./pages/dat/dat.component";
 import { DatListComponent } from "./pages/dat/dat-list/dat-list.component";
 import { DatAddComponent } from "./pages/dat/dat-add/dat-add.component";
 import { CaisseOperationsComponent } from "./pages/caisses/caisse-operations/caisse-operations.component";
+import { routes } from "../routes";
 
 export const getRoutes = () => {
   const childRoutes: Routes = [
@@ -41,88 +42,88 @@ export const getRoutes = () => {
       component: DashboardHomeComponent,
     },
     {
-      path: partialConfigs.routes.commonRoutes.clientsHomeRoute,
+      path: routes.clientsHomeRoute,
       component: ClientsComponent,
     },
     {
-      path: partialConfigs.routes.commonRoutes.clientsListRoute,
+      path: routes.clientsListRoute,
       component: AdhesionMembreComponent,
     },
     {
-      path: routes.clients,
+      path: routes.clientsAddEditRoute,
       component: MemberAddEditComponent,
     },
     {
-      path: routes.clients,
+      path: routes.clientsHomeRoute,
       component: MemberViewComponent,
     },
     {
-      path: routes.acquisitions,
+      path: routes.procurationsManageRoute,
       component: ProcurationsComponent,
     },
     // ACCOUNTS
     {
-      path: partialConfigs.routes.commonRoutes.accountHomeRoute,
+      path: routes.accountHomeRoute,
       component: AccountsComponent,
     },
     {
-      path: partialConfigs.routes.commonRoutes.accountListRoute,
+      path: routes.accountListRoute,
       component: AccountListComponent,
     },
     // CREDITS
     {
-      path: partialConfigs.routes.commonRoutes.creditsHomeRoute,
+      path: routes.creditsHomeRoute,
       component: CreditsComponent,
     },
     {
-      path: partialConfigs.routes.commonRoutes.creditsListRoute,
+      path: routes.creditsListRoute,
       component: CreditsListComponent,
     },
     {
-      path: partialConfigs.routes.commonRoutes.creditAddRoute,
+      path: routes.creditAddRoute,
       component: CreditsAddComponent,
     },
     // BANQUES
     {
-      path: partialConfigs.routes.commonRoutes.bankHomeRoute,
+      path: routes.bankHomeRoute,
       component: BanksComponent,
     },
     {
-      path: partialConfigs.routes.commonRoutes.bankListRoute,
+      path: routes.bankListRoute,
       component: BanksListComponent,
     },
     {
-      path: partialConfigs.routes.commonRoutes.bankAddRoute,
+      path: routes.bankAddRoute,
       component: BanksAddComponent,
     },
     // CAISSES
     {
-      path: partialConfigs.routes.commonRoutes.cashierHomeRoute,
+      path: routes.cashierHomeRoute,
       component: CaissesComponent,
     },
     {
-      path: partialConfigs.routes.commonRoutes.cashierAddRoute,
+      path: routes.cashierAddRoute,
       component: CaissesAddComponent,
     },
     {
-      path: partialConfigs.routes.commonRoutes.cashierOperationAddRoute,
+      path: routes.cashierOperationAddRoute,
       component: CaisseOperationsComponent,
     },
     {
-      path: partialConfigs.routes.commonRoutes.cashierListRoute,
+      path: routes.cashierListRoute,
       component: CaissesListComponent,
     },
     // DAT
     {
-      path: partialConfigs.routes.commonRoutes.datHomeRoute,
+      path: routes.datHomeRoute,
       component: DatComponent,
     },
     {
-      path: partialConfigs.routes.commonRoutes.datAddRoute,
+      path: routes.datAddRoute,
       component: DatAddComponent,
     },
     {
-      path: partialConfigs.routes.commonRoutes.datListRoute,
+      path: routes.datListRoute,
       component: DatListComponent,
     },
   ];
