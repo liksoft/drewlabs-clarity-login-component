@@ -16,7 +16,7 @@ const routes: Routes = [
     data: {
       path: partialConfigs.routes.commonRoutes.dashboardHomeRoute,
       authorizations: AUTH_RESOURCES_AUTHORIZATIONS,
-      moduleName: 'EPay WorkSpace'
+      moduleName: 'Système de Management Intégré'
     }
   },
   {

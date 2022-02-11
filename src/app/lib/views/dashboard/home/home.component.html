@@ -1,68 +1,147 @@
 <div class="clr-row">
   <div class="clr-col-12 lik-card">
-    <div class="lik-card-title">Gestion de la clientèle</div>
+    <div class="lik-card-title">Système de Management Intégré (SMI) de la COOPECTRASSTO</div>
     <div class="lik-card-description">
-        Assurer les opérations sur les clients.
+      Coopérative des Travailleurs de la Sécurité Sociale du Togo
     </div>
-    <div class="clients-list clr-row">
-      <!-- Card Start -->
-      <div class="clr-col">
+    <div class="divider"></div>
+    <div class="hero-area clr-row">
+      <div class="clr-col-md-3">
         <div class="card big-card">
           <div class="card-header">
-            <clr-icon shape="users"></clr-icon> Statistiques des clients
+            <clr-icon shape="users" size="32"></clr-icon> Clients
           </div>
           <div class="card-block">
             <div class="card-text">
-
+            Gestion des membres, les procurations et les données démographiques
             </div>
           </div>
           <div class="card-footer">
-
-          </div>
-        </div>
-      </div>
-      <!-- Card End -->
-    </div>
-    <div class="home-actions clr-row">
-      <!-- Card Start -->
-      <div class="clr-col">
-        <div class="card big-card">
-          <div class="card-header">
-            <clr-icon shape="add-text"></clr-icon> Nouveau Client
-          </div>
-          <div class="card-block">
-            <div class="card-text">
-             Ajouter un nouveau membre/client en fournissant les informations requises.
-            </div>
-          </div>
-          <div class="card-footer">
-            <button class="btn btn-primary btn-sm">
-              <clr-icon shape="arrow" dir="right" class="has-badge"></clr-icon> Ajouter
+            <button class="btn btn-primary" [routerLink]="clientsHomePath">
+              <clr-icon shape="arrow" dir="right" class="has-badge"></clr-icon> Gérer les clients
             </button>
           </div>
         </div>
       </div>
-      <!-- Card End -->
-
-      <!-- Card Start -->
-      <div class="clr-col">
+      <div class="clr-col-md-3">
         <div class="card big-card">
           <div class="card-header">
-            <clr-icon shape="paste"></clr-icon> Procurations
+            <clr-icon shape="wallet" size="32"></clr-icon> Comptes
           </div>
           <div class="card-block">
             <div class="card-text">
-             Enregistrer et gérer des mandats pour les membres souhaitant fournir une procuration à un tiers
+            Gestion des comptes des clients et opérations associées
             </div>
           </div>
           <div class="card-footer">
-            <button class="btn btn-primary btn-sm">
-              <clr-icon shape="arrow" dir="right" class="has-badge"></clr-icon> Ajouter
+            <button class="btn btn-primary">
+              <clr-icon shape="arrow" dir="right" class="has-badge"></clr-icon> Gérer les comptes
             </button>
           </div>
         </div>
       </div>
-      <!-- Card End -->
+      <div class="clr-col-md-3">
+        <div class="card big-card">
+          <div class="card-header">
+            <clr-icon shape="sync" size="32"></clr-icon> Crédits
+          </div>
+          <div class="card-block">
+            <div class="card-text">
+            Gestion les aspects liées aux crédits et recouvrement
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-primary">
+              <clr-icon shape="arrow" dir="right" class="has-badge"></clr-icon> Gérer les crédits
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="clr-col-md-3">
+        <div class="card big-card">
+          <div class="card-header">
+            <clr-icon shape="store" size="32"></clr-icon> Caisse
+          </div>
+          <div class="card-block">
+            <div class="card-text">
+            Gestion les opérations et mouvements de la caisse
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-primary">
+              <clr-icon shape="arrow" dir="right" class="has-badge"></clr-icon> Gérer les caisses
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="clr-col-md-3">
+        <div class="card big-card">
+          <div class="card-header">
+            <clr-icon shape="bank" size="32"></clr-icon> Banques
+          </div>
+          <div class="card-block">
+            <div class="card-text">
+            Gestion les activités avec les banques et institutions financières
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-primary">
+              <clr-icon shape="arrow" dir="right" class="has-badge"></clr-icon> Gérer les banques
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="clr-col-md-3">
+        <div class="card big-card">
+          <div class="card-header">
+            <clr-icon shape="clock" size="32"></clr-icon> Dépôt à terme
+          </div>
+          <div class="card-block">
+            <div class="card-text">
+              Gérer les dépôts à terme constitués par les membres
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-primary">
+              <clr-icon shape="arrow" dir="right" class="has-badge"></clr-icon> Gérer les DAT
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="clr-col-md-3">
+        <div class="card big-card">
+          <div class="card-header">
+            <clr-icon shape="employee-group" size="32"></clr-icon> Ressources Humaines & Paie
+          </div>
+          <div class="card-block">
+            <div class="card-text">
+            Gestion le capital humain, la carrière des employés et leur rémunération
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-primary">
+              <clr-icon shape="arrow" dir="right" class="has-badge"></clr-icon> Gérer RH
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="clr-col-md-3">
+        <div class="card big-card">
+          <div class="card-header">
+            <clr-icon shape="coin-bag" size="32"></clr-icon> Comptabilité
+          </div>
+          <div class="card-block">
+            <div class="card-text">
+            Gestion de l'activité comptable et des immobilisations.
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-primary">
+              <clr-icon shape="arrow" dir="right" class="has-badge"></clr-icon> Gérer la compta
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
