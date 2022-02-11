@@ -106,3 +106,5 @@ dist
 
 # History
 .history/
+
+.angular/

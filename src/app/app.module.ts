@@ -11,7 +11,6 @@ import { registerLocaleData } from "@angular/common";
 import localeFr from "@angular/common/locales/fr";
 import localeFrExtra from "@angular/common/locales/extra/fr";
 import { StorageModule } from "./lib/core/storage";
-import { AuthTokenModule } from "./lib/core/auth-token";
 import { AuthModule } from "./lib/core/auth";
 import { environment } from "src/environments/environment";
 import {
@@ -25,28 +24,34 @@ import { HttpClient } from "@angular/common/http";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { TranslationService } from "./lib/core/translator";
 import { DynamicFormControlModule } from "./lib/core/components/dynamic-inputs/dynamic-form-control";
-import { DrewlabsV2_1LoginResultHandlerFunc } from "./lib/core/auth/rxjs/operators";
-import { LoginV2_1Response } from "./lib/core/auth/contracts/v2/login.response";
 import { parseV3HttpResponse } from "./lib/core/http/core/v3/http-response";
 import { HttpModule } from "./lib/core/http";
 
 // #region UI state module imports
 import { UIStateComponentsModule } from "./lib/views/partials/ui-state-components";
-import { UIStateModule } from "./lib/core/ui-state";
+import {
+  UIStateModule,
+  UIStateProvider,
+  UIStateStatusCode,
+  UI_STATE_PROVIDER,
+} from "./lib/core/ui-state";
 // #endregion UI state module imports
 
 // #region Dropzone configuration
+import { DROPZONE_DICT } from "./lib/core/components/dropzone";
+import { first, map, tap } from "rxjs/operators";
+import { LocalStrategy, StrategyBasedAuthModule } from "./lib/views/login/core";
 import {
-  DropzoneDict,
-  DropzoneModule,
-  DROPZONE_DICT,
-} from "./lib/core/components/dropzone";
-import { map } from "rxjs/operators";
+  AuthStrategies,
+  AUTH_ACTION_HANDLERS,
+  AUTH_CLIENT_CONFIG,
+  AUTH_SERVICE_CONFIG,
+} from "./lib/views/login/constants";
+import { interval, lastValueFrom } from "rxjs";
+import { SESSION_STORAGE } from "./lib/core/utils/ng/common";
+import { SecureWebStorage } from "./lib/core/storage/core";
+import { Router } from "@angular/router";
 // #endregion Dropzone configuration
-
-export function AppDrewlabsV2_1LoginResultHandlerFunc(response: any) {
-  return DrewlabsV2_1LoginResultHandlerFunc(LoginV2_1Response)(response);
-}
 
 registerLocaleData(localeFr, "fr", localeFrExtra);
 
@@ -62,47 +67,45 @@ export class TranslateHandler implements MissingTranslationHandler {
 }
 
 export const DropzoneDictLoader = async (translate: TranslateService) => {
-  return await translate
-    .get(
-      [
-        "dictAcceptedFilesLabel",
-        "dictFallbackMessageLabel",
-        "dictFileTooBigLabel",
-        "dictInvalidFileTypeLabel",
-        "dictCancelUploadLabel",
-        "dictResponseErrorLabel",
-        "dictCancelUploadConfirmationLabel",
-        "dictRemoveFileConfirmationLabel",
-        "dictRemoveFileLabel",
-        "dictMaxFilesExceededLabel",
-        "dictUploadCanceled",
-      ],
-      {
-        maxFilesize: "{{maxFilesize}}",
-        filesize: "{{filesize}}",
-      }
-    )
-    .pipe(
-      map(
-        (translations) =>
-          ({
-            dictFallbackMessage: translations?.dictFallbackMessageLabel,
-            dictFileTooBig: translations?.dictFileTooBigLabel,
-            dictInvalidFileType: translations?.dictInvalidFileTypeLabel,
-            dictResponseError: translations?.dictResponseErrorLabel,
-            dictCancelUpload: translations?.dictCancelUploadLabel,
-            dictCancelUploadConfirmation:
-              translations?.dictCancelUploadConfirmationLabel,
-            dictRemoveFile: translations?.dictRemoveFileLabel,
-            dictRemoveFileConfirmation:
-              translations?.dictRemoveFileConfirmationLabel,
-            dictMaxFilesExceeded: translations?.dictMaxFilesExceededLabel,
-            dictUploadCanceled: translations?.dictUploadCanceled,
-            dictAcceptedFiles: translations?.dictAcceptedFilesLabel,
-          } as DropzoneDict)
+  return await lastValueFrom(
+    translate
+      .get(
+        [
+          "dictAcceptedFilesLabel",
+          "dictFallbackMessageLabel",
+          "dictFileTooBigLabel",
+          "dictInvalidFileTypeLabel",
+          "dictCancelUploadLabel",
+          "dictResponseErrorLabel",
+          "dictCancelUploadConfirmationLabel",
+          "dictRemoveFileConfirmationLabel",
+          "dictRemoveFileLabel",
+          "dictMaxFilesExceededLabel",
+          "dictUploadCanceled",
+        ],
+        {
+          maxFilesize: "{{maxFilesize}}",
+          filesize: "{{filesize}}",
+        }
       )
-    )
-    .toPromise();
+      .pipe(
+        map((translations) => ({
+          dictFallbackMessage: translations?.dictFallbackMessageLabel,
+          dictFileTooBig: translations?.dictFileTooBigLabel,
+          dictInvalidFileType: translations?.dictInvalidFileTypeLabel,
+          dictResponseError: translations?.dictResponseErrorLabel,
+          dictCancelUpload: translations?.dictCancelUploadLabel,
+          dictCancelUploadConfirmation:
+            translations?.dictCancelUploadConfirmationLabel,
+          dictRemoveFile: translations?.dictRemoveFileLabel,
+          dictRemoveFileConfirmation:
+            translations?.dictRemoveFileConfirmationLabel,
+          dictMaxFilesExceeded: translations?.dictMaxFilesExceededLabel,
+          dictUploadCanceled: translations?.dictUploadCanceled,
+          dictAcceptedFiles: translations?.dictAcceptedFilesLabel,
+        }))
+      )
+  );
 };
 
 @NgModule({
@@ -112,6 +115,7 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -119,38 +123,30 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
         deps: [HttpClient],
       },
       missingTranslationHandler: environment?.production
-        ? []
-        : [
-            {
-              provide: MissingTranslationHandler,
-              useClass: TranslateHandler,
-            },
-          ],
+        ? undefined
+        : {
+            provide: MissingTranslationHandler,
+            useClass: TranslateHandler,
+          },
     }),
     SharedModule.forRoot(),
     HttpModule.forRoot({
-      serverURL: environment.APP_SERVER_URL,
-      requestResponseHandler: parseV3HttpResponse, // Modifiable
+      serverURL: environment.api.host,
+      requestResponseHandler: parseV3HttpResponse,
     }),
     StorageModule.forRoot({ secretKey: environment.APP_SECRET }),
-    AuthTokenModule.forRoot({}),
-    AuthModule.forRoot({
-      loginResponseHandler: AppDrewlabsV2_1LoginResultHandlerFunc,
-      serverConfigs: {
-        host: null,
-        loginPath: "auth/v1/login",
-        logoutPath: "auth/v1/logout",
-        usersPath: "auth/v1/users",
-      },
-    }),
-    BrowserAnimationsModule,
-
-    // UI State module
+    AuthModule.forRoot(),
+    // UI STATE PROVIDERS
     UIStateModule.forRoot(),
     UIStateComponentsModule.forRoot(),
-    // Configure Dropzone module for root
-    DropzoneModule.forRoot({
-      dropzoneConfig: {
+    // DYNAMIC CONTROLS PROVIDERS
+    DynamicFormControlModule.forRoot({
+      serverConfigs: {
+        host: environment.forms.host,
+        bindingsPath: environment.forms.endpoints.bindingsPath,
+      },
+      formsAssets: "/assets/resources/jsonforms.json",
+      dropzoneConfigs: {
         url: environment.APP_FILE_SERVER_URL,
         maxFilesize: 10,
         acceptedFiles: "image/*",
@@ -160,22 +156,64 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
         addRemoveLinks: true,
       },
     }),
-    DynamicFormControlModule.forRoot({
-      serverConfigs: {
-        host: environment.FORM_SERVER_URL,
-        controlBindingsPath: "api/v1/control-bindings",
+    // TODO: ADD STRATEGY BASED AUTH MODULE
+    StrategyBasedAuthModule.forRoot(
+      {
+        provide: AUTH_ACTION_HANDLERS,
+        useFactory: (uiState: UIStateProvider, router: Router) => {
+          return {
+            onAuthenticationFailure: () => {
+              console.log("Unauthenticated.");
+              uiState.endAction(
+                "login.authenticationFailed",
+                UIStateStatusCode.BAD
+              );
+            },
+            onAuthenticaltionSuccessful: () => {
+              uiState.endAction(
+                "login.successful",
+                UIStateStatusCode.AUTHENTICATED
+              );
+            },
+            onPerformingAction: () => {
+              uiState.startAction();
+            },
+            onError: () => {
+              uiState.endAction("", UIStateStatusCode.ERROR);
+            },
+            onLogout: () => {
+              interval(300)
+                .pipe(
+                  first(),
+                  tap(() => {
+                    router.navigateByUrl("/login");
+                    uiState.endAction();
+                  })
+                )
+                .subscribe();
+            },
+          };
+        },
+        deps: [UI_STATE_PROVIDER, Router],
       },
-    }),
-    DynamicFormControlModule.forRoot({
-      serverConfigs: {
-        host: environment.FORM_SERVER_URL,
-        formsPath: environment.endpoints?.forms,
-        controlsPath: environment?.endpoints?.formControls,
-        controlOptionsPath: environment?.endpoints?.controlOptions,
-        controlBindingsPath: environment?.endpoints?.controlBindings,
-      },
-      formsAssets: "/assets/resources/jsonforms.json",
-    }),
+      {
+        provide: AUTH_SERVICE_CONFIG,
+        useFactory: (client: HttpClient, storage: Storage) => ({
+          strategies: [
+            {
+              id: AuthStrategies.LOCAL,
+              strategy: new LocalStrategy(
+                client,
+                environment.auth.host,
+                new SecureWebStorage(storage, environment.APP_SECRET)
+              ),
+            },
+          ],
+          autoLogin: true,
+        }),
+        deps: [HttpClient, SESSION_STORAGE],
+      }
+    ),
   ],
   providers: [
     TranslationService,
@@ -190,6 +228,13 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
     {
       provide: "FILE_STORE_PATH",
       useValue: environment.APP_FILE_SERVER_URL,
+    },
+    {
+      provide: AUTH_CLIENT_CONFIG,
+      useValue: {
+        id: environment.auth.clientID,
+        secret: environment.auth.clientSecret,
+      },
     },
   ],
   bootstrap: [AppComponent],

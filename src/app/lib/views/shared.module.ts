@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { ClarityModule } from "@clr/angular";
 import { StorageModule } from "../core/storage";
-import { AuthTokenModule } from "../core/auth-token";
 import { AuthModule } from "../core/auth";
 import { TranslateModule } from "@ngx-translate/core";
 import { DragDropModule } from "@angular/cdk/drag-drop";
@@ -19,6 +18,7 @@ import { TopBarModule } from "./partials/topbar";
 import { DetailedTablePreviewModule } from "./partials/detailed-table-preview";
 import { SidebarModule } from "./partials/sidebar";
 import { AppModulesModule } from "./partials/app-modules";
+import { StrategyBasedAuthModule } from "./login/core";
 
 @NgModule({
   imports: [
@@ -38,10 +38,8 @@ import { AppModulesModule } from "./partials/app-modules";
     TranslateModule,
     HttpModule,
     StorageModule,
-    AuthTokenModule,
     AuthModule,
     DragDropModule,
-
     //
     PipesModule,
     DynamicFormControlModule,
@@ -53,6 +51,9 @@ import { AppModulesModule } from "./partials/app-modules";
     DetailedTablePreviewModule,
     SidebarModule,
     AppModulesModule,
+
+    // TODO : EXPORT StrategyBasedAuthModule
+    StrategyBasedAuthModule,
   ],
   declarations: [],
   providers: [{ provide: LOCALE_ID, useValue: "fr" }],
