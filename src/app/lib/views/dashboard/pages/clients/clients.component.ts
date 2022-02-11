@@ -1,18 +1,13 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
+import * as Highcharts from 'highcharts';
 
 @Component({
-  selector: "app-dashboard-home",
-  templateUrl: "./home.component.html",
-  styles: [],
+  selector: 'app-clients',
+  templateUrl: './clients.component.html',
+  styleUrls: ['./clients.component.scss']
 })
-
-export class AdminDashboardHomeComponent {
-
-  public navbarRoutesMap: RoutesMap[];
-  constructor(private auth: AuthService) {
-  }
-
-  public clientsHomePath = `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.clientsHomeRoute}`;
+export class ClientsComponent implements OnInit {
+  constructor() { }
 
   highcharts = Highcharts;
   // line chart
@@ -185,4 +180,8 @@ export class AdminDashboardHomeComponent {
     ]
     }]
   }
+
+  ngOnInit(): void {
+  }
+
 }

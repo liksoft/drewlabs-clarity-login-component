@@ -16,8 +16,7 @@ const routes: Routes = [
     data: {
       path: partialConfigs.routes.commonRoutes.dashboardHomeRoute,
       authorizations: AUTH_RESOURCES_AUTHORIZATIONS,
-      moduleName: 'SIM',
-      logoAssetPath: "/assets/images/sim.png",
+      moduleName: 'Système de Management Intégré'
     }
   },
   {
