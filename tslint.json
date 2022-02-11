@@ -148,7 +148,7 @@
     "ordered-imports": [false, {
       "import-sources-order": "any",
       "named-imports-order": "case-insensitive"
-    }]    
+    }]
   },
   "rulesDirectory": [
     "codelyzer"
