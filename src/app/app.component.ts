@@ -1,29 +1,40 @@
-import { Component, AfterViewInit } from "@angular/core";
-import { TranslationService } from "./lib/core/translator/translator.service";
-import { Router } from "@angular/router";
 import * as moment from "moment";
 import { Location } from "@angular/common";
 import "moment/locale/fr";
 import "moment/locale/en-gb";
-import { doLog } from "./lib/core/rxjs/operators";
-import { AppUIStateProvider } from "./lib/core/ui-state";
-import { isEmpty } from "lodash";
+import { Component, Inject } from "@angular/core";
+import { TranslationService } from "./lib/core/translator/translator.service";
+import { Router } from "@angular/router";
+import { AppUIStateProvider, UIStateStatusCode } from "./lib/core/ui-state";
+import { map, Subject, takeUntil, tap } from "rxjs";
+import { ErrorHandler, HTTP_CLIENT } from "./lib/core/http";
+import { isEmpty } from "@iazlabs/utilities";
 
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent {
   title = "CNSS PAIEMENTS";
-
-  uiState$ = this.uiState.uiState.pipe(doLog("Application Global UI State: "));
+  uiState$ = this.uiState.uiState.pipe(
+    map((state) => ({
+      ...state,
+      hidden:
+        state.performingAction ||
+        typeof state.status === "undefined" ||
+        state.status === null,
+    }))
+  );
+  // tslint:disable-next-line: variable-name
+  private _destroy$ = new Subject<void>();
 
   constructor(
     private translate: TranslationService,
     private router: Router,
     private location: Location,
-    private uiState: AppUIStateProvider
+    private uiState: AppUIStateProvider,
+    @Inject(HTTP_CLIENT) errorHandler: ErrorHandler
   ) {
     this.translate.provider.addLangs(["en", "fr"]);
     const browserLang = this.translate.provider.getBrowserLang() ?? "fr";
@@ -35,9 +46,22 @@ export class AppComponent implements AfterViewInit {
     );
     // Set moment locale
     moment.locale(browserLang);
-  }
 
-  ngAfterViewInit() {}
+    errorHandler.errorState$
+      .pipe(
+        takeUntil(this._destroy$),
+        tap((state) => {
+          this.onEndActionEvent({
+            status:
+              state.status === 500
+                ? UIStateStatusCode.ERROR
+                : UIStateStatusCode.BAD,
+            message: "",
+          });
+        })
+      )
+      .subscribe();
+  }
 
   onIsAuthenticated(value: boolean) {
     setTimeout(() => {

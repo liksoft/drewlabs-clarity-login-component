@@ -1,8 +1,14 @@
 <ng-container *ngIf="uiState$ | async as state">
   <app-ui-notification
-    [uiState]="state"
-    (endActionEvent)="onEndActionEvent($event)"
-  ></app-ui-notification>
+    [props]="{
+      message: state.uiMessage,
+      status: state.status,
+      hasError: state.hasError,
+      hidden: state.hidden
+    }"
+  >
+    <app-online-state-monitoring></app-online-state-monitoring>
+  </app-ui-notification>
   <app-progress-bar
     [performingAction]="state.performingAction"
     [indeterminate]="true"
