@@ -17,7 +17,6 @@ import { DatagridHeaderModule } from "./partials/datgrid-header";
 import { TopBarModule } from "./partials/topbar";
 import { DetailedTablePreviewModule } from "./partials/detailed-table-preview";
 import { SidebarModule } from "./partials/sidebar";
-import { AppModulesModule } from "./partials/app-modules";
 import { StrategyBasedAuthModule } from "./login/core";
 
 @NgModule({
@@ -50,7 +49,6 @@ import { StrategyBasedAuthModule } from "./login/core";
     TopBarModule,
     DetailedTablePreviewModule,
     SidebarModule,
-    AppModulesModule,
 
     // TODO : EXPORT StrategyBasedAuthModule
     StrategyBasedAuthModule,

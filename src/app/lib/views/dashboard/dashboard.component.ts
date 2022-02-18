@@ -5,7 +5,7 @@ import { DepartmentsProvider } from "../../core/auth/core/providers/department";
 import { RolesProvider } from "../../core/auth/core/providers/role";
 import { AuthorizationsProvider } from "../../core/auth/core/providers/authorizations";
 import { CompaniesProvider } from "../../core/auth/core/providers/organisation";
-import { RoutesMap } from "src/app/lib/core/routes";
+import { RoutesMap } from "../partials/routes";
 import { AppUIStateProvider } from "src/app/lib/core/ui-state";
 
 const resetProvidersStores = (providers: { destroy(): void }[]) => {
