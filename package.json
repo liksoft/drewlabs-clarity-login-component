@@ -26,6 +26,7 @@
     "@clr/angular": "13.0.2",
     "@clr/icons": "^13.0.0",
     "@clr/ui": "13.0.2",
+    "@iazlabs/built-value": "^0.1.1",
     "@iazlabs/collections": "^0.1.1",
     "@iazlabs/js-datetime": "^0.1.2",
     "@iazlabs/js-object": "^0.1.0",
