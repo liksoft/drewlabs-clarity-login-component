@@ -4,7 +4,8 @@ import {
   HttpHandler,
 } from "@angular/common/http";
 import { Inject, Injectable, OnDestroy } from "@angular/core";
-import { Subject, takeUntil, tap } from "rxjs";
+import { Subject } from "rxjs";
+import { takeUntil, tap } from 'rxjs/operators';
 import { AUTH_SERVICE } from "../constants";
 import { AuthServiceInterface } from "../contracts";
 

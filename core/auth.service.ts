@@ -1,18 +1,15 @@
 import { Inject, Injectable, OnDestroy, Optional } from "@angular/core";
 import {
-  catchError,
   forkJoin,
   from,
   isObservable,
-  lastValueFrom,
   of,
   ReplaySubject,
-  startWith,
   Subject,
-  tap,
   throwError,
-  takeUntil,
 } from "rxjs";
+
+import { catchError, startWith, tap, takeUntil } from "rxjs/operators";
 import {
   AuthActions,
   AuthStrategies,
@@ -104,13 +101,11 @@ export class AuthService
       .pipe(takeUntil(this._destroy$))
       .subscribe();
     try {
-      await lastValueFrom(
-        forkJoin([
-          Array.from(this.strategies.values()).map((strategy) =>
-            asObservable(strategy.initialize(this.autologin))
-          ),
-        ])
-      );
+      await forkJoin([
+        Array.from(this.strategies.values()).map((strategy) =>
+          asObservable(strategy.initialize(this.autologin))
+        ),
+      ]).toPromise();
 
       if (this.autologin) {
         await Promise.all(

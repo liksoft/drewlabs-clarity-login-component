@@ -1,5 +1,5 @@
 import { TestBed } from "@angular/core/testing";
-import { lastValueFrom, map, tap } from "rxjs";
+import { tap } from "rxjs/operators";
 import {
   AuthStrategies,
   AUTH_SERVICE,
@@ -63,27 +63,26 @@ describe("LocalStrategy", () => {
 
   it("#AuthService.signIn(AuthStrategies.LOCAL) should return an observable of true", async (done: DoneFn) => {
     client.setResponseType(ResponseTypes.AUTHENTICATED);
-    const result = await lastValueFrom(
-      (authService as AuthServiceInterface).signIn(AuthStrategies.LOCAL, {
+    const result = await (authService as AuthServiceInterface)
+      .signIn(AuthStrategies.LOCAL, {
         username: "ADMIN",
         password: "secret",
       })
-    );
+      .toPromise();
     expect(result).toBe(true);
     done();
   });
 
   it("#AuthService.signIn(AuthStrategies.LOCAL) should return an observable of false for empty body", async (done: DoneFn) => {
     client.setResponseType(ResponseTypes.AUTHENTICATED);
-    const result = await lastValueFrom(
-      (authService as AuthServiceInterface).signIn(AuthStrategies.LOCAL, {})
-    );
+    const result = await (authService as AuthServiceInterface)
+      .signIn(AuthStrategies.LOCAL, {})
+      .toPromise();
     expect(result).toBe(false);
     done();
   });
 
   it("#AuthService.signIn(AuthStrategies.LOCAL) notifies signInState$ observable on successful login", async (done: DoneFn) => {
-
     // TODO : Initialize variables
     client.setResponseType(ResponseTypes.AUTHENTICATED);
     let signState: SignInResultInterface;
@@ -92,12 +91,12 @@ describe("LocalStrategy", () => {
       .pipe(tap((state) => (signState = state)))
       .subscribe();
     // Subscribe to get the sign in state result
-    await lastValueFrom(
-      (authService as AuthServiceInterface).signIn(AuthStrategies.LOCAL, {
+    await (authService as AuthServiceInterface)
+      .signIn(AuthStrategies.LOCAL, {
         username: "ADMIN",
         password: "secret",
       })
-    );
+      .toPromise();
     // TODO : Assert
     expect(signState).toEqual({
       ...AUTHENTICATED_RESULT,
