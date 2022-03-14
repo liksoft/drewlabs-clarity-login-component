@@ -1,6 +1,6 @@
 {
   "name": "coopecclients",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "ng": "ng",
     "start:aot": "ng serve --port 4900 --configuration production",
@@ -29,6 +29,9 @@
     "@iazlabs/collections": "^0.1.1",
     "@iazlabs/js-datetime": "^0.1.2",
     "@iazlabs/js-object": "^0.1.0",
+    "@iazlabs/ngx-config": "^0.0.2",
+    "@iazlabs/ngx-storage": "^0.1.1",
+    "@iazlabs/rx-state": "^0.1.4",
     "@iazlabs/utilities": "^0.1.2",
     "@ng-select/ng-select": "^8.1.1",
     "@ngx-translate/core": "^14.0.0",
@@ -47,6 +50,7 @@
     "highcharts-angular": "^3.0.0",
     "lodash": "^4.17.15",
     "moment": "^2.29.1",
+    "rx-query": "^1.0.2",
     "rxjs": "^7.5.2",
     "rxjs-compat": "^6.6.7",
     "tslib": "^2.3.0",
