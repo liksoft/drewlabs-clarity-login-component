@@ -30,6 +30,8 @@
     "@iazlabs/collections": "^0.1.1",
     "@iazlabs/js-datetime": "^0.1.2",
     "@iazlabs/js-object": "^0.1.0",
+    "@iazlabs/ngx-config": "^0.0.2",
+    "@iazlabs/ngx-storage": "^0.1.1",
     "@iazlabs/utilities": "^0.1.2",
     "@ng-select/ng-select": "^8.1.1",
     "@ngx-translate/core": "^14.0.0",
