@@ -107,3 +107,5 @@ dist
 # History
 .history/
 .angular/
+
+package-lock.json
