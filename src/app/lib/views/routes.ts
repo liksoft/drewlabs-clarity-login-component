@@ -1,10 +1,12 @@
 export const routes = {
   // CLIENTS
-  clientsHomeRoute: "clients-home",
-  clientsListRoute: "clients-list",
-  clientsAddEditRoute: "client-edit",
-  clientsViewRoute: "client-view",
-  procurationsManageRoute: "procurations-manage",
+  clientsModuleRoute: "clients",
+  clientsHomeRoute: "home",
+  clientsListRoute: "list",
+  clientsDetailsRoute: "details",
+  clientsAddEditRoute: "edit",
+  clientsViewRoute: "view",
+  procurationsManageRoute: "procurations",
 
   // ACCOUNTS
   accountHomeRoute: "account_home",
@@ -30,4 +32,8 @@ export const routes = {
   datHomeRoute: "dat_home",
   datListRoute: "dat_list",
   datAddRoute: "dat_add",
+
+  // Common
+  dashboardRoute: 'dashboard',
+  dashboardHome: 'home'
 };

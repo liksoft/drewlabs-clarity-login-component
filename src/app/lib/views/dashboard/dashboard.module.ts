@@ -1,30 +1,25 @@
-import { NgModule } from '@angular/core';
+import { NgModule } from "@angular/core";
 import {
   MODULE_DECLARATIONS,
   AdminDashboardRoutingModule,
-  COMPONENTS_PROVIDERS
-} from './dashboard-routing.module';
-import { RouterModule } from '@angular/router';
-import { SharedModule } from '../shared.module';
-import { HttpClientModule } from '@angular/common/http';
-import { HighchartsChartModule } from 'highcharts-angular';
-
+  COMPONENTS_PROVIDERS,
+} from "./dashboard-routing.module";
+import { SharedModule } from "../shared.module";
+import { HighchartsChartModule } from "highcharts-angular";
+import { ClientsModule } from "./pages/clients/clients.module";
 
 @NgModule({
   imports: [
     AdminDashboardRoutingModule,
     SharedModule,
-    RouterModule,
     HighchartsChartModule,
+    ClientsModule,
   ],
-  declarations: [
-    ...MODULE_DECLARATIONS,
-
-  ],
+  declarations: [...MODULE_DECLARATIONS],
   exports: [...MODULE_DECLARATIONS],
   providers: [...COMPONENTS_PROVIDERS],
-  entryComponents: []
+  entryComponents: [],
 })
 export class DashboardModule {
-  constructor() { }
+  constructor() {}
 }
