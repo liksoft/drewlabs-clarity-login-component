@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from "@angular/core";
+import { Component, Inject, OnDestroy } from "@angular/core";
 import { partialConfigs } from "../partials/partials-configs";
 import { UsersProvider } from "../../core/auth/core/providers/app-user";
 import { DepartmentsProvider } from "../../core/auth/core/providers/department";
@@ -6,7 +6,7 @@ import { RolesProvider } from "../../core/auth/core/providers/role";
 import { AuthorizationsProvider } from "../../core/auth/core/providers/authorizations";
 import { CompaniesProvider } from "../../core/auth/core/providers/organisation";
 import { RoutesMap } from "../partials/routes";
-import { AppUIStateProvider } from "src/app/lib/core/ui-state";
+import { UIStateProvider, UI_STATE_PROVIDER } from "../partials/ui-state";
 
 const resetProvidersStores = (providers: { destroy(): void }[]) => {
   providers.forEach((provider) => provider.destroy());
@@ -41,7 +41,7 @@ export class DashboardComponent implements OnDestroy {
   ];
 
   constructor(
-    uiState: AppUIStateProvider,
+    @Inject(UI_STATE_PROVIDER) uiState: UIStateProvider,
     private users: UsersProvider,
     private departments: DepartmentsProvider,
     private roles: RolesProvider,

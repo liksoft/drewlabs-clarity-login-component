@@ -5,7 +5,7 @@ import "moment/locale/en-gb";
 import { Component, Inject } from "@angular/core";
 import { TranslationService } from "./lib/core/translator/translator.service";
 import { Router } from "@angular/router";
-import { AppUIStateProvider, UIStateStatusCode } from "./lib/core/ui-state";
+import { UIStateProvider, UIStateStatusCode, UI_STATE_PROVIDER } from "./lib/views/partials/ui-state";
 import { map, Subject, takeUntil, tap } from "rxjs";
 import { ErrorHandler, HTTP_CLIENT } from "./lib/core/http";
 import { isEmpty } from "@iazlabs/utilities";
@@ -35,7 +35,7 @@ export class AppComponent {
     private translate: TranslationService,
     private router: Router,
     private location: Location,
-    private uiState: AppUIStateProvider,
+    @Inject(UI_STATE_PROVIDER) private uiState: UIStateProvider,
     @Inject(HTTP_CLIENT) errorHandler: ErrorHandler
   ) {
     this.translate.provider.addLangs(["en", "fr"]);
