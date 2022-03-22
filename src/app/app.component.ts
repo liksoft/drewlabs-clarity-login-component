@@ -1,7 +1,4 @@
-import * as moment from "moment";
 import { Location } from "@angular/common";
-import "moment/locale/fr";
-import "moment/locale/en-gb";
 import { Component, Inject } from "@angular/core";
 import { TranslationService } from "./lib/core/translator/translator.service";
 import { Router } from "@angular/router";
@@ -9,6 +6,7 @@ import { UIStateProvider, UIStateStatusCode, UI_STATE_PROVIDER } from "./lib/vie
 import { map, Subject, takeUntil, tap } from "rxjs";
 import { ErrorHandler, HTTP_CLIENT } from "./lib/core/http";
 import { isEmpty } from "@iazlabs/utilities";
+import { JSDate } from  '@iazlabs/js-datetime';
 
 @Component({
   selector: "app-root",
@@ -47,7 +45,7 @@ export class AppComponent {
       browserLang.match(/en|fr/) ? browserLang : "fr"
     );
     // Set moment locale
-    moment.locale(browserLang);
+    JSDate.locale(browserLang);
 
     errorHandler.errorState$
       .pipe(

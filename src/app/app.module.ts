@@ -51,6 +51,7 @@ import { SESSION_STORAGE } from "./lib/core/utils/ng/common";
 import { SecureWebStorage } from "./lib/core/storage/core";
 import { Router } from "@angular/router";
 import { DynamicFormControlModule } from "./lib/core/components/dynamic-inputs/angular";
+import { PaginationModule } from "./lib/bloc/services/pagination";
 // #endregion Dropzone configuration
 
 registerLocaleData(localeFr, "fr", localeFrExtra);
@@ -214,6 +215,11 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
         deps: [HttpClient, SESSION_STORAGE],
       }
     ),
+
+    // Pagination
+    PaginationModule.forRoot({
+      // module configurations definitions
+    })
   ],
   providers: [
     TranslationService,
