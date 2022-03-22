@@ -16,6 +16,7 @@ import { isEmpty } from "@iazlabs/utilities";
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent {
+
   title = "CNSS PAIEMENTS";
   uiState$ = this.uiState.uiState.pipe(
     map((state) => ({
@@ -26,6 +27,7 @@ export class AppComponent {
         state.status === null,
     }))
   );
+
   // tslint:disable-next-line: variable-name
   private _destroy$ = new Subject<void>();
 
