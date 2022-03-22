@@ -12,7 +12,7 @@ import { PipesModule } from "./partials/pipes";
 import { DynamicFormControlModule } from "../core/components/dynamic-inputs/angular";
 import { ProgressBarModule } from "./partials/progress-bar";
 import { DropzoneModule } from "../core/components/dropzone";
-import { UIStateComponentsModule } from "./partials/ui-state-components";
+import { UIStateComponentsModule } from "./partials/ui-state";
 import { DatagridHeaderModule } from "./partials/datgrid-header";
 import { TopBarModule } from "./partials/topbar";
 import { DetailedTablePreviewModule } from "./partials/detailed-table-preview";

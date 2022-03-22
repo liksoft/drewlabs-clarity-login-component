@@ -23,18 +23,17 @@ import {
 import { HttpClient } from "@angular/common/http";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { TranslationService } from "./lib/core/translator";
-import { DynamicFormControlModule } from "./lib/core/components/dynamic-inputs/dynamic-form-control";
 import { parseV3HttpResponse } from "./lib/core/http/core/v3/http-response";
 import { HttpModule } from "./lib/core/http";
 
 // #region UI state module imports
-import { UIStateComponentsModule } from "./lib/views/partials/ui-state-components";
 import {
   UIStateModule,
   UIStateProvider,
   UIStateStatusCode,
   UI_STATE_PROVIDER,
-} from "./lib/core/ui-state";
+  UIStateComponentsModule,
+} from "./lib/views/partials/ui-state";
 // #endregion UI state module imports
 
 // #region Dropzone configuration
@@ -51,6 +50,8 @@ import { interval, lastValueFrom } from "rxjs";
 import { SESSION_STORAGE } from "./lib/core/utils/ng/common";
 import { SecureWebStorage } from "./lib/core/storage/core";
 import { Router } from "@angular/router";
+import { DynamicFormControlModule } from "./lib/core/components/dynamic-inputs/angular";
+import { PaginationModule } from "./lib/views/partials/clr-smart-grid/pagination";
 // #endregion Dropzone configuration
 
 registerLocaleData(localeFr, "fr", localeFrExtra);
@@ -214,6 +215,11 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
         deps: [HttpClient, SESSION_STORAGE],
       }
     ),
+
+    // Pagination
+    PaginationModule.forRoot({
+      // module configurations definitions
+    })
   ],
   providers: [
     TranslationService,

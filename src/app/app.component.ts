@@ -1,14 +1,12 @@
-import * as moment from "moment";
 import { Location } from "@angular/common";
-import "moment/locale/fr";
-import "moment/locale/en-gb";
 import { Component, Inject } from "@angular/core";
 import { TranslationService } from "./lib/core/translator/translator.service";
 import { Router } from "@angular/router";
-import { AppUIStateProvider, UIStateStatusCode } from "./lib/core/ui-state";
+import { UIStateProvider, UIStateStatusCode, UI_STATE_PROVIDER } from "./lib/views/partials/ui-state";
 import { map, Subject, takeUntil, tap } from "rxjs";
 import { ErrorHandler, HTTP_CLIENT } from "./lib/core/http";
 import { isEmpty } from "@iazlabs/utilities";
+import { JSDate } from  '@iazlabs/js-datetime';
 
 @Component({
   selector: "app-root",
@@ -16,6 +14,7 @@ import { isEmpty } from "@iazlabs/utilities";
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent {
+
   title = "CNSS PAIEMENTS";
   uiState$ = this.uiState.uiState.pipe(
     map((state) => ({
@@ -26,6 +25,7 @@ export class AppComponent {
         state.status === null,
     }))
   );
+
   // tslint:disable-next-line: variable-name
   private _destroy$ = new Subject<void>();
 
@@ -33,7 +33,7 @@ export class AppComponent {
     private translate: TranslationService,
     private router: Router,
     private location: Location,
-    private uiState: AppUIStateProvider,
+    @Inject(UI_STATE_PROVIDER) private uiState: UIStateProvider,
     @Inject(HTTP_CLIENT) errorHandler: ErrorHandler
   ) {
     this.translate.provider.addLangs(["en", "fr"]);
@@ -45,7 +45,7 @@ export class AppComponent {
       browserLang.match(/en|fr/) ? browserLang : "fr"
     );
     // Set moment locale
-    moment.locale(browserLang);
+    JSDate.locale(browserLang);
 
     errorHandler.errorState$
       .pipe(
