@@ -26,13 +26,14 @@
     "@clr/angular": "13.0.2",
     "@clr/icons": "^13.0.0",
     "@clr/ui": "13.0.2",
+    "@iazlabs/built-value": "^0.1.1",
     "@iazlabs/collections": "^0.1.1",
     "@iazlabs/js-datetime": "^0.1.2",
     "@iazlabs/js-object": "^0.1.0",
     "@iazlabs/ngx-config": "^0.0.2",
     "@iazlabs/ngx-storage": "^0.1.1",
-    "@iazlabs/rx-state": "^0.1.4",
-    "@iazlabs/utilities": "^0.1.2",
+    "@iazlabs/rx-state": "^0.1.8",
+    "@iazlabs/utilities": "^0.1.7",
     "@ng-select/ng-select": "^8.1.1",
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
@@ -58,7 +59,7 @@
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~13.2.3",
+    "@angular-devkit/build-angular": "^13.3.0",
     "@angular/cli": "~13.2.3",
     "@angular/compiler-cli": "~13.2.2",
     "@angular/language-service": "~13.2.2",
@@ -81,9 +82,9 @@
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
-    "protractor": "~7.0.0",
+    "protractor": "^4.0.14",
     "ts-node": "~8.3.0",
-    "tslint": "~6.1.0",
+    "tslint": "^5.12.1",
     "typescript": "~4.5.5"
   },
   "browser": {

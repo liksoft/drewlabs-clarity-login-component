@@ -39,15 +39,15 @@ import { StrategyBasedAuthModule } from "./login/core";
     StorageModule,
     AuthModule,
     DragDropModule,
+    DynamicFormControlModule,
+    DropzoneModule,
+    DatagridHeaderModule,
+    DetailedTablePreviewModule,
     //
     PipesModule,
-    DynamicFormControlModule,
     ProgressBarModule,
-    DropzoneModule,
     UIStateComponentsModule,
-    DatagridHeaderModule,
     TopBarModule,
-    DetailedTablePreviewModule,
     SidebarModule,
 
     // TODO : EXPORT StrategyBasedAuthModule

@@ -57,7 +57,7 @@ export class AppNavComponent implements OnInit {
       {
         key: "navbar_dashboard",
         routeIcon: "home",
-        route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.homeRoute}`,
+        route: `/${routes.dashboardRoute}/${routes.dashboardHome}`,
         // children: [],
       },
 
@@ -68,22 +68,22 @@ export class AppNavComponent implements OnInit {
           {
             key: "clients_home",
             routeIcon: "tools",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.clientsHomeRoute}`,
+            route: `${routes.clientsModuleRoute}/${routes.clientsHomeRoute}`,
           },
           {
             key: "members_list",
             routeIcon: "add-text",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.clientsListRoute}`,
+            route: `${routes.clientsModuleRoute}/${routes.clientsListRoute}`,
           },
           {
             key: "members_add",
             routeIcon: "list",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.clientsAddEditRoute}`,
+            route: `${routes.clientsModuleRoute}/${routes.clientsAddEditRoute}`,
           },
           {
             key: "procuration_list",
             routeIcon: "list",
-            route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${routes.procurationsManageRoute}`,
+            route: `${routes.clientsModuleRoute}/${routes.procurationsManageRoute}`,
           },
         ],
       },

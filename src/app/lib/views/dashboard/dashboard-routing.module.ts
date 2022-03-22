@@ -4,16 +4,10 @@ import { AccountsComponent } from "./pages/accounts/accounts.component";
 import { NgModule, LOCALE_ID, Provider } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { DashboardComponent } from "./dashboard.component";
-import { DashboardHomeComponent } from "./home/home.component";
-import { partialConfigs } from "../partials/partials-configs";
+import { DashboardHomeComponent } from "./pages/home/home.component";
 import { AppNavComponent } from "./app-nav/app-nav.component";
 import { SettingsComponent } from "./settings/settings.component";
 import { UpdatePasswordViewComponent } from "./settings/update-password-view/update-password-view.component";
-import { MemberAddEditComponent } from "./pages/clients/adhesion-membre/member-add-edit/member-add-edit.component";
-import { ProcurationsComponent } from "./pages/clients/procurations/procurations.component";
-import { MemberViewComponent } from "./pages/clients/adhesion-membre/member-view/member-view.component";
-import { AdhesionMembreComponent } from "./pages/clients/adhesion-membre/adhesion-membre.component";
-import { ClientsComponent } from "./pages/clients/clients.component";
 import { CreditsListComponent } from "./pages/credits/credits-list/credits-list.component";
 import { CreditsAddComponent } from "./pages/credits/credits-add/credits-add.component";
 import { CaissesComponent } from "./pages/caisses/caisses.component";
@@ -28,6 +22,8 @@ import { DatListComponent } from "./pages/dat/dat-list/dat-list.component";
 import { DatAddComponent } from "./pages/dat/dat-add/dat-add.component";
 import { CaisseOperationsComponent } from "./pages/caisses/caisse-operations/caisse-operations.component";
 import { routes } from "../routes";
+import { ClientsComponent } from "./pages/clients/clients.component";
+import { CLIENT_ROUTES } from "./pages/clients/routes";
 
 export const getRoutes = () => {
   const childRoutes: Routes = [
@@ -35,31 +31,16 @@ export const getRoutes = () => {
       path: "",
       component: DashboardComponent,
       pathMatch: "full",
-      redirectTo: partialConfigs.routes.commonRoutes.homeRoute,
+      redirectTo: routes.dashboardHome,
     },
     {
-      path: partialConfigs.routes.commonRoutes.homeRoute,
+      path: routes.dashboardHome,
       component: DashboardHomeComponent,
     },
     {
-      path: routes.clientsHomeRoute,
+      path: `${routes.clientsModuleRoute}`,
       component: ClientsComponent,
-    },
-    {
-      path: routes.clientsListRoute,
-      component: AdhesionMembreComponent,
-    },
-    {
-      path: routes.clientsAddEditRoute,
-      component: MemberAddEditComponent,
-    },
-    {
-      path: routes.clientsHomeRoute,
-      component: MemberViewComponent,
-    },
-    {
-      path: routes.procurationsManageRoute,
-      component: ProcurationsComponent,
+      children: CLIENT_ROUTES
     },
     // ACCOUNTS
     {
@@ -138,24 +119,19 @@ export const getRoutes = () => {
 
 @NgModule({
   imports: [RouterModule.forChild(getRoutes())],
+  exports: [RouterModule],
 })
 export class AdminDashboardRoutingModule {}
 
 export const MODULE_DECLARATIONS = [
   DashboardHomeComponent,
   DashboardComponent,
-
   // Navigation component
   AppNavComponent,
   // Accounts & Settings components
   SettingsComponent,
   UpdatePasswordViewComponent,
   // App Components
-  AdhesionMembreComponent,
-  ProcurationsComponent,
-  MemberViewComponent,
-  MemberAddEditComponent,
-  ClientsComponent,
   AccountsComponent,
   AccountListComponent,
   CreditsComponent,

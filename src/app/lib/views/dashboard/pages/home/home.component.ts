@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
-import { partialConfigs } from "../../partials/partials-configs";
-import { routes } from "../../routes";
+import { partialConfigs } from "../../../partials/partials-configs";
+import { routes } from "../../../routes";
 
 @Component({
   selector: "app-dashboard-home",

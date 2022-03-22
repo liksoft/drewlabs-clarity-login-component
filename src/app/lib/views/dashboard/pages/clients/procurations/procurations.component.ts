@@ -1,5 +1,5 @@
-import { Component, OnInit } from "@angular/core";
-import { procurationsList } from "./testing/procurations";
+import { Component } from "@angular/core";
+import { procurationsList } from "../testing/procurations";
 
 @Component({
   selector: "app-procurations",
