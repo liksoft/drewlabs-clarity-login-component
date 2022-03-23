@@ -1,4 +1,4 @@
-<ng-container *ngIf="uiState$ | async as state">
+<!-- <ng-container *ngIf="uiState$ | async as state">
   <app-ui-notification
     [props]="{
       message: state.uiMessage,
@@ -15,4 +15,48 @@
     [overlay]="true"
   ></app-progress-bar>
 </ng-container>
-<router-outlet></router-outlet>
+<router-outlet></router-outlet> -->
+
+<div class="container__clr-smart-grid">
+  <azlabs-clr-smart-grid
+    [columns]="columns"
+    [data]="individuals"
+    [config]="{
+      sizeOptions: [5, 10, 50, 100, 150],
+      pageSize: 5,
+      hasExpandableRows: false,
+      hasDetails: true,
+      selectable: true,
+      singleSelection: false
+    }"
+    (dgRefresh)="onDgRefresh($event)"
+    (selectedChange)="onSelectedChanges($event)"
+  >
+    <ng-template #dgActionBar let-selected>
+      <div class="btn-group">
+        <button type="button" class="btn btn-sm btn-outline">
+          <cds-icon shape="plus"></cds-icon>
+          Add to group
+        </button>
+        <button type="button" class="btn btn-sm btn-outline">
+          <cds-icon shape="close"></cds-icon>
+          Delete
+        </button>
+        <button type="button" class="btn btn-sm btn-outline" *ngIf="selected">
+          <cds-icon shape="pencil"></cds-icon>
+          Edit
+        </button>
+      </div>
+    </ng-template>
+    <ng-template #dgActionOverflow let-item>
+      <button class="action-item">{{ item['firstname'] }}</button>
+    </ng-template>
+    <ng-template #dgRowDetail let-item>
+      <pre>Row Details!</pre>
+    </ng-template>
+    <ng-template #dgDetailBody let-item>
+      <div class="dg-detail-header">Detail Pane Header!</div>
+      <pre>{{ item | json }}</pre>
+    </ng-template>
+  </azlabs-clr-smart-grid>
+</div>
