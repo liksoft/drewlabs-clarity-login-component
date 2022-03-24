@@ -1,7 +1,6 @@
 {
   "name": "coopecclients",
   "version": "0.0.1",
-  "type": "module",
   "scripts": {
     "ng": "ng",
     "start:aot": "ng serve --port 4900 --configuration production",
@@ -29,6 +28,7 @@
     "@clr/ui": "13.0.2",
     "@iazlabs/built-value": "^0.1.2",
     "@iazlabs/collections": "^0.1.2",
+    "@iazlabs/functional": "^0.1.8",
     "@iazlabs/js-datetime": "^0.1.4",
     "@iazlabs/js-object": "^0.1.1",
     "@iazlabs/ngx-config": "^0.0.2",

@@ -1,5 +1,5 @@
 import { Location } from "@angular/common";
-import { Component, Inject } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import { TranslationService } from "./lib/core/translator/translator.service";
 import { Router } from "@angular/router";
 import {
@@ -10,14 +10,15 @@ import {
 import { map, Subject, takeUntil, tap } from "rxjs";
 import { ErrorHandler, HTTP_CLIENT } from "./lib/core/http";
 import { isEmpty } from "@iazlabs/utilities";
-import { JSDate } from  '@iazlabs/js-datetime';
+import { JSDate } from "@iazlabs/js-datetime";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = "CNSS PAIEMENTS";
   uiState$ = this.uiState.uiState.pipe(
     map((state) => ({
@@ -37,7 +38,8 @@ export class AppComponent {
     private router: Router,
     private location: Location,
     @Inject(UI_STATE_PROVIDER) private uiState: UIStateProvider,
-    @Inject(HTTP_CLIENT) errorHandler: ErrorHandler
+    @Inject(HTTP_CLIENT) errorHandler: ErrorHandler,
+    private httpClient: HttpClient
   ) {
     this.translate.provider.addLangs(["en", "fr"]);
     const browserLang = this.translate.provider.getBrowserLang() ?? "fr";
@@ -66,6 +68,8 @@ export class AppComponent {
       .subscribe();
   }
 
+  ngOnInit() {}
+
   onIsAuthenticated(value: boolean) {
     setTimeout(() => {
       const currentPath = this.location.path();
@@ -78,13 +82,5 @@ export class AppComponent {
 
   onEndActionEvent({ status, message }: { status?: number; message?: string }) {
     this.uiState.endAction(message, status);
-  }
-
-  onDgRefresh(event: unknown) {
-    console.log(event);
-  }
-
-  onSelectedChanges(event: unknown | unknown[]) {
-    console.log(event);
   }
 }

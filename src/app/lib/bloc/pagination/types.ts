@@ -12,10 +12,11 @@ export type PaginatorType = {
    * @param _query
    * @param hash
    */
-  pagination: <T = unknown>(
+  paginate: <T = unknown>(
     path: string,
     _query: MapToPaginationQueryOutputType,
-    hash: number
+    // Overload the default configuration of the Paginator
+    queryConfig?: QueryCachingConfig
   ) => Observable<QueryOutputType<T>>;
 
   /**
@@ -29,9 +30,28 @@ export type PaginatorType = {
    */
   refresh: (
     path: string,
-    _query: MapToPaginationQueryOutputType,
-    hash: number
+    _query: MapToPaginationQueryOutputType
   ) => void;
 };
 
 export type QueryCachingConfig = Partial<QueryConfig>;
+
+/**
+ * @description Type definition of Paginator internal client used
+ * to query paginable data
+ */
+export type PaginatorInternalClient =
+  | {
+      /**
+       * @param resource  Path to the ressource collection. For Rest API requests this represent the REST resource endpoint
+       * @param options   Options object used as request parameters
+       */
+      get: <T, OptionType extends object = { [index: string]: any }>(
+        resource: string,
+        options: OptionType
+      ) => Observable<T> | Promise<T>;
+    }
+  | (<T, OptionType extends object = { [index: string]: any }>(
+      resource: string,
+      options: OptionType
+    ) => Observable<T> | Promise<T>);

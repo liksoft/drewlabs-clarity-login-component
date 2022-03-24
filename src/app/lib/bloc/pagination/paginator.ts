@@ -1,11 +1,28 @@
-import { Inject, Injectable } from "@angular/core";
+import { Inject, Injectable, Optional } from "@angular/core";
 import { hashCode } from "@iazlabs/strings";
-import { Client, HTTP_CLIENT } from "../../core/http";
 import { MapToPaginationQueryOutputType } from "../../core/pagination";
 import { query, refreshQuery } from "rx-query";
-import { Observable } from "rxjs";
-import { PaginatorType, QueryCachingConfig, QueryOutputType } from "./types";
-import { PAGINATION_QUERY_CONFIG } from "./tokens";
+import { from, Observable } from "rxjs";
+import {
+  PaginatorInternalClient,
+  PaginatorType,
+  QueryCachingConfig,
+  QueryOutputType,
+} from "./types";
+import { PAGINATION_QUERY_CONFIG, PAGINATOR_INTERNAL_CLIENT } from "./tokens";
+import { memoize } from '@iazlabs/functional';
+
+function isPromise(promise: unknown) {
+  return (
+    (promise &&
+      Object.prototype.toString.call(promise) === "[object Promise]") ||
+    Boolean(
+      promise &&
+        typeof promise === "object" &&
+        typeof (promise as any).then === "function"
+    )
+  );
+}
 
 /**
  * Compute the hash code of user provide http query
@@ -27,38 +44,52 @@ export function computeHash(
   if (null === query || queryType === "undefined") {
     return 0;
   }
-  return hashCode(query as string);
+  let hashCode_ = hashCode(query as string);
+  hashCode_ = (hashCode_ ^ (hashCode_ >>> 7) ^ (hashCode_ >>> 4)) & 0x7fffffff;
+  return hashCode_;
 }
 
 @Injectable({
   providedIn: "root",
 })
 export class Paginator implements PaginatorType {
+  // @interal - Provide a memoization implementation arround hash computing implementation
+  private readonly computeHash_ = memoize(computeHash);
+
   /**
    *
    * @param client
    */
   constructor(
-    @Inject(HTTP_CLIENT) private client: Client,
-    @Inject(PAGINATION_QUERY_CONFIG) private queryConfig: QueryCachingConfig
+    @Inject(PAGINATOR_INTERNAL_CLIENT) private client: PaginatorInternalClient,
+    @Inject(PAGINATION_QUERY_CONFIG)
+    @Optional()
+    private queryConfig?: QueryCachingConfig
   ) {}
 
-  pagination<T>(
+  paginate<T>(
     path: string,
     _query: MapToPaginationQueryOutputType,
-    hash: number
+    // Overload the default configuration of the Paginator
+    queryConfig?: QueryCachingConfig
   ) {
     return query(
-      `${path}/:hash=${hash}`,
-      _query,
+      `${path}`,
+      this.computeHash_(_query),
       () => {
-        return this.client.get(path, _query);
+        const result =
+          typeof this.client === "function"
+            ? this.client.call(this, path, _query)
+            : this.client.get(path, _query);
+        return isPromise(result)
+          ? from(result)
+          : (result as Observable<unknown>);
       },
-      this.queryConfig
+      queryConfig || this.queryConfig
     ) as Observable<QueryOutputType<T>>;
   }
 
-  refresh(path: string, _query: MapToPaginationQueryOutputType, hash: number) {
-    return refreshQuery(`${path}/:hash=${hash}`, _query);
+  refresh(path: string, _query: MapToPaginationQueryOutputType) {
+    return refreshQuery(`${path}`, this.computeHash_(_query));
   }
 }
