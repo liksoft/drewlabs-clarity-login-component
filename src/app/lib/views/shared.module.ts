@@ -51,7 +51,7 @@ import { ClrSmartGridModule } from "./partials/clr-smart-grid";
     TopBarModule,
     SidebarModule,
 
-    // Smartgrid module
+    // Clr-Smart-Grid-Module imports
     ClrSmartGridModule,
 
     // TODO : EXPORT StrategyBasedAuthModule

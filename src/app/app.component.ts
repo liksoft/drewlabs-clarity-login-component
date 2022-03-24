@@ -2,13 +2,15 @@ import { Location } from "@angular/common";
 import { Component, Inject } from "@angular/core";
 import { TranslationService } from "./lib/core/translator/translator.service";
 import { Router } from "@angular/router";
-import { UIStateProvider, UIStateStatusCode, UI_STATE_PROVIDER } from "./lib/views/partials/ui-state";
+import {
+  UIStateProvider,
+  UIStateStatusCode,
+  UI_STATE_PROVIDER,
+} from "./lib/views/partials/ui-state";
 import { map, Subject, takeUntil, tap } from "rxjs";
 import { ErrorHandler, HTTP_CLIENT } from "./lib/core/http";
 import { isEmpty } from "@iazlabs/utilities";
 import { JSDate } from  '@iazlabs/js-datetime';
-import { individuals } from "./lib/views/dashboard/pages/clients/testing/members";
-import { GridColumnType } from "./lib/views/partials/clr-smart-grid";
 
 @Component({
   selector: "app-root",
@@ -16,7 +18,6 @@ import { GridColumnType } from "./lib/views/partials/clr-smart-grid";
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent {
-
   title = "CNSS PAIEMENTS";
   uiState$ = this.uiState.uiState.pipe(
     map((state) => ({
@@ -30,7 +31,6 @@ export class AppComponent {
 
   // tslint:disable-next-line: variable-name
   private _destroy$ = new Subject<void>();
-
 
   constructor(
     private translate: TranslationService,
@@ -78,5 +78,13 @@ export class AppComponent {
 
   onEndActionEvent({ status, message }: { status?: number; message?: string }) {
     this.uiState.endAction(message, status);
+  }
+
+  onDgRefresh(event: unknown) {
+    console.log(event);
+  }
+
+  onSelectedChanges(event: unknown | unknown[]) {
+    console.log(event);
   }
 }
