@@ -18,6 +18,7 @@ import { TopBarModule } from "./partials/topbar";
 import { DetailedTablePreviewModule } from "./partials/detailed-table-preview";
 import { SidebarModule } from "./partials/sidebar";
 import { StrategyBasedAuthModule } from "./login/core";
+import { ClrSmartGridModule } from "./partials/clr-smart-grid";
 
 @NgModule({
   imports: [
@@ -49,6 +50,9 @@ import { StrategyBasedAuthModule } from "./login/core";
     UIStateComponentsModule,
     TopBarModule,
     SidebarModule,
+
+    // Smartgrid module
+    ClrSmartGridModule,
 
     // TODO : EXPORT StrategyBasedAuthModule
     StrategyBasedAuthModule,

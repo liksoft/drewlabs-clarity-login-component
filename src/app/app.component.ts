@@ -7,6 +7,8 @@ import { map, Subject, takeUntil, tap } from "rxjs";
 import { ErrorHandler, HTTP_CLIENT } from "./lib/core/http";
 import { isEmpty } from "@iazlabs/utilities";
 import { JSDate } from  '@iazlabs/js-datetime';
+import { individuals } from "./lib/views/dashboard/pages/clients/testing/members";
+import { GridColumnType } from "./lib/views/partials/clr-smart-grid";
 
 @Component({
   selector: "app-root",
@@ -28,6 +30,7 @@ export class AppComponent {
 
   // tslint:disable-next-line: variable-name
   private _destroy$ = new Subject<void>();
+
 
   constructor(
     private translate: TranslationService,

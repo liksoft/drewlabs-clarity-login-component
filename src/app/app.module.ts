@@ -51,7 +51,6 @@ import { SESSION_STORAGE } from "./lib/core/utils/ng/common";
 import { SecureWebStorage } from "./lib/core/storage/core";
 import { Router } from "@angular/router";
 import { DynamicFormControlModule } from "./lib/core/components/dynamic-inputs/angular";
-import { PaginationModule } from "./lib/views/partials/clr-smart-grid/pagination";
 // #endregion Dropzone configuration
 
 registerLocaleData(localeFr, "fr", localeFrExtra);
@@ -217,9 +216,9 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
     ),
 
     // Pagination
-    PaginationModule.forRoot({
-      // module configurations definitions
-    })
+    // PaginationModule.forRoot({
+    //   // module configurations definitions
+    // })
   ],
   providers: [
     TranslationService,
