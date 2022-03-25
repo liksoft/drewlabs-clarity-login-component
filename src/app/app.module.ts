@@ -142,8 +142,10 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
     // DYNAMIC CONTROLS PROVIDERS
     DynamicFormControlModule.forRoot({
       serverConfigs: {
-        host: environment.forms.host,
-        bindingsPath: environment.forms.endpoints.bindingsPath,
+        api: {
+          host: environment.forms.host,
+          bindings: environment.forms.endpoints.bindingsPath,
+        },
       },
       formsAssets: "/assets/resources/jsonforms.json",
       dropzoneConfigs: {
