@@ -7,7 +7,7 @@ import {
 } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Subject } from "rxjs";
-import { CustomValidators } from "src/app/lib/core/validators";
+import { CustomValidators } from "src/app/lib/core/components/dynamic-inputs/angular/validators";
 import { ComponentReactiveFormHelpers } from "src/app/lib/core/components/dynamic-inputs/angular";
 
 @Component({
@@ -51,7 +51,7 @@ export class UpdatePasswordViewComponent implements OnInit, OnDestroy {
   // tslint:disable-next-line: typedef
   ngOnInit() {
     this.formGroup.setValidators(
-      CustomValidators.Match("password", "password_confirmation")
+      CustomValidators.match("password", "password_confirmation")
     );
     this.formGroup.updateValueAndValidity();
   }

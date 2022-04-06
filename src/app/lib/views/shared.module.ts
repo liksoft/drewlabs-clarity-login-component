@@ -9,7 +9,7 @@ import { TranslateModule } from "@ngx-translate/core";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { HttpModule } from "../core/http";
 import { PipesModule } from "./partials/pipes";
-import { DynamicFormControlModule } from "../core/components/dynamic-inputs/angular";
+import { NgxSmartFormModule } from "../core/components/dynamic-inputs/angular";
 import { ProgressBarModule } from "./partials/progress-bar";
 import { DropzoneModule } from "../core/components/dropzone";
 import { UIStateComponentsModule } from "./partials/ui-state";
@@ -40,7 +40,7 @@ import { ClrSmartGridModule } from "./partials/clr-smart-grid";
     StorageModule,
     AuthModule,
     DragDropModule,
-    DynamicFormControlModule,
+    NgxSmartFormModule,
     DropzoneModule,
     DatagridHeaderModule,
     DetailedTablePreviewModule,

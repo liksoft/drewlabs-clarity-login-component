@@ -50,7 +50,7 @@ import { interval, lastValueFrom } from "rxjs";
 import { SESSION_STORAGE } from "./lib/core/utils/ng/common";
 import { SecureWebStorage } from "./lib/core/storage/core";
 import { Router } from "@angular/router";
-import { DynamicFormControlModule } from "./lib/core/components/dynamic-inputs/angular";
+import { NgxSmartFormModule } from "./lib/core/components/dynamic-inputs/angular";
 // #endregion Dropzone configuration
 
 registerLocaleData(localeFr, "fr", localeFrExtra);
@@ -140,7 +140,7 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
     UIStateModule.forRoot(),
     UIStateComponentsModule.forRoot(),
     // DYNAMIC CONTROLS PROVIDERS
-    DynamicFormControlModule.forRoot({
+    NgxSmartFormModule.forRoot({
       serverConfigs: {
         api: {
           host: environment.forms.host,

@@ -12,6 +12,9 @@ import { ErrorHandler, HTTP_CLIENT } from "./lib/core/http";
 import { isEmpty } from "@iazlabs/utilities";
 import { JSDate } from "@iazlabs/js-datetime";
 import { HttpClient } from "@angular/common/http";
+import { FORM_CLIENT } from "./lib/core/components/dynamic-inputs/angular";
+import { FormsClient } from "./lib/core/components/dynamic-inputs/core";
+import { doLog } from "./lib/core/rxjs/operators";
 
 @Component({
   selector: "app-root",
