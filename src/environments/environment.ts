@@ -11,16 +11,13 @@ export const environment = {
   APP_FILE_SERVER_URL: "https://auth.lik.tg/",
   APP_SECRET: "V1HQkt03PoGdlxN",
   forms: {
-    host: "https://auth.lik.tg/",
+    host: "http://127.0.0.1:8000/",
     endpoints: {
-      forms: "api/forms",
-      formControls: "api/form-controls",
-      optionsPath: "api/form-control-options",
-      bindingsPath: "api/control-bindings",
+      bindingsPath: "api/v2/control-bindings",
     },
   },
   api: {
-    host: "https://auth.lik.tg/",
+    host: "http://127.0.0.1:8000/",
   },
   auth: {
     host: "https://auth.lik.tg/",

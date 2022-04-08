@@ -4,19 +4,16 @@ export const environment = {
   userInfoStorageKey: "CNSS_PAYMENTS_ADMIN_USER_INFO",
   authTokenStorageKey: "CNSS_PAYMENTS_ADMIN_X_AUTH_TOKEN",
   authRememberTokenStorageKey: "CNSS_PAYMENTS_ADMIN_AUTH_REMEMBER_TOKEN",
-  APP_FILE_SERVER_URL: "http://localhost:8300/",
+  APP_FILE_SERVER_URL: "http://127.0.0.1:8000/",
   APP_SECRET: "Ouiyw3ckFv@O5H",
   forms: {
-    host: "http://localhost:8300/",
+    host: "http://127.0.0.1:8000/",
     endpoints: {
-      forms: "api/forms",
-      formControls: "api/form-controls",
-      optionsPath: "api/form-control-options",
-      bindingsPath: "api/control-bindings",
+      bindingsPath: "api/v2/control-bindings",
     },
   },
   api: {
-    host: "http://localhost:8300/",
+    host: "http://127.0.0.1:8000/",
   },
   auth: {
     host: "https://auth.lik.tg/",
