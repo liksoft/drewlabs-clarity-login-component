@@ -63,7 +63,6 @@
 //   @Input() performingAction: boolean = false;
 // }
 
-
 // const testSetup = (routeData?: Data) => {
 //   const routerSpy = jasmine.createSpyObj('Router', ['navigateByUrl', 'navigate']) as SpyObj<Router>;
 //   const httpClientServiceSpy = new HttpClientStub();
@@ -118,7 +117,7 @@
 
 //   it('should set component state when component initialize', () => {
 //     // Arrange
-//     const { component, fixture } = testSetup({ dashboardPath: 'dashboard' });
+//     const { component, fixture } = testSetup({ headerPath: 'header' });
 
 //     // Assert
 //     component.loginViewState$.subscribe(state => {
@@ -132,7 +131,7 @@
 
 //   it('should call component onChildComponentFormSubmitted method and expect loginState to be true', (done: DoneFn) => {
 //     // Arrange
-//     let { component, fixture, httpClientServiceSpy } = testSetup({ dashboardPath: 'dashboard' });
+//     let { component, fixture, httpClientServiceSpy } = testSetup({ headerPath: 'header' });
 //     httpClientServiceSpy = httpClientServiceSpy.setReturnValue(authenticatedResponse);
 //     const defaults = { username: 'azandrew@gmail.com', password: 'SuperSecretPassword' };
 
@@ -151,9 +150,9 @@
 //     component.onChildComponentFormSubmitted(defaults);
 //   });
 
-//   it('should navigate to dashboard when authenticate successfully', fakeAsync(() => {
+//   it('should navigate to header when authenticate successfully', fakeAsync(() => {
 //     // Arrange
-//     let { component, fixture, httpClientServiceSpy, routerSpy } = testSetup({ dashboardPath: 'dashboard' });
+//     let { component, fixture, httpClientServiceSpy, routerSpy } = testSetup({ headerPath: 'header' });
 //     httpClientServiceSpy = httpClientServiceSpy.setReturnValue(authenticatedResponse);
 //     const defaults = { username: 'azandrew@gmail.com', password: 'SuperSecretPassword' };
 
@@ -164,7 +163,7 @@
 //       .pipe(
 //         filter(state => !state.authenticating && isDefined(state.isInitialState))
 //       ).subscribe(() => {
-//         expect(routerSpy.navigateByUrl.calls.first().args[0]).toBe('/dashboard');
+//         expect(routerSpy.navigateByUrl.calls.first().args[0]).toBe('/header');
 //       });
 //     // Act
 //     component.onChildComponentFormSubmitted(defaults);
@@ -173,7 +172,7 @@
 
 //   it('should have login state with loggedIn status equals false', (done: DoneFn) => {
 //     // Arrange
-//     let { component, fixture, httpClientServiceSpy } = testSetup({ dashboardPath: 'dashboard' });
+//     let { component, fixture, httpClientServiceSpy } = testSetup({ headerPath: 'header' });
 //     httpClientServiceSpy = httpClientServiceSpy.setReturnValue(unauthenticatedResponse);
 //     const defaults = { username: 'azandrew@gmail.com', password: 'SuperSecretPassword' };
 

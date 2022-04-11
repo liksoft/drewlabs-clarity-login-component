@@ -57,7 +57,7 @@ export class LoginComponent implements OnDestroy {
           console.log(state);
           // TODO : CHECK IF USER HAS ABILITIES
           if (state) {
-            // TODO : NAVIGATE TO THE APPLICATION DASHBOARD
+            // TODO : NAVIGATE TO THE APPLICATION header
             setTimeout(() => {
               this.router.navigateByUrl(`/${this.data["path"]}`);
             }, 300);
