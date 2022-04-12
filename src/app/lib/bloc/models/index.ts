@@ -10,3 +10,12 @@ export {
   Place,
   TimeStampsAware,
 } from "./common";
+
+export {
+  Address,
+  Member,
+  Individual,
+  Moral,
+  MoralMemberPartiesSignatory,
+  Membership
+} from "./clients";

@@ -117,6 +117,7 @@ export interface Member extends TimeStampsAware {
 }
 
 export interface Membership extends TimeStampsAware {
+  id: number | number;
   categoryId: number;
   statusId: number;
   closedAt?: string;

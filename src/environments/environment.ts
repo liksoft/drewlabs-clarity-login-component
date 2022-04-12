@@ -21,6 +21,13 @@ export const environment = {
   },
   api: {
     host: "https://auth.lik.tg/",
+    endpoints: {
+      clients: {
+        addresses: "api/v1/addresses",
+        individuals: "api/v1/individuals",
+        morals: "api/v1/morals",
+      },
+    },
   },
   auth: {
     host: "https://auth.lik.tg/",
