@@ -45,8 +45,10 @@ export class LoginViewComponent {
   @Input() loggedIn: boolean = false;
   @ViewChild("loginForm") loginForm!: NgForm;
   @Input() public moduleName = "APPNAME";
-  @Input() logoAssetPath = "...";
+  @Input() logoAssetPath = "/src/app/views/styles/assets/images/logo-sogehp-dogtalafie.png";
   @Input() hasRememberMe!: boolean;
+
+  public workspaceLogo = "app/views/styles/assets/images/logo-sogehp-dogtalafie.png";
 
   /**
    * Component object instance initializer
