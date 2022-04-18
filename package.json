@@ -33,6 +33,7 @@
     "@iazlabs/js-object": "^0.1.1",
     "@iazlabs/ngx-config": "^0.0.2",
     "@iazlabs/ngx-storage": "^0.1.1",
+    "@iazlabs/rx-hooks": "^0.1.1",
     "@iazlabs/rx-state": "^0.1.8",
     "@iazlabs/strings": "^0.1.2",
     "@iazlabs/utilities": "^0.1.7",
