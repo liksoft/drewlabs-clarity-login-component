@@ -1,4 +1,4 @@
-<!-- <clr-main-container class="light-mode">
+<clr-main-container class="light-mode">
   <app-top-bar
     [routesMap]="routesMap"
     [applicationName]="'FinApp'"
@@ -12,10 +12,4 @@
       <router-outlet></router-outlet>
     </main>
   </div>
-</clr-main-container> -->
-
-<div class="container light-mode">
-  <ng-container *ngIf="form$ | async as vm">
-    <ngx-smart-form [form]="vm" [autoSubmit]="true"></ngx-smart-form>
-  </ng-container>
-</div>
+</clr-main-container>
