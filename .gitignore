@@ -109,3 +109,5 @@ dist
 .angular/
 
 package-lock.json
+
+/.tmp

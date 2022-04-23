@@ -11,13 +11,13 @@ export const environment = {
   APP_FILE_SERVER_URL: "https://auth.lik.tg/",
   APP_SECRET: "V1HQkt03PoGdlxN",
   forms: {
-    host: "http://127.0.0.1:8000/",
+    host: "https://coopec-clients.lik.tg",
     endpoints: {
       bindingsPath: "api/v2/control-bindings",
     },
   },
   api: {
-    host: "https://auth.lik.tg/",
+    host: "https://coopec-clients.lik.tg",
     endpoints: {
       clients: {
         addresses: "api/v1/addresses",
