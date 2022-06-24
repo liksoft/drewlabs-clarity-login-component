@@ -1,17 +1,15 @@
 import { Location } from "@angular/common";
-import { Component, Inject, OnInit } from "@angular/core";
-import { TranslationService } from "./lib/core/translator/translator.service";
+import { Component, Inject } from "@angular/core";
 import { Router } from "@angular/router";
 import {
   UIStateProvider,
-  UIStateStatusCode,
   UI_STATE_PROVIDER,
 } from "./lib/views/partials/ui-state";
-import { map, Subject, takeUntil, tap } from "rxjs";
-import { ErrorHandler, HTTP_CLIENT } from "./lib/core/http";
+import { map, Subject } from "rxjs";
 import { isEmpty } from "@azlabsjs/utilities";
 import { JSDate } from "@azlabsjs/js-datetime";
 import { HttpClient } from "@angular/common/http";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-root",
@@ -34,38 +32,20 @@ export class AppComponent {
   private _destroy$ = new Subject<void>();
 
   constructor(
-    private translate: TranslationService,
+    private translate: TranslateService,
     private router: Router,
     private location: Location,
     @Inject(UI_STATE_PROVIDER) private uiState: UIStateProvider,
-    @Inject(HTTP_CLIENT) errorHandler: ErrorHandler,
     private httpClient: HttpClient
   ) {
-    this.translate.provider.addLangs(["en", "fr"]);
-    const browserLang = this.translate.provider.getBrowserLang() ?? "fr";
+    this.translate.addLangs(["en", "fr"]);
+    const browserLang = this.translate.getBrowserLang() ?? "fr";
     // Log(browserLang);
-    this.translate.provider.setDefaultLang(browserLang);
+    this.translate.setDefaultLang(browserLang);
     // Insure that translation provider use the user browser language
-    this.translate.provider.use(
-      browserLang.match(/en|fr/) ? browserLang : "fr"
-    );
+    this.translate.use(browserLang.match(/en|fr/) ? browserLang : "fr");
     // Set moment locale
     JSDate.locale(browserLang);
-
-    errorHandler.errorState$
-      .pipe(
-        takeUntil(this._destroy$),
-        tap((state) => {
-          this.onEndActionEvent({
-            status:
-              state.status === 500
-                ? UIStateStatusCode.ERROR
-                : UIStateStatusCode.BAD,
-            message: "",
-          });
-        })
-      )
-      .subscribe();
   }
 
   onIsAuthenticated(value: boolean) {

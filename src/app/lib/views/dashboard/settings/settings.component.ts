@@ -1,10 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { combineLatest } from "rxjs";
+import { BehaviorSubject, combineLatest } from "rxjs";
 import { map } from "rxjs/operators";
-import { IAppUser } from "src/app/lib/core/auth/contracts/v2";
-import { AuthService } from "src/app/lib/core/auth/core";
-import { createStateful } from "src/app/lib/core/rxjs/helpers";
-import { doLog } from "src/app/lib/core/rxjs/operators";
 
 @Component({
   templateUrl: "./settings.component.html",
@@ -16,16 +12,8 @@ export class SettingsComponent {
   apiActive = false;
 
   // tslint:disable-next-line: variable-name
-  private _showHidePasswordUIController$ = createStateful(false);
+  private _showHidePasswordUIController$ = new BehaviorSubject(false);
   showUpdatePasswordUI$ = this._showHidePasswordUIController$.asObservable();
-
-  state$ = combineLatest([this.auth.state$, this.showUpdatePasswordUI$]).pipe(
-    map(([authState, showUpdatePWordView]) => ({
-      user: authState.user as IAppUser,
-      showUpdatePWordView,
-    })),
-    doLog("Setting component state: ")
-  );
 
   // tslint:disable-next-line: typedef
   showUpdatePasswordUI() {
@@ -37,5 +25,5 @@ export class SettingsComponent {
     this._showHidePasswordUIController$.next(false);
   }
 
-  constructor(private auth: AuthService) {}
+  constructor() {}
 }

@@ -31,13 +31,16 @@
                 >
                   <clr-dg-action-overflow>
                     <button class="action-item">
-                      <clr-icon shape="user"></clr-icon> Fiche signalétique
+                      <clr-icon shape="user"></clr-icon>
+                      Fiche signalétique
                     </button>
                     <button class="action-item">
-                      <clr-icon shape="edit"></clr-icon> Modifier infos
+                      <clr-icon shape="edit"></clr-icon>
+                      Modifier infos
                     </button>
                     <button class="action-item">
-                      <clr-icon shape="tasks"></clr-icon> Changer statut
+                      <clr-icon shape="tasks"></clr-icon>
+                      Changer statut
                     </button>
                     <button class="action-item">
                       <clr-icon shape="close"></clr-icon>
@@ -46,9 +49,7 @@
                   </clr-dg-action-overflow>
 
                   <clr-dg-cell>{{ member.number }}</clr-dg-cell>
-                  <clr-dg-cell>{{
-                    member.opening_date | parseDate
-                  }}</clr-dg-cell>
+                  <clr-dg-cell>{{ member.opening_date }}</clr-dg-cell>
                   <clr-dg-cell>{{ member.lastname }}</clr-dg-cell>
                   <clr-dg-cell>{{ member.firstname }}</clr-dg-cell>
                   <clr-dg-cell>{{ member.business_relation }}</clr-dg-cell>
@@ -58,11 +59,12 @@
                   <clr-dg-cell>{{ member.civil_state }}</clr-dg-cell>
                   <clr-dg-cell>{{ member.member_status }}</clr-dg-cell>
                   <clr-dg-cell>
-                    <ng-container *ngIf="member.id"
-                      ><button class="btn btn-primary btn-sm">
-                        <clr-icon shape="user"></clr-icon> Fiche
-                      </button></ng-container
-                    >
+                    <ng-container *ngIf="member.id">
+                      <button class="btn btn-primary btn-sm">
+                        <clr-icon shape="user"></clr-icon>
+                        Fiche
+                      </button>
+                    </ng-container>
                   </clr-dg-cell>
                 </clr-dg-row>
 
@@ -91,13 +93,16 @@
                 >
                   <clr-dg-action-overflow>
                     <button class="action-item">
-                      <clr-icon shape="user"></clr-icon> Fiche signalétique
+                      <clr-icon shape="user"></clr-icon>
+                      Fiche signalétique
                     </button>
                     <button class="action-item">
-                      <clr-icon shape="edit"></clr-icon> Modifier infos
+                      <clr-icon shape="edit"></clr-icon>
+                      Modifier infos
                     </button>
                     <button class="action-item">
-                      <clr-icon shape="tasks"></clr-icon> Changer statut
+                      <clr-icon shape="tasks"></clr-icon>
+                      Changer statut
                     </button>
                     <button class="action-item">
                       <clr-icon shape="close"></clr-icon>
@@ -106,9 +111,7 @@
                   </clr-dg-action-overflow>
 
                   <clr-dg-cell>{{ member.number }}</clr-dg-cell>
-                  <clr-dg-cell>{{
-                    member.opening_date | parseDate
-                  }}</clr-dg-cell>
+                  <clr-dg-cell>{{ member.opening_date }}</clr-dg-cell>
                   <clr-dg-cell>{{ member.id_number }}</clr-dg-cell>
                   <clr-dg-cell>{{ member.id_number }}</clr-dg-cell>
                   <clr-dg-cell>{{ member.activity_sector }}</clr-dg-cell>
@@ -116,11 +119,12 @@
                   <clr-dg-cell>{{ member.phone }}</clr-dg-cell>
                   <clr-dg-cell>{{ member.member_status }}</clr-dg-cell>
                   <clr-dg-cell>
-                    <ng-container *ngIf="member.id"
-                      ><button class="btn btn-primary btn-sm">
-                        <clr-icon shape="user"></clr-icon> Fiche
-                      </button></ng-container
-                    >
+                    <ng-container *ngIf="member.id">
+                      <button class="btn btn-primary btn-sm">
+                        <clr-icon shape="user"></clr-icon>
+                        Fiche
+                      </button>
+                    </ng-container>
                   </clr-dg-cell>
                 </clr-dg-row>
 
