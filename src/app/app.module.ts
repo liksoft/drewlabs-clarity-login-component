@@ -10,21 +10,16 @@ import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { registerLocaleData } from "@angular/common";
 import localeFr from "@angular/common/locales/fr";
 import localeFrExtra from "@angular/common/locales/extra/fr";
-import { StorageModule } from "./lib/core/storage";
-import { AuthModule } from "./lib/core/auth";
 import { environment } from "src/environments/environment";
 import {
-  MissingTranslationHandler,
-  MissingTranslationHandlerParams,
   TranslateModule,
   TranslateService,
   TranslateLoader,
 } from "@ngx-translate/core";
 import { HttpClient } from "@angular/common/http";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-import { TranslationService } from "./lib/core/translator";
-import { parseV3HttpResponse } from "./lib/core/http/core/v3/http-response";
-import { HttpModule } from "./lib/core/http";
+import { NgxSmartFormModule } from "@azlabsjs/ngx-smart-form";
+import { DOCUMENT_SESSION_STORAGE, StorageModule } from "@azlabsjs/ngx-storage";
 
 // #region UI state module imports
 import {
@@ -37,7 +32,6 @@ import {
 // #endregion UI state module imports
 
 // #region Dropzone configuration
-import { DROPZONE_DICT } from "./lib/core/components/dropzone";
 import { first, map, tap } from "rxjs/operators";
 import { LocalStrategy, StrategyBasedAuthModule } from "./lib/views/login/core";
 import {
@@ -47,10 +41,7 @@ import {
   AUTH_SERVICE_CONFIG,
 } from "./lib/views/login/constants";
 import { interval, lastValueFrom } from "rxjs";
-import { SESSION_STORAGE } from "./lib/core/utils/ng/common";
-import { SecureWebStorage } from "./lib/core/storage/core";
 import { Router } from "@angular/router";
-import { NgxSmartFormModule } from "./lib/core/components/dynamic-inputs/angular";
 // #endregion Dropzone configuration
 
 registerLocaleData(localeFr, "fr", localeFrExtra);
@@ -58,12 +49,6 @@ registerLocaleData(localeFr, "fr", localeFrExtra);
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http);
-}
-
-export class TranslateHandler implements MissingTranslationHandler {
-  handle = (params: MissingTranslationHandlerParams) => {
-    return params.key;
-  };
 }
 
 export const DropzoneDictLoader = async (translate: TranslateService) => {
@@ -122,31 +107,25 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
         useFactory: HttpLoaderFactory,
         deps: [HttpClient],
       },
-      missingTranslationHandler: environment?.production
-        ? undefined
-        : {
-            provide: MissingTranslationHandler,
-            useClass: TranslateHandler,
-          },
     }),
     SharedModule.forRoot(),
-    HttpModule.forRoot({
-      serverURL: environment.api.host,
-      requestResponseHandler: parseV3HttpResponse,
-    }),
-    StorageModule.forRoot({ secretKey: environment.APP_SECRET }),
-    AuthModule.forRoot(),
     // UI STATE PROVIDERS
     UIStateModule.forRoot(),
     UIStateComponentsModule.forRoot(),
     // DYNAMIC CONTROLS PROVIDERS
     NgxSmartFormModule.forRoot({
+      // Optional : Required only to get data dynamically from the server
+      // Server configuration for dynamically loading
+      // Select, Checkbox and Radio button from server
       serverConfigs: {
         api: {
           host: environment.forms.host,
+          // Custom path on the server else the default is used
           bindings: environment.forms.endpoints.bindingsPath,
         },
       },
+      // Path to the form assets
+      // This path will be used the http handler to load the forms in cache
       formsAssets: "/assets/resources/jsonforms.json",
       dropzoneConfigs: {
         url: environment.APP_FILE_SERVER_URL,
@@ -157,6 +136,10 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
         maxFiles: 1,
         addRemoveLinks: true,
       },
+    }),
+    StorageModule.forRoot({
+      secret: environment.storage.secret,
+      prefix: environment.storage.prefix, // Not required, include only to prefix keys before they are added to the cache
     }),
     // TODO: ADD STRATEGY BASED AUTH MODULE
     StrategyBasedAuthModule.forRoot(
@@ -207,31 +190,18 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
               strategy: new LocalStrategy(
                 client,
                 environment.auth.host,
-                new SecureWebStorage(storage, environment.APP_SECRET)
+                storage
               ),
             },
           ],
           autoLogin: true,
         }),
-        deps: [HttpClient, SESSION_STORAGE],
+        deps: [HttpClient, DOCUMENT_SESSION_STORAGE],
       }
     ),
-
-    // Pagination
-    // PaginationModule.forRoot({
-    //   // module configurations definitions
-    // })
   ],
   providers: [
-    TranslationService,
     TranslateService,
-    {
-      provide: DROPZONE_DICT,
-      useFactory: async (translate: TranslateService) => {
-        return await DropzoneDictLoader(translate);
-      },
-      deps: [TranslateService],
-    },
     {
       provide: "FILE_STORE_PATH",
       useValue: environment.APP_FILE_SERVER_URL,

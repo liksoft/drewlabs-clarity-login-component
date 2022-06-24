@@ -9,16 +9,12 @@ import { TranslateModule } from "@ngx-translate/core";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { HttpModule } from "../core/http";
 import { PipesModule } from "./partials/pipes";
-import { NgxSmartFormModule } from "../core/components/dynamic-inputs/angular";
 import { ProgressBarModule } from "./partials/progress-bar";
 import { DropzoneModule } from "../core/components/dropzone";
 import { UIStateComponentsModule } from "./partials/ui-state";
-import { DatagridHeaderModule } from "./partials/datgrid-header";
 import { TopBarModule } from "./partials/topbar";
-import { DetailedTablePreviewModule } from "./partials/detailed-table-preview";
 import { SidebarModule } from "./partials/sidebar";
 import { StrategyBasedAuthModule } from "./login/core";
-import { ClrSmartGridModule } from "./partials/clr-smart-grid";
 
 @NgModule({
   imports: [
@@ -40,19 +36,13 @@ import { ClrSmartGridModule } from "./partials/clr-smart-grid";
     StorageModule,
     AuthModule,
     DragDropModule,
-    NgxSmartFormModule,
     DropzoneModule,
-    DatagridHeaderModule,
-    DetailedTablePreviewModule,
     //
     PipesModule,
     ProgressBarModule,
     UIStateComponentsModule,
     TopBarModule,
     SidebarModule,
-
-    // Clr-Smart-Grid-Module imports
-    ClrSmartGridModule,
 
     // TODO : EXPORT StrategyBasedAuthModule
     StrategyBasedAuthModule,
