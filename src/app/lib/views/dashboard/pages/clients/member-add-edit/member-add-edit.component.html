@@ -1,24 +1,36 @@
-<div class="clr-row">
-  <div class="clr-col-12 lik-card">
-    <div class="lik-card-title">Ajouter / Modifier un membre</div>
-    <div class="lik-card-description">
-      Veuillez renseigner les informations sur le membre
-    </div>
-    <div class="divider"></div>
-    <div class="clients-data clr-row">
-      <!-- Card Start -->
-      <div class="clr-col-12 clr-data">
-
-        <div class="form-loading">Chargement du formulaire en cours...</div>
-
-        <div class="form-footer">
-          <button class="btn btn-primary">
-            <clr-icon shape="arrow" dir="right" class="has-badge"></clr-icon>
-            Créer le membre
-          </button>
-        </div>
+<ng-container *ngIf="form">
+  <div class="clr-row">
+    <div class="clr-col-12 lik-card">
+      <div class="lik-card-title">{{ form.title }}</div>
+      <div class="lik-card-description">
+        Veuillez renseigner les informations sur le membre
       </div>
-      <!-- Card End -->
+      <div class="divider"></div>
+      <div class="clients-data clr-row">
+        <!-- Card Start -->
+        <div class="clr-col-12 clr-data">
+          <ngx-smart-form
+            [submitable]="true"
+            [autoupload]="true"
+            (submit)="ngxFormSubmit($event)"
+            [form]="form"
+          >
+            <ng-template #submitButton let-handler>
+              <button class="btn btn-primary" (click)="handler($event)">
+                <clr-icon
+                  shape="arrow"
+                  dir="right"
+                  class="has-badge"
+                ></clr-icon>
+                Créer le membre
+              </button>
+            </ng-template>
+          </ngx-smart-form>
+          <!-- [autoSubmit]="true"
+        [path]="'customers'" -->
+        </div>
+        <!-- Card End -->
+      </div>
     </div>
   </div>
-</div>
+</ng-container>

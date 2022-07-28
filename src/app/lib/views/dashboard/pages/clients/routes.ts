@@ -6,8 +6,9 @@ import { MemberListComponent } from "./member-list/member-list.component";
 import { MemberAddEditComponent } from "./member-add-edit/member-add-edit.component";
 import { MemberViewComponent } from "./member-view/member-view.component";
 import { ProcurationsComponent } from "./procurations/procurations.component";
-
-console.log()
+import { environment } from "src/environments/environment";
+import { MoralMemberAddComponent } from "./moral-member-add/moral-member-add.component";
+import { IndividualMemberAddComponent } from "./individual-member-add/individual-member-add.component";
 
 export const CLIENT_ROUTES: Routes = [
   {
@@ -19,8 +20,18 @@ export const CLIENT_ROUTES: Routes = [
     component: MemberListComponent,
   },
   {
-    path: routesConfigs.clientsAddEditRoute,
-    component: MemberAddEditComponent,
+    path: routesConfigs.individualClientRoute,
+    component: IndividualMemberAddComponent,
+    data: {
+      formId: environment.forms.views.createIndividualClient,
+    },
+  }, //
+  {
+    path: routesConfigs.moralClientRoute,
+    component: MoralMemberAddComponent,
+    data: {
+      formId: environment.forms.views.createMoralClient,
+    },
   },
   {
     path: routesConfigs.clientsHomeRoute,
@@ -40,4 +51,6 @@ export const declarations = [
   MemberViewComponent,
   MemberAddEditComponent,
   ClientsHomeComponent,
+  IndividualMemberAddComponent,
+  MoralMemberAddComponent,
 ];

@@ -4,7 +4,8 @@ export const routes = {
   clientsHomeRoute: "home",
   clientsListRoute: "list",
   clientsDetailsRoute: "details",
-  clientsAddEditRoute: "edit",
+  moralClientRoute: "morals",
+  individualClientRoute: "individuals",
   clientsViewRoute: "view",
   procurationsManageRoute: "procurations",
 

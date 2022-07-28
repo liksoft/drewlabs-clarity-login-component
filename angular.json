@@ -47,6 +47,7 @@
               "node_modules/@clr/icons/clr-icons.min.css",
               "node_modules/@clr/ui/clr-ui.min.css",
               "src/app/lib/views/global-styles/styles.scss",
+              "node_modules/@azlabsjs/ngx-intl-tel-input/assets/styles.css",
               "src/styles.scss"
             ],
             "scripts": [

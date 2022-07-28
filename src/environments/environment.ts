@@ -14,6 +14,11 @@ export const environment = {
     endpoints: {
       bindingsPath: "api/v2/control-bindings",
     },
+    views: {
+      createIndividualClient: 218,
+      createMoralClient: 219,
+      createStakeHolder: 220
+    }
   },
   api: {
     host: "https://coopec-clients.lik.tg",

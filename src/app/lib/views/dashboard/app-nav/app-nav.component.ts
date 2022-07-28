@@ -24,7 +24,8 @@ export class AppNavComponent implements OnInit {
       clients_menu: "Clients",
       clients_home: "Aperçu Clients",
       clients_list: "Clients",
-      members_add: "Ajouter",
+      members_add: "Client Individuel",
+      moral_members_add: "Client Moral",
       members_list: "Annuaire",
       procuration_list: "Procurations",
       // COMPTES
@@ -77,8 +78,13 @@ export class AppNavComponent implements OnInit {
           },
           {
             key: "members_add",
-            routeIcon: "list",
-            route: `${routes.clientsModuleRoute}/${routes.clientsAddEditRoute}`,
+            routeIcon: "person",
+            route: `${routes.clientsModuleRoute}/${routes.individualClientRoute}`,
+          },
+          {
+            key: "moral_members_add",
+            routeIcon: "people",
+            route: `${routes.clientsModuleRoute}/${routes.moralClientRoute}`,
           },
           {
             key: "procuration_list",
