@@ -5,4 +5,5 @@ export {
   MembershipRequestModel,
   CustomerRequestModel as IndividualRequestModel,
   MoralRequestModel,
+  MoralMemberRequestType,
 } from "./requests";

@@ -1,4 +1,4 @@
-import { Component, Inject, Input } from "@angular/core";
+import { Component, EventEmitter, Inject, Input, Output } from "@angular/core";
 import { Log } from "src/app/lib/bloc";
 import { FormConfigInterface } from "@azlabsjs/smart-form-core";
 
@@ -8,10 +8,15 @@ import { FormConfigInterface } from "@azlabsjs/smart-form-core";
   styleUrls: ["./member-add-edit.component.scss"],
 })
 export class MemberAddEditComponent {
-
+  //#region Component inputs
   @Input() form!: FormConfigInterface;
+  //#endregion Component outputs
+
+  //#region Component outputs
+  @Output() submit = new EventEmitter<Record<string, unknown>>();
+  //#endregion Component outputs
 
   ngxFormSubmit(event: Record<string, unknown>) {
-    Log(event);
+    this.submit.emit(event);
   }
 }

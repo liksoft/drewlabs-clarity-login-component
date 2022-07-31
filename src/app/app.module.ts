@@ -18,10 +18,7 @@ import {
 } from "@ngx-translate/core";
 import { HttpClient } from "@angular/common/http";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-import {
-  NgxSmartFormModule,
-  TEMPLATE_DICTIONARY,
-} from "@azlabsjs/ngx-smart-form";
+import { NgxSmartFormModule } from "@azlabsjs/ngx-smart-form";
 import { DOCUMENT_SESSION_STORAGE, StorageModule } from "@azlabsjs/ngx-storage";
 
 // #region UI state module imports
@@ -48,6 +45,7 @@ import { Router } from "@angular/router";
 import { NgxConfigModule } from "@azlabsjs/ngx-config";
 import { NgxIntlTelInputModule } from "@azlabsjs/ngx-intl-tel-input";
 import { HttpResponse } from "@azlabsjs/requests";
+import { NgxClrSmartGridModule } from "@azlabsjs/ngx-clr-smart-grid";
 // #endregion Dropzone configuration
 
 registerLocaleData(localeFr, "fr", localeFrExtra);
@@ -143,6 +141,24 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
       //   },
       //   deps: [TranslateService]
       // },
+      uploadOptions: {
+        interceptorFactory: (injector: Injector) => {
+          // Replace the interceptor function by using the injector
+          return (request, next) => {
+            request = request.clone({
+              options: {
+                ...request.options,
+                headers: {
+                  ...request.options.headers,
+                  'x-client-id': environment.forms.upload.clientid,
+                  'x-client-secret': environment.forms.upload.clientsecret,
+                },
+              },
+            });
+            return next(request);
+          };
+        },
+      },
       optionsRequest: {
         interceptorFactory: (injector: Injector) => {
           // Replace the interceptor function by using the injector
@@ -239,6 +255,7 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
       //   deps: any[]; // Provider
       // },
     }),
+    NgxClrSmartGridModule
   ],
   providers: [
     TranslateService,

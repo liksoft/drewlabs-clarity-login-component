@@ -2,10 +2,18 @@ import { Component, Inject, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { FormsClient, FORM_CLIENT } from "@azlabsjs/ngx-smart-form";
 import { APP_CONFIG_MANAGER, ConfigurationManager } from "@azlabsjs/ngx-config";
+import { Log } from "src/app/lib/bloc";
 
 @Component({
   selector: "app-individual-member-add",
-  templateUrl: "./individual-member-add.component.html",
+  template: `
+    <ng-container *ngIf="form$ | async as form">
+      <app-member-add-edit
+        [form]="form"
+        (submit)="onSubmit($event)"
+      ></app-member-add-edit>
+    </ng-container>
+  `,
 })
 export class IndividualMemberAddComponent implements OnInit {
   form$ = this.client.get(
@@ -22,4 +30,8 @@ export class IndividualMemberAddComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {}
+
+  onSubmit(event: Record<string, unknown>) {
+    Log(event);
+  }
 }

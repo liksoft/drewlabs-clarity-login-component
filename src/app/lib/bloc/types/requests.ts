@@ -68,3 +68,8 @@ export type StakeHolderRequestModel = {
   type: number | string;
   customer: Partial<CustomerRequestModel>;
 };
+
+
+export type MoralMemberRequestType = {
+
+};

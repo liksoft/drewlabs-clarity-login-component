@@ -7,8 +7,10 @@ import { MemberAddEditComponent } from "./member-add-edit/member-add-edit.compon
 import { MemberViewComponent } from "./member-view/member-view.component";
 import { ProcurationsComponent } from "./procurations/procurations.component";
 import { environment } from "src/environments/environment";
-import { MoralMemberAddComponent } from "./moral-member-add/moral-member-add.component";
-import { IndividualMemberAddComponent } from "./individual-member-add/individual-member-add.component";
+import { MoralMemberAddComponent } from "./member-add-edit/moral-member-add.component";
+import { IndividualMemberAddComponent } from "./member-add-edit/individual-member-add.component";
+import { IndividualMemberListComponent } from "./member-list/individual-member-list.component";
+import { MoralMemberListComponent } from "./member-list/moral-member-list.component";
 
 export const CLIENT_ROUTES: Routes = [
   {
@@ -53,4 +55,6 @@ export const declarations = [
   ClientsHomeComponent,
   IndividualMemberAddComponent,
   MoralMemberAddComponent,
+  IndividualMemberListComponent,
+  MoralMemberListComponent
 ];

@@ -17,8 +17,13 @@ export const environment = {
     views: {
       createIndividualClient: 218,
       createMoralClient: 219,
-      createStakeHolder: 220
-    }
+      createStakeHolder: 220,
+    },
+    upload: {
+      clientid: "96a6bba2-73e4-404c-9bb3-0d61c31bba44",
+      clientsecret:
+        "9NYHbYhzNXX2AbrxHs4H0cTmM7udeKEdqfwyTCXGLjnaU2IhmVldNwAknIpysbx5QZ8KBytvw1hW7qQE6iA",
+    },
   },
   api: {
     host: "https://coopec-clients.lik.tg",
