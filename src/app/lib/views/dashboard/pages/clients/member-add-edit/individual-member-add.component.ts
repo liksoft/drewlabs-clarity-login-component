@@ -2,7 +2,11 @@ import { Component, Inject, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { FormsClient, FORM_CLIENT } from "@azlabsjs/ngx-smart-form";
 import { APP_CONFIG_MANAGER, ConfigurationManager } from "@azlabsjs/ngx-config";
-import { Log } from "src/app/lib/bloc";
+import { JSDate } from "@azlabsjs/js-datetime";
+import {
+  UIStateProvider,
+  UI_STATE_PROVIDER,
+} from "src/app/lib/views/partials/ui-state";
 
 @Component({
   selector: "app-individual-member-add",
@@ -26,12 +30,42 @@ export class IndividualMemberAddComponent implements OnInit {
   constructor(
     @Inject(FORM_CLIENT) private client: FormsClient,
     @Inject(APP_CONFIG_MANAGER) private configManager: ConfigurationManager,
-    private activateRoute: ActivatedRoute
+    private activateRoute: ActivatedRoute,
+    @Inject(UI_STATE_PROVIDER) private uiState: UIStateProvider
   ) {}
 
   ngOnInit(): void {}
 
   onSubmit(event: Record<string, unknown>) {
-    Log(event);
+    // TODO: Start a UI action
+    this.uiState.startAction();
+    const details = event["by"] as Record<string, unknown>;
+    const files = (event["files"] ?? []) as Record<string, unknown>[];
+    const request: Record<string, unknown> = {
+      member: event["member"],
+      by: {
+        ...details,
+        birthdate: details["birthdate"]
+          ? JSDate.format(
+              JSDate.create(details["birthdate"] as string, "d/m/y")
+            )
+          : undefined,
+        address: event["address"],
+      },
+    };
+
+    if (Array.isArray(files) && files.length !== 0) {
+      request["files"] = files.map((file) => ({
+        ...file,
+        expired_at: file["expired_at"]
+          ? JSDate.format(JSDate.create(file["expired_at"] as string, "d/m/y"))
+          : undefined,
+      }));
+    }
+    // TODO: Send the create member request
+
+    // TODO: Using the created member id, create the stake holders
+
+    // TODO : End ui action
   }
 }
