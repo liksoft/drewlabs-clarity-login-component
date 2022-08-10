@@ -20,6 +20,4 @@ import { ClientsModule } from "./pages/clients/clients.module";
   providers: [...COMPONENTS_PROVIDERS],
   entryComponents: [],
 })
-export class DashboardModule {
-  constructor() {}
-}
+export class DashboardModule {}

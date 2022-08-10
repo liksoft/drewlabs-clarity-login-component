@@ -7,6 +7,8 @@ import {
   UIStateProvider,
   UI_STATE_PROVIDER,
 } from "src/app/lib/views/partials/ui-state";
+import { IndividualMembersService } from "../clients.service";
+import { lastValueFrom } from "rxjs";
 
 @Component({
   selector: "app-individual-member-add",
@@ -31,14 +33,13 @@ export class IndividualMemberAddComponent implements OnInit {
     @Inject(FORM_CLIENT) private client: FormsClient,
     @Inject(APP_CONFIG_MANAGER) private configManager: ConfigurationManager,
     private activateRoute: ActivatedRoute,
-    @Inject(UI_STATE_PROVIDER) private uiState: UIStateProvider
+    @Inject(UI_STATE_PROVIDER) private uiState: UIStateProvider,
+    private individuals: IndividualMembersService
   ) {}
 
   ngOnInit(): void {}
 
-  onSubmit(event: Record<string, unknown>) {
-    // TODO: Start a UI action
-    this.uiState.startAction();
+  async onSubmit(event: Record<string, unknown>) {
     const details = event["by"] as Record<string, unknown>;
     const files = (event["files"] ?? []) as Record<string, unknown>[];
     const request: Record<string, unknown> = {
@@ -63,9 +64,10 @@ export class IndividualMemberAddComponent implements OnInit {
       }));
     }
     // TODO: Send the create member request
-
+    console.log(await lastValueFrom(this.individuals.create(request)));
     // TODO: Using the created member id, create the stake holders
 
-    // TODO : End ui action
+    // TODO: Add the end action message as parameter
+    this.uiState.endAction();
   }
 }

@@ -1,7 +1,11 @@
+export { Requests, REQUEST_ACTIONS, State } from "./requests";
 export {
-  Requests,
-  REQUEST_ACTIONS,
+  RequestInterface as RequestPayload,
+  RequestClient,
   RequestsConfig,
-  RequestPayload as RequestParams,
-} from "./requests";
-export { REQUEST_CLIENT } from "../types";
+  RequestState as RequestType,
+  CacheQueryConfig,
+} from "./types";
+
+export { firstWhere, apiResponse } from "./rx";
+export { createQueryParams } from "./helpers";

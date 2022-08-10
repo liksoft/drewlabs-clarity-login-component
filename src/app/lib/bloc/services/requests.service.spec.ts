@@ -1,7 +1,8 @@
 import { TestBed } from "@angular/core/testing";
-import { HTTPRequestMethods } from "@azlabsjs/requests";
 import { filter, first, map, ObservableInput, of, throwError } from "rxjs";
 import { Requests } from "./requests";
+import { firstWhere } from "./rx";
+import { HTTPRequestMethods } from "./types";
 
 const testResult = {
   data: [
@@ -30,6 +31,11 @@ const commentResult = {
   ],
 };
 
+const fnTestResult = {
+  content: "/Users/azandrewsidoine/Documents/creative-scala.pdf",
+  description: "SCALA PROGRAMMING LANGUAGE EBOOK 2",
+};
+
 describe("Requests", () => {
   let service!: Requests;
 
@@ -46,8 +52,8 @@ describe("Requests", () => {
                 body: unknown,
                 options?: unknown
               ) => {
-                if (path.includes('comments')) {
-                  return throwError(() => 'Comments path not supported');
+                if (path.includes("comments")) {
+                  return throwError(() => "Comments path not supported");
                 }
                 return (
                   path.includes("comments") ? of(commentResult) : of(testResult)
@@ -113,12 +119,38 @@ describe("Requests", () => {
         })
       )
       .pipe(
+        firstWhere((state) => state.pending === false),
+        map((state) => {
+          expect(state.response).toEqual(undefined);
+          expect(state.error).toEqual("Comments path not supported");
+        })
+      )
+      .subscribe();
+
+    return new Promise<boolean>((resolve) => {
+      setTimeout(() => {
+        resolve(true);
+      }, 3000);
+    });
+  });
+
+  it("should call the provider function passed as parameter and update the requests state with the result of the function call", () => {
+    service
+      .select(
+        service.dispatch(
+          (path: string, method: HTTPRequestMethods) => {
+            return of(fnTestResult);
+          },
+          "api/v1/books",
+          'GET'
+        )
+      )
+      .pipe(
         filter((state) => state.pending === false),
         // First to only listen once
         first(),
         map((state) => {
-          expect(state.response).toEqual(undefined);
-          expect(state.error).toEqual('Comments path not supported');
+          expect(state.response).toEqual(fnTestResult);
         })
       )
       .subscribe();
