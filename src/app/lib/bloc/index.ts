@@ -11,4 +11,4 @@ export {
   firstWhere,
   createQueryParams,
   apiResponse,
-} from "./services";
+} from "./services/requests";

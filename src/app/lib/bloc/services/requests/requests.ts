@@ -22,8 +22,6 @@ import {
   takeUntil,
   tap,
 } from "rxjs";
-import { Action, CommandInterface } from "../types/commands";
-import { REQUEST_CLIENT } from "../types";
 import {
   HTTPRequestMethods,
   RequestInterface,
@@ -37,9 +35,12 @@ import {
   FnActionArgumentLeastType,
   RequestPayloadLeastArgumentType,
   ObservableInputFunction,
+  CommandInterface,
+  Action,
 } from "./types";
 import { DOCUMENT } from "@angular/common";
 import { guid, cacheRequest, useCache } from "./helpers";
+import { REQUEST_CLIENT } from "./token";
 
 // TODO: Add a caching system on top of the request implementation
 // in order to memoize and replay requests
@@ -391,12 +392,19 @@ export class Requests
       | [string, T, ...FnActionArgumentTypes<T>],
     actionType: typeof argument[0]
   ) {
-    if (actionType === 'function') {
+    if (actionType === "function") {
       const _arguments = argument as [string, T, ...FnActionArgumentTypes<T>];
       const fn = _arguments[1];
-      const funcName = fn.name === '' ? undefined : fn.name;
+      const funcName = fn.name === "" ? undefined : fn.name;
       const parameters = fn.toString().match(/\( *([^)]+?) *\)/gi);
-      return [_arguments[0], fn.prototype ?? `${funcName ?? `native anonymous`}${parameters ? parameters[0] : '()'} { ... }`, ...argument.slice(2)];
+      return [
+        _arguments[0],
+        fn.prototype ??
+          `${funcName ?? `native anonymous`}${
+            parameters ? parameters[0] : "()"
+          } { ... }`,
+        ...argument.slice(2),
+      ];
     }
     return [...argument] as [string, RequestInterface | undefined];
   }

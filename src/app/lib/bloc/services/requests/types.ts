@@ -106,6 +106,8 @@ export type FnActionArgumentTypes<F extends Function> = F extends (
   ...args: infer A
 ) => ObservableInput<unknown>
   ? A
+  : F extends (...args: infer B) => Function
+  ? B
   : never;
 
 /**
@@ -130,5 +132,23 @@ export type FnActionArgumentLeastType = CacheQueryConfig & {
 };
 
 // @internal
-export type ObservableInputFunction = (...args: unknown[]) => ObservableInput<unknown>;
+export type ObservableInputFunction = (
+  ...args: unknown[]
+) => ObservableInput<unknown>;
+
+
+/**
+ * @internal
+ */
+export type Action<T = unknown> = {
+  name: string;
+  payload?: T;
+};
+
+/**
+ * @internal
+ */
+export interface CommandInterface<T = unknown, R = unknown> {
+  dispatch(action: Action<T>): R;
+}
 //#endregion
