@@ -216,7 +216,6 @@ export class CachedRequest<T = unknown> {
       .pipe(
         filter(() => this._isStale),
         mergeMap(() => {
-          console.log('Performing request...');
           return this.doRequest();
         }),
         takeUntil(this.clearRefetch$),
