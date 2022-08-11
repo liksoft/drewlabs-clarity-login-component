@@ -168,6 +168,7 @@ describe("Requests", () => {
       .select(
         service.dispatch(
           (path: string, method: HTTPRequestMethods) => {
+            console.log(path, method);
             executionCount = executionCount + 1;
             return createResponse({
               title: "In publishing and graphic design",

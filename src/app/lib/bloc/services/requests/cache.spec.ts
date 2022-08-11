@@ -1,6 +1,6 @@
 import { of } from "rxjs";
 import { CachedRequest, RequestsCache } from "./cache";
-import { cacheRequest, useCache } from "./helpers";
+import { cacheRequest, requestsCache } from "./helpers";
 import { Requests } from ".";
 import { HTTPRequestMethods, RequestInterface } from "./types";
 
@@ -8,7 +8,7 @@ describe("Requests cache test", () => {
   let cache!: RequestsCache<string>;
 
   beforeEach(() => {
-    cache = useCache();
+    cache = requestsCache();
   });
 
   it("should create an instance of Cache class", () => {

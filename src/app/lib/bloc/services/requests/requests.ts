@@ -39,7 +39,7 @@ import {
   Action,
 } from "./types";
 import { DOCUMENT } from "@angular/common";
-import { guid, cacheRequest, useCache } from "./helpers";
+import { guid, cacheRequest, requestsCache } from "./helpers";
 import { REQUEST_CLIENT } from "./token";
 
 // TODO: Add a caching system on top of the request implementation
@@ -76,7 +76,7 @@ export class Requests
   private readonly dispatch$!: (action: Required<Action<unknown>>) => void;
   private readonly state$!: Observable<State>;
   // List of request cached by the current instance
-  private cache = useCache();
+  private cache = requestsCache();
   private destroy$ = new Subject<void>();
   // Uncomment the code below to add support for performing action property observable
   // public readonly performingAction$!: Observable<boolean>;

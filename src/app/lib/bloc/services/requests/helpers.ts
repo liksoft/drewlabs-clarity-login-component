@@ -88,11 +88,7 @@ export function cacheRequest<T>(prop: {
  * @internal
  * Creates a requests cache instance
  */
-export function useCache<T = unknown>() {
+export function requestsCache<T = unknown>() {
   return new RequestsCache<T>();
-}
-
-function isobject_(o: unknown) {
-  return o !== null && typeof o === "object";
 }
 

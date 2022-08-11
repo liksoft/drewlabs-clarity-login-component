@@ -4,6 +4,7 @@ import {
   asyncScheduler,
   catchError,
   EMPTY,
+  filter,
   first,
   from,
   interval,
@@ -213,10 +214,9 @@ export class CachedRequest<T = unknown> {
       : interval(refetchInterval)
     )
       .pipe(
+        filter(() => this._isStale),
         mergeMap(() => {
-          if (!this._isStale) {
-            return EMPTY;
-          }
+          console.log('Performing request...');
           return this.doRequest();
         }),
         takeUntil(this.clearRefetch$),
