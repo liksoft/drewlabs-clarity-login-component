@@ -1,5 +1,5 @@
 import { useRxEffect } from "@azlabsjs/rx-hooks";
-import { deepEqual } from "@azlabsjs/utilities";
+import { deepEqual, isPrimitive } from "@azlabsjs/utilities";
 import {
   asyncScheduler,
   catchError,
@@ -19,26 +19,62 @@ import {
 } from "rxjs";
 import { CacheQueryConfig } from "./types";
 
-// TODO : Think about implementation taking in account staleTime and Cache Time
-
-export class RequestsCache {
+export class RequestsCache<T = unknown> {
   /**
    * @internal
    *
    * State of the cache instance
    */
-  private _state: CachedRequest[] = [];
+  private _state: CachedRequest<T>[] = [];
 
   get length() {
     return this._state.length;
   }
 
+  /**
+   * Removes all items from the cache system
+   */
   clear() {
+    for (const request of this._state ?? []) {
+      request.destroy();
+    }
     this._state = [];
   }
 
-  add(item: CachedRequest): void {
+  /**
+   * Add an item to the cache
+   *
+   * @param item
+   */
+  add(item: CachedRequest<T>): void {
     this._state = [item, ...(this._state ?? [])];
+  }
+
+  /**
+   * Check if the cache contains a specific key
+   *
+   * @param argument
+   */
+  contains(argument: unknown) {
+    return this.indexOf(argument) !== -1;
+  }
+
+  /**
+   * Return the element in the cache matching the provided argument
+   *
+   * @param argument
+   */
+  get(argument: unknown) {
+    return this.at(this.indexOf(argument));
+  }
+
+  /**
+   * Cache is empty if all element has been removed from the cache
+   *
+   * @returns
+   */
+  isEmpty() {
+    return this.length === 0;
   }
 
   //#region Miscellanous
@@ -60,13 +96,27 @@ export class RequestsCache {
   }
 
   indexOf(argument: unknown) {
-    const index =
-      typeof argument === "string"
-        ? this._state.findIndex((request) => request.id === argument)
-        : this._state.findIndex((request) =>
-            deepEqual(request.payload, argument)
-          );
-    return index;
+    // First we apply an strict equality on the request id and payload against
+    // the query value
+    if (isPrimitive(argument)) {
+      return this._state.findIndex(
+        (request) => request.id === argument || request.payload === argument
+      );
+    }
+    // Case the key is not found, index will still be -1, therefore we search
+    return this._state.findIndex((request) => {
+      if (
+        ((typeof request.payload === "undefined" || request.payload === null) &&
+          typeof argument !== "undefined" &&
+          argument !== null) ||
+        ((typeof argument === "undefined" || argument === null) &&
+          typeof request.payload !== "undefined" &&
+          request.payload !== null)
+      ) {
+        return false;
+      }
+      return deepEqual(request.payload, argument);
+    });
   }
   //#region Miscellanous
 }
@@ -122,7 +172,7 @@ export class CachedRequest<T = unknown> {
     private _payload: unknown,
     private properties: CacheQueryConfig,
     private readonly callback: () => ObservableInput<T>,
-    private refetchCallback: (response: T) => void,
+    private refetchCallback?: (response: T) => void,
     private errorCallback?: (error: unknown) => void,
     defaultWindow?: Window,
     lastError?: unknown
@@ -158,15 +208,17 @@ export class CachedRequest<T = unknown> {
     if (typeof refetchInterval === "undefined" || refetchInterval === null) {
       return;
     }
-    if (!this.isStale) {
-      return;
-    }
     (isObservable(refetchInterval)
       ? refetchInterval
       : interval(refetchInterval)
     )
       .pipe(
-        mergeMap(() => this.doRequest()),
+        mergeMap(() => {
+          if (!this._isStale) {
+            return EMPTY;
+          }
+          return this.doRequest();
+        }),
         takeUntil(this.clearRefetch$),
         takeUntil(this.destroy$)
       )
@@ -214,9 +266,11 @@ export class CachedRequest<T = unknown> {
       tap((response) => {
         this.lastError = undefined;
         this.lastResponse = response;
-        // Unmark the request as stale
+        // Unmark the request as stale after each successful request
         this._isStale = false;
-        this.refetchCallback(response);
+        if (this.refetchCallback) {
+          this.refetchCallback(response);
+        }
         // Mark the request as state based on the staleTime configuration
         this.markAsStale();
       })
@@ -226,7 +280,7 @@ export class CachedRequest<T = unknown> {
   private markAsStale() {
     if (
       typeof this.properties.staleTime === "undefined" ||
-      this.properties.staleTime ||
+      this.properties.staleTime === null ||
       this.properties.staleTime === 0
     ) {
       this._isStale = true;
@@ -234,7 +288,9 @@ export class CachedRequest<T = unknown> {
       interval(this.properties.staleTime)
         .pipe(
           first(),
-          tap(() => (this._isStale = true)),
+          tap(() => {
+            this._isStale = true;
+          }),
           takeUntil(this.destroy$)
         )
         .subscribe();

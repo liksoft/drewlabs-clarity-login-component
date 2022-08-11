@@ -1,7 +1,17 @@
 import { TestBed } from "@angular/core/testing";
-import { filter, first, map, ObservableInput, of, throwError } from "rxjs";
+import {
+  filter,
+  first,
+  interval,
+  lastValueFrom,
+  map,
+  ObservableInput,
+  of,
+  tap,
+  throwError,
+} from "rxjs";
 import { Requests } from "./requests";
-import { firstWhere } from "./rx";
+import { apiResponse, firstWhere } from "./rx";
 import { HTTPRequestMethods } from "./types";
 
 const testResult = {
@@ -71,7 +81,7 @@ describe("Requests", () => {
     expect(service).toBeTruthy();
   });
 
-  it("should handle request an log the request to cache", () => {
+  it("should handle request an log the request to cache", async () => {
     service
       .select(
         service.dispatch({
@@ -127,38 +137,77 @@ describe("Requests", () => {
       )
       .subscribe();
 
-    return new Promise<boolean>((resolve) => {
-      setTimeout(() => {
-        resolve(true);
-      }, 3000);
-    });
+    await lastValueFrom(interval(3000).pipe(first()));
   });
 
-  it("should call the provider function passed as parameter and update the requests state with the result of the function call", () => {
+  it("should call the provider function passed as parameter and update the requests state with the result of the function call", async () => {
     service
       .select(
         service.dispatch(
-          (path: string, method: HTTPRequestMethods) => {
-            return of(fnTestResult);
-          },
+          (path: string, method: HTTPRequestMethods) => of(fnTestResult),
           "api/v1/books",
-          'GET'
+          "GET"
         )
       )
       .pipe(
-        filter((state) => state.pending === false),
-        // First to only listen once
-        first(),
-        map((state) => {
-          expect(state.response).toEqual(fnTestResult);
+        apiResponse(),
+        map((response) => {
+          expect(response).toEqual(fnTestResult);
         })
       )
       .subscribe();
 
-    return new Promise<boolean>((resolve) => {
-      setTimeout(() => {
-        resolve(true);
-      }, 3000);
-    });
+    await lastValueFrom(interval(3000).pipe(first()));
+  });
+
+  it("should cache the request and return the cached value to the client unless the request is mark as stale", async () => {
+    const createResponse = (response: Record<string, unknown>) =>
+      new Promise((resolve) => resolve(response));
+    let executionCount = 0;
+    service
+      .select(
+        service.dispatch(
+          (path: string, method: HTTPRequestMethods) => {
+            executionCount = executionCount + 1;
+            return createResponse({
+              title: "In publishing and graphic design",
+              content:
+                "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available",
+              createdAt: "2022-11-20 18:20",
+            });
+          },
+          "api/v1/books",
+          "GET",
+          { cacheQuery: true, staleTime: 2000, refetchInterval: 100 }
+        )
+      )
+      .subscribe();
+    service
+      .select(
+        service.dispatch(
+          (path: string, method: HTTPRequestMethods) => {
+            executionCount = executionCount + 1;
+            return createResponse({
+              title: "In publishing and graphic design",
+              content:
+                "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available",
+              createdAt: "2022-11-20 18:20",
+            });
+          },
+          "api/v1/books",
+          "GET",
+          { cacheQuery: true, staleTime: 2000, refetchInterval: 100 }
+        )
+      )
+      .subscribe();
+    await lastValueFrom(
+      interval(4000).pipe(
+        first(),
+        tap(() => {
+          service.ngOnDestroy();
+          expect(executionCount).toEqual(3);
+        })
+      )
+    );
   });
 });

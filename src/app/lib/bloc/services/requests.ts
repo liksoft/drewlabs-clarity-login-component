@@ -1,4 +1,10 @@
-import { Inject, Injectable, InjectionToken, Optional } from "@angular/core";
+import {
+  Inject,
+  Injectable,
+  InjectionToken,
+  OnDestroy,
+  Optional,
+} from "@angular/core";
 import { useRxEffect, useRxReducer } from "@azlabsjs/rx-hooks";
 import {
   asyncScheduler,
@@ -12,6 +18,8 @@ import {
   ObservableInput,
   observeOn,
   of,
+  Subject,
+  takeUntil,
   tap,
 } from "rxjs";
 import { Action, CommandInterface } from "../types/commands";
@@ -28,7 +36,6 @@ import {
   FuncRequestType,
   FnActionArgumentLeastType,
   RequestPayloadLeastArgumentType,
-  CacheQueryConfig,
   ObservableInputFunction,
 } from "./types";
 import { DOCUMENT } from "@angular/common";
@@ -61,12 +68,15 @@ const REQUEST_RESULT_ACTION = "[request_result_action]";
 @Injectable({
   providedIn: "root",
 })
-export class Requests implements CommandInterface<RequestInterface, string> {
+export class Requests
+  implements CommandInterface<RequestInterface, string>, OnDestroy
+{
   //#region Properties definitions
   private readonly dispatch$!: (action: Required<Action<unknown>>) => void;
   private readonly state$!: Observable<State>;
   // List of request cached by the current instance
   private cache = useCache();
+  private destroy$ = new Subject<void>();
   // Uncomment the code below to add support for performing action property observable
   // public readonly performingAction$!: Observable<boolean>;
   //#endregion Properties definitions
@@ -277,7 +287,9 @@ export class Requests implements CommandInterface<RequestInterface, string> {
   ): [string, Required<Action<unknown>> | undefined, boolean] {
     let cached: boolean = false;
     const actionType = typeof action;
-    let uuid!: string; // = Requests.createRequestID();
+    let uuid!: string;
+    const name =
+      actionType === "function" ? "[requests_fn_action]" : action.name;
     //#region caching request
     const cacheConfig =
       actionType === "function"
@@ -289,21 +301,24 @@ export class Requests implements CommandInterface<RequestInterface, string> {
     // Case the last value passed as argument is an instance of {@see FnActionArgumentLeastType}
     // We call the function with the slice of argument from the beginning to the element before the last element
     const argument:
-      | RequestInterface
-      | [T, ...FnActionArgumentTypes<T>]
-      | undefined =
+      | [string, RequestInterface | undefined]
+      | [string, T, ...FnActionArgumentTypes<T>] =
       actionType === "function"
         ? [
+            name,
             action as T,
             ...(((cacheConfig as FnActionArgumentLeastType)?.cacheQuery ||
             args.length > 0
               ? [...args].slice(0, args.length - 1)
               : args) as FnActionArgumentTypes<T>),
           ]
-        : (action as Action<RequestInterface>).payload;
+        : [name, (action as Action<RequestInterface>).payload];
+    // Comparing functions in javascript is tedious, and error prone, therefore we will only rely
+    // not rely on function when searching cache for cached item by on constructed action
+    const cachePayload = this.buildCacheQuery(argument, actionType);
     //#region Resolves action type or name
-    if (argument) {
-      const cachedRequestIndex = this.cache.indexOf(argument);
+    if (cachePayload) {
+      const cachedRequestIndex = this.cache.indexOf(cachePayload);
       const cachedRequest =
         cachedRequestIndex === -1
           ? undefined
@@ -328,18 +343,36 @@ export class Requests implements CommandInterface<RequestInterface, string> {
     }
     // Here we make sure the request UUID is generated for the request if missing
     uuid = uuid ?? Requests.createRequestID();
-    const name =
-      actionType === "function" ? "[requests_fn_action]" : action.name;
     //#endregion Resolves action type or name
 
     //#region Creates request callback
-    const callback = this.createRequestCallback(name, argument, this.config);
+    const callback = this.createRequestCallback(argument, name, this.config);
     //#region Creates request callback
 
     //#region If request should be cached, we add request to cache
     if (cacheConfig) {
       const { defaultView } = this.document ?? { defaultView: undefined };
-      this.cacheRequest(uuid, callback, cacheConfig, defaultView as Window);
+      this.cache.add(
+        cacheRequest({
+          objectid: uuid,
+          callback,
+          properties: cacheConfig,
+          payload: cachePayload,
+          refetchCallback: (response) => {
+            this.dispatch$({
+              name: REQUEST_RESULT_ACTION,
+              payload: { uuid, response, ok: true } as Partial<RequestState>,
+            });
+          },
+          errorCallback: (error) => {
+            this.dispatch$({
+              name: REQUEST_RESULT_ACTION,
+              payload: { uuid, error, ok: false },
+            });
+          },
+          window: defaultView as Window,
+        })
+      );
     }
     //#endregion If request should be cached, we add request to cache
     return [
@@ -352,9 +385,27 @@ export class Requests implements CommandInterface<RequestInterface, string> {
     ];
   }
 
+  private buildCacheQuery<T extends ObservableInputFunction>(
+    argument:
+      | [string, RequestInterface | undefined]
+      | [string, T, ...FnActionArgumentTypes<T>],
+    actionType: typeof argument[0]
+  ) {
+    if (actionType === 'function') {
+      const _arguments = argument as [string, T, ...FnActionArgumentTypes<T>];
+      const fn = _arguments[1];
+      const funcName = fn.name === '' ? undefined : fn.name;
+      const parameters = fn.toString().match(/\( *([^)]+?) *\)/gi);
+      return [_arguments[0], fn.prototype ?? `${funcName ?? `native anonymous`}${parameters ? parameters[0] : '()'} { ... }`, ...argument.slice(2)];
+    }
+    return [...argument] as [string, RequestInterface | undefined];
+  }
+
   private createRequestCallback<T extends ObservableInputFunction>(
+    argument:
+      | [string, RequestInterface | undefined]
+      | [string, T, ...FnActionArgumentTypes<T>],
     name: string,
-    argument?: RequestInterface | [T, ...FnActionArgumentTypes<T>],
     config?: RequestsConfig
   ) {
     if (
@@ -362,47 +413,20 @@ export class Requests implements CommandInterface<RequestInterface, string> {
       argument === null ||
       !Array.isArray(argument)
     ) {
-      return this.makeRequest(name, argument as RequestInterface, config);
+      return this.makeRequest(name, argument, config);
     }
-    return () => {
-      return argument[0](...argument.slice(1));
-    };
-  }
-
-  /**
-   * Add the request to the cache
-   *
-   * @param id
-   * @param callback
-   * @param properties
-   * @param defaultView
-   */
-  private cacheRequest<T extends ObservableInputFunction>(
-    id: string,
-    callback: T,
-    properties: CacheQueryConfig | boolean,
-    defaultView: Window
-  ) {
-    this.cache.add(
-      cacheRequest({
-        id,
-        callback,
-        refetchCallback: (response) => {
-          this.dispatch$({
-            name: REQUEST_RESULT_ACTION,
-            payload: { id, response, ok: true } as Partial<RequestState>,
-          });
-        },
-        errorCallback: (error) => {
-          this.dispatch$({
-            name: REQUEST_RESULT_ACTION,
-            payload: { id, error, ok: false },
-          });
-        },
-        properties,
-        window: defaultView,
-      })
-    );
+    const _least = argument.slice(1) as [
+      T | RequestInterface,
+      ...FnActionArgumentTypes<T>
+    ];
+    const firstArgument = _least[0];
+    if (typeof firstArgument === "function") {
+      return () => {
+        return firstArgument(..._least.slice(1));
+      };
+    } else {
+      return this.makeRequest(argument[0], firstArgument, this.config);
+    }
   }
 
   // Dispatch method implementation
@@ -430,6 +454,7 @@ export class Requests implements CommandInterface<RequestInterface, string> {
    */
   select(id: string) {
     const observalbe$ = this.state$.pipe(
+      takeUntil(this.destroy$),
       map((state) => state.requests.find((request) => request.id === id)),
       filter((state) => typeof state !== "undefined" && state !== null)
     ) as Observable<RequestState>;
@@ -446,5 +471,10 @@ export class Requests implements CommandInterface<RequestInterface, string> {
   }
 
   // Handles object destruct action
-  public ngOnDestroy() {}
+  public ngOnDestroy() {
+    if (typeof this !== "undefined" && this !== null) {
+      this.cache.clear();
+      this.destroy$.next();
+    }
+  }
 }

@@ -7,7 +7,7 @@ const defaultCacheConfig = {
   retryDelay: 1000,
   refetchInterval: 300000, // each 5min
   refetchOnReconnect: true,
-  staleTime: 300000,
+  staleTime: 0,
   cacheTime: 300000,
 };
 
@@ -53,12 +53,12 @@ export function guid() {
   );
 }
 
-export function cacheRequest<T = unknown>(prop: {
-  id: string;
+export function cacheRequest<T>(prop: {
+  objectid: string;
   properties: CacheQueryConfig | boolean;
   callback: () => ObservableInput<T>;
   errorCallback?: (error: unknown) => void;
-  refetchCallback: (response: T) => void;
+  refetchCallback?: (response: T) => void;
   window?: Window;
   lastError?: unknown;
   payload?: unknown;
@@ -68,12 +68,12 @@ export function cacheRequest<T = unknown>(prop: {
     refetchCallback,
     properties,
     lastError,
-    id,
+    objectid,
     payload,
     errorCallback,
   } = prop;
   return new CachedRequest<T>(
-    id,
+    objectid,
     payload,
     typeof properties === "boolean" ? defaultCacheConfig : properties,
     callback,
@@ -88,6 +88,11 @@ export function cacheRequest<T = unknown>(prop: {
  * @internal
  * Creates a requests cache instance
  */
-export function useCache() {
-  return new RequestsCache();
+export function useCache<T = unknown>() {
+  return new RequestsCache<T>();
 }
+
+function isobject_(o: unknown) {
+  return o !== null && typeof o === "object";
+}
+
