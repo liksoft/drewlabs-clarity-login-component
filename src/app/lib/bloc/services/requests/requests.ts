@@ -4,6 +4,7 @@ import {
   InjectionToken,
   OnDestroy,
   Optional,
+  PLATFORM_ID,
 } from "@angular/core";
 import { useRxEffect, useRxReducer } from "@azlabsjs/rx-hooks";
 import {
@@ -38,7 +39,7 @@ import {
   CommandInterface,
   Action,
 } from "./types";
-import { DOCUMENT } from "@angular/common";
+import { DOCUMENT, isPlatformBrowser } from "@angular/common";
 import { guid, cacheRequest, requestsCache } from "./helpers";
 import { REQUEST_CLIENT } from "./token";
 
@@ -66,9 +67,7 @@ const REQUEST_METHOD_REGEX = /^post|put|patch|get|delete/;
 //@internal
 const REQUEST_RESULT_ACTION = "[request_result_action]";
 
-@Injectable({
-  providedIn: "root",
-})
+@Injectable()
 export class Requests
   implements CommandInterface<RequestInterface, string>, OnDestroy
 {
@@ -85,6 +84,7 @@ export class Requests
   // Class constructor
   constructor(
     @Inject(REQUEST_CLIENT) private client: RequestClient,
+    @Inject(PLATFORM_ID) @Optional() private platformId: Object,
     @Inject(REQUEST_ACTIONS) @Optional() private config?: RequestsConfig,
     @Inject(DOCUMENT) private document?: Document
   ) {
@@ -478,11 +478,15 @@ export class Requests
     return observalbe$;
   }
 
+  destroy() {
+    this.cache.clear();
+    this.destroy$.next();
+  }
+
   // Handles object destruct action
-  public ngOnDestroy() {
-    if (typeof this !== "undefined" && this !== null) {
-      this.cache.clear();
-      this.destroy$.next();
+  ngOnDestroy() {
+    if (this && this.platformId && isPlatformBrowser(this.platformId)) {
+      this.destroy();
     }
   }
 }
