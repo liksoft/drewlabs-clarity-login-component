@@ -20,6 +20,11 @@ import {
 } from "rxjs";
 import { CacheQueryConfig } from "./types";
 
+/**
+ * Internal caching implementation of requests.
+ *
+ * @internal
+ */
 export class RequestsCache<T = unknown> {
   /**
    * @internal
@@ -122,6 +127,12 @@ export class RequestsCache<T = unknown> {
   //#region Miscellanous
 }
 
+/**
+ * Caching object used by the { @see RequestsCache } object when handling request caching
+ * refetches, and retries.
+ *
+ * @internal
+ */
 export class CachedRequest<T = unknown> {
   //#region Properties definitions
   private tries = 0;

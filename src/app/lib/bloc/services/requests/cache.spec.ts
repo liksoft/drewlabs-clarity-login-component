@@ -2,7 +2,7 @@ import { of } from "rxjs";
 import { CachedRequest, RequestsCache } from "./cache";
 import { cacheRequest, requestsCache } from "./helpers";
 import { Requests } from ".";
-import { HTTPRequestMethods, RequestInterface } from "./types";
+import { RequestInterface } from "./types";
 
 describe("Requests cache test", () => {
   let cache!: RequestsCache<string>;

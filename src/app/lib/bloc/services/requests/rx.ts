@@ -1,13 +1,17 @@
 import { filter, first, map, Observable, OperatorFunction, tap } from "rxjs";
 import { RequestState } from "./types";
 
+/**
+ * @internal
+ * @param predicate
+ */
 export function firstWhere<T = unknown>(predicate: (value: T) => boolean) {
   return (observable$: Observable<T>) =>
     observable$.pipe(filter(predicate), first());
 }
 
 /**
- * RxJS operator that returns the api response from
+ * @description RxJS operator that returns the api response from
  */
 export function apiResponse<TResponse = unknown>(
   project?: (request: RequestState) => TResponse

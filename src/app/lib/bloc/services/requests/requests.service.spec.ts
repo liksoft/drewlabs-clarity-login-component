@@ -1,3 +1,4 @@
+import { PLATFORM_ID } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import {
   filter,
@@ -12,7 +13,6 @@ import {
 } from "rxjs";
 import { Requests } from "./requests";
 import { apiResponse, firstWhere } from "./rx";
-import { HTTPRequestMethods } from "./types";
 
 const testResult = {
   data: [
@@ -54,23 +54,29 @@ describe("Requests", () => {
       providers: [
         {
           provide: Requests,
-          useFactory: () => {
-            return new Requests({
-              request: (
-                path: string,
-                method: HTTPRequestMethods,
-                body: unknown,
-                options?: unknown
-              ) => {
-                if (path.includes("comments")) {
-                  return throwError(() => "Comments path not supported");
-                }
-                return (
-                  path.includes("comments") ? of(commentResult) : of(testResult)
-                ) as ObservableInput<any>;
+          useFactory: (platform: Object) => {
+            return new Requests(
+              {
+                request: (
+                  path: string,
+                  method: string,
+                  body: unknown,
+                  options?: unknown
+                ) => {
+                  if (path.includes("comments")) {
+                    return throwError(() => "Comments path not supported");
+                  }
+                  return (
+                    path.includes("comments")
+                      ? of(commentResult)
+                      : of(testResult)
+                  ) as ObservableInput<any>;
+                },
               },
-            });
+              platform
+            );
           },
+          deps: [PLATFORM_ID],
         },
       ],
     }).compileComponents();
@@ -144,7 +150,7 @@ describe("Requests", () => {
     service
       .select(
         service.dispatch(
-          (path: string, method: HTTPRequestMethods) => of(fnTestResult),
+          (path: string, method: string) => of(fnTestResult),
           "api/v1/books",
           "GET"
         )
@@ -167,8 +173,7 @@ describe("Requests", () => {
     service
       .select(
         service.dispatch(
-          (path: string, method: HTTPRequestMethods) => {
-            console.log(path, method);
+          (path: string, method: string) => {
             executionCount = executionCount + 1;
             return createResponse({
               title: "In publishing and graphic design",
@@ -182,11 +187,12 @@ describe("Requests", () => {
           { cacheQuery: true, staleTime: 2000, refetchInterval: 100 }
         )
       )
+      .pipe(apiResponse())
       .subscribe();
     service
       .select(
         service.dispatch(
-          (path: string, method: HTTPRequestMethods) => {
+          (path: string, method: string) => {
             executionCount = executionCount + 1;
             return createResponse({
               title: "In publishing and graphic design",
@@ -200,12 +206,13 @@ describe("Requests", () => {
           { cacheQuery: true, staleTime: 2000, refetchInterval: 100 }
         )
       )
+      .pipe(apiResponse())
       .subscribe();
-    await lastValueFrom(
-      interval(4000).pipe(
+    return await lastValueFrom(
+      interval(3000).pipe(
         first(),
         tap(() => {
-          service.ngOnDestroy();
+          service.destroy();
           expect(executionCount).toEqual(3);
         })
       )

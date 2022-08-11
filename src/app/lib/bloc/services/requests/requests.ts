@@ -24,12 +24,11 @@ import {
   tap,
 } from "rxjs";
 import {
-  HTTPRequestMethods,
   RequestInterface,
   RequestsConfig,
   RequestsConfigParamsType,
   RequestState,
-  RequestClient,
+  RequestHandler,
   FnActionArgumentTypes,
   RequestPayload,
   FuncRequestType,
@@ -41,10 +40,7 @@ import {
 } from "./types";
 import { DOCUMENT, isPlatformBrowser } from "@angular/common";
 import { guid, cacheRequest, requestsCache } from "./helpers";
-import { REQUEST_CLIENT } from "./token";
-
-// TODO: Add a caching system on top of the request implementation
-// in order to memoize and replay requests
+import { REQUEST_BACKEND_HANDLER } from "./token";
 
 /**
  * // Requests store state
@@ -62,7 +58,7 @@ export const REQUEST_ACTIONS = new InjectionToken<RequestsConfig>(
 
 // Regex matching request action
 // @internal
-const REQUEST_METHOD_REGEX = /^post|put|patch|get|delete/;
+const REQUEST_METHOD_REGEX = /^post|put|patch|get|delete|options|head/;
 
 //@internal
 const REQUEST_RESULT_ACTION = "[request_result_action]";
@@ -83,7 +79,7 @@ export class Requests
 
   // Class constructor
   constructor(
-    @Inject(REQUEST_CLIENT) private client: RequestClient,
+    @Inject(REQUEST_BACKEND_HANDLER) private client: RequestHandler,
     @Inject(PLATFORM_ID) @Optional() private platformId: Object,
     @Inject(REQUEST_ACTIONS) @Optional() private config?: RequestsConfig,
     @Inject(DOCUMENT) private document?: Document
@@ -199,14 +195,13 @@ export class Requests
         method ??
         (typeof config.actions[name] === "string"
           ? "post"
-          : (((config.actions[name] as RequestsConfigParamsType)!.method ??
-              "post") as HTTPRequestMethods));
+          : (config.actions[name] as RequestsConfigParamsType)!.method ??
+            "post");
     }
-    method =
-      method ?? (name.match(REQUEST_METHOD_REGEX)![0] as HTTPRequestMethods);
+    method = method ?? name.match(REQUEST_METHOD_REGEX)![0];
     if (method === null || typeof method === "undefined") {
       throw new Error(
-        "Request action name must be of type method_endpoint and must be an http request method"
+        "Request action name must be of type [method_endpoint:param1:param2]"
       );
     }
     if (path === null || typeof path === "undefined") {

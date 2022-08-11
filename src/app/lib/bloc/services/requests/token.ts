@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
-import { RequestClient } from './types';
+import { RequestHandler } from './types';
 
-export const REQUEST_CLIENT = new InjectionToken<RequestClient>(
-  'Createst an instance of http request client'
+export const REQUEST_BACKEND_HANDLER = new InjectionToken<RequestHandler>(
+  'Createst an instance of request client'
 );

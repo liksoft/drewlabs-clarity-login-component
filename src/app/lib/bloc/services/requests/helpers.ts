@@ -2,6 +2,7 @@ import { ObservableInput } from "rxjs";
 import { CachedRequest, RequestsCache } from "./cache";
 import { CacheQueryConfig } from "./types";
 
+// @internal
 const defaultCacheConfig = {
   retries: 3,
   retryDelay: 1000,
@@ -11,6 +12,11 @@ const defaultCacheConfig = {
   cacheTime: 300000,
 };
 
+/**
+ * Creates query parameters by parsing request params options
+ *
+ * @param query
+ */
 export function createQueryParams<
   TQuery = string | number | Record<string, unknown>
 >(query?: TQuery) {
@@ -53,6 +59,11 @@ export function guid() {
   );
 }
 
+/**
+ * Cached requests factory function for creating { @see CachedRequest } instances
+ *
+ * @param prop
+ */
 export function cacheRequest<T>(prop: {
   objectid: string;
   properties: CacheQueryConfig | boolean;
@@ -85,8 +96,9 @@ export function cacheRequest<T>(prop: {
 }
 
 /**
- * @internal
  * Creates a requests cache instance
+ *
+ * @internal
  */
 export function requestsCache<T = unknown>() {
   return new RequestsCache<T>();

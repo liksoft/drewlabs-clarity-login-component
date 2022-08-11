@@ -1,0 +1,15 @@
+export type HTTPRequestMethods =
+  | "GET"
+  | "DELETE"
+  | "OPTION"
+  | "HEAD"
+  | "POST"
+  | "PUT"
+  | "PATCH"
+  | "get"
+  | "delete"
+  | "option"
+  | "head"
+  | "post"
+  | "put"
+  | "patch";

@@ -8,7 +8,7 @@ export {
   RequestType,
   Requests,
   REQUEST_ACTIONS,
-  firstWhere,
+  REQUEST_BACKEND_HANDLER,
   createQueryParams,
   apiResponse,
 } from "./services/requests";

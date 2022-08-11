@@ -1,22 +1,8 @@
 import { Observable, ObservableInput } from "rxjs";
 
 //#region Requests service types
-export type HTTPRequestMethods =
-  | "GET"
-  | "DELETE"
-  | "OPTION"
-  | "HEAD"
-  | "POST"
-  | "PUT"
-  | "PATCH"
-  | "get"
-  | "delete"
-  | "option"
-  | "head"
-  | "post"
-  | "put"
-  | "patch";
-export declare type HTTPResponseType =
+
+export declare type ResponseType =
   | "arraybuffer"
   | "text"
   | "blob"
@@ -56,12 +42,12 @@ export type RequestsConfig = {
  * @internal
  */
 export type RequestInterface = {
-  method?: HTTPRequestMethods;
+  method?: string;
   body?: unknown;
   params?: Record<string, any>;
   options?: {
-    headers?: HeadersInit;
-    responseType?: HTTPResponseType;
+    headers?: [string, string][] | Record<string, string>;
+    responseType?: ResponseType;
     params?: Record<string, any>;
   };
   cache?: boolean | CacheQueryConfig;
@@ -77,9 +63,15 @@ export type RequestPayload<TFunc extends Function> = {
   id: string;
 };
 
-export interface RequestClient {
+/**
+ * @description Execute the request based on user provided options.
+ *
+ * It's internally used by the { @see Requests } service for sending data to
+ * backend server used the implemented protocol
+ */
+export interface RequestHandler {
   /**
-   * Makes an HTTP Request to a server enpoint and returns
+   * Sends a client request to a server enpoint and returns
    * an observable of response type
    *
    * @param path The path to API resource or full server url
@@ -89,11 +81,11 @@ export interface RequestClient {
    */
   request<T = unknown>(
     path: string,
-    method: HTTPRequestMethods,
+    method: string,
     body: unknown,
     options?: {
-      headers?: HeadersInit;
-      responseType?: HTTPResponseType;
+      headers?: [string, string][] | Record<string, string>;
+      responseType?: ResponseType;
       params?: Record<string, any>;
     }
   ): ObservableInput<T>;
@@ -135,7 +127,6 @@ export type FnActionArgumentLeastType = CacheQueryConfig & {
 export type ObservableInputFunction = (
   ...args: unknown[]
 ) => ObservableInput<unknown>;
-
 
 /**
  * @internal
