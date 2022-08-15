@@ -1,5 +1,3 @@
-import { PLATFORM_ID } from "@angular/core";
-import { TestBed } from "@angular/core/testing";
 import {
   filter,
   first,
@@ -49,38 +47,22 @@ const fnTestResult = {
 describe("Requests", () => {
   let service!: Requests;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      providers: [
-        {
-          provide: Requests,
-          useFactory: (platform: Object) => {
-            return new Requests(
-              {
-                request: (
-                  path: string,
-                  method: string,
-                  body: unknown,
-                  options?: unknown
-                ) => {
-                  if (path.includes("comments")) {
-                    return throwError(() => "Comments path not supported");
-                  }
-                  return (
-                    path.includes("comments")
-                      ? of(commentResult)
-                      : of(testResult)
-                  ) as ObservableInput<any>;
-                },
-              },
-              platform
-            );
-          },
-          deps: [PLATFORM_ID],
-        },
-      ],
-    }).compileComponents();
-    service = TestBed.inject(Requests);
+  beforeEach(() => {
+    service = new Requests({
+      execute: (
+        path: string,
+        method: string,
+        body: unknown,
+        options?: unknown
+      ) => {
+        if (path.includes("comments")) {
+          return throwError(() => "Comments path not supported");
+        }
+        return (
+          path.includes("comments") ? of(commentResult) : of(testResult)
+        ) as ObservableInput<any>;
+      },
+    });
   });
 
   it("should create the request service", async () => {
@@ -123,7 +105,7 @@ describe("Requests", () => {
     service
       .select(
         service.dispatch({
-          name: "[get_api/v1/post/:post_id/comments",
+          name: "[get_api/v1/post/:post_id/comments]",
           payload: {
             params: {
               post_id: 1,
@@ -184,7 +166,12 @@ describe("Requests", () => {
           },
           "api/v1/books",
           "GET",
-          { cacheQuery: true, staleTime: 2000, refetchInterval: 100 }
+          {
+            cacheQuery: true,
+            staleTime: 2000,
+            refetchInterval: 100,
+            name: "get_books_component",
+          }
         )
       )
       .pipe(apiResponse())
@@ -203,7 +190,12 @@ describe("Requests", () => {
           },
           "api/v1/books",
           "GET",
-          { cacheQuery: true, staleTime: 2000, refetchInterval: 100 }
+          {
+            cacheQuery: true,
+            staleTime: 2000,
+            refetchInterval: 100,
+            name: "get_books_component",
+          }
         )
       )
       .pipe(apiResponse())

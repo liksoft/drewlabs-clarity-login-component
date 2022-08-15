@@ -42,10 +42,16 @@ import {
 } from "./lib/views/login/constants";
 import { interval, lastValueFrom } from "rxjs";
 import { Router } from "@angular/router";
-import { NgxConfigModule } from "@azlabsjs/ngx-config";
+import {
+  APP_CONFIG_MANAGER,
+  ConfigurationManager,
+  NgxConfigModule,
+} from "@azlabsjs/ngx-config";
 import { NgxIntlTelInputModule } from "@azlabsjs/ngx-intl-tel-input";
 import { HttpResponse } from "@azlabsjs/requests";
 import { NgxClrSmartGridModule } from "@azlabsjs/ngx-clr-smart-grid";
+import { HTTPQueryModule } from "./lib/bloc/services/requests/angular";
+import { HTTP_HOST } from "./lib/bloc/services/requests/http";
 // #endregion Dropzone configuration
 
 registerLocaleData(localeFr, "fr", localeFrExtra);
@@ -150,8 +156,8 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
                 ...request.options,
                 headers: {
                   ...request.options.headers,
-                  'x-client-id': environment.forms.upload.clientid,
-                  'x-client-secret': environment.forms.upload.clientsecret,
+                  "x-client-id": environment.forms.upload.clientid,
+                  "x-client-secret": environment.forms.upload.clientsecret,
                 },
               },
             });
@@ -255,7 +261,16 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
       //   deps: any[]; // Provider
       // },
     }),
-    NgxClrSmartGridModule
+    NgxClrSmartGridModule,
+    HTTPQueryModule.forRoot({
+      hostProvider: {
+        provide: HTTP_HOST,
+        useFactory: (configManager: ConfigurationManager) => {
+          return configManager.get("api.host", "https://coopec-clients.lik.tg");
+        },
+        deps: [APP_CONFIG_MANAGER],
+      },
+    }),
   ],
   providers: [
     TranslateService,

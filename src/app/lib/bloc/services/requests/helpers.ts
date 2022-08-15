@@ -1,6 +1,7 @@
-import { ObservableInput } from "rxjs";
+import { finalize, Observable, ObservableInput } from "rxjs";
 import { CachedRequest, RequestsCache } from "./cache";
-import { CacheQueryConfig } from "./types";
+import { selectRequest } from "./rx";
+import { CacheQueryConfig, State } from "./types";
 
 // @internal
 const defaultCacheConfig = {
@@ -72,7 +73,7 @@ export function cacheRequest<T>(prop: {
   refetchCallback?: (response: T) => void;
   window?: Window;
   lastError?: unknown;
-  payload?: unknown;
+  argument?: unknown;
 }) {
   const {
     callback,
@@ -80,12 +81,12 @@ export function cacheRequest<T>(prop: {
     properties,
     lastError,
     objectid,
-    payload,
+    argument,
     errorCallback,
   } = prop;
   return new CachedRequest<T>(
     objectid,
-    payload,
+    argument,
     typeof properties === "boolean" ? defaultCacheConfig : properties,
     callback,
     refetchCallback,
@@ -104,3 +105,18 @@ export function requestsCache<T = unknown>() {
   return new RequestsCache<T>();
 }
 
+/**
+ *
+ * @param param0
+ */
+export function useRequestSelector([state$, cache]: [
+  Observable<State>,
+  RequestsCache | undefined
+]) {
+  return (argument: unknown) => {
+    return state$.pipe(
+      selectRequest(argument),
+      finalize(() => cache?.invalidate(argument))
+    );
+  };
+}

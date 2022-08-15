@@ -1,10 +1,11 @@
-export { Requests, REQUEST_ACTIONS, State } from "./requests";
+export { Requests } from "./requests";
 export {
-  RequestInterface as RequestPayload,
-  RequestHandler as RequestClient,
+  RequestInterface,
+  RequestHandler,
   RequestsConfig,
-  RequestState as RequestType,
+  RequestState,
   CacheQueryConfig,
+  State
 } from "./types";
 export { apiResponse } from "./rx";
 export { createQueryParams } from "./helpers";

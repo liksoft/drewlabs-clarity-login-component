@@ -1,17 +1,8 @@
-import {
-  Inject,
-  Injectable,
-  InjectionToken,
-  OnDestroy,
-  Optional,
-  PLATFORM_ID,
-} from "@angular/core";
 import { useRxEffect, useRxReducer } from "@azlabsjs/rx-hooks";
 import {
   asyncScheduler,
   catchError,
   EMPTY,
-  filter,
   finalize,
   from,
   map,
@@ -20,7 +11,6 @@ import {
   observeOn,
   of,
   Subject,
-  takeUntil,
   tap,
 } from "rxjs";
 import {
@@ -29,32 +19,21 @@ import {
   RequestsConfigParamsType,
   RequestState,
   RequestHandler,
-  FnActionArgumentTypes,
+  DispatchLeastArgumentTypes,
   RequestPayload,
-  FuncRequestType,
   FnActionArgumentLeastType,
-  RequestPayloadLeastArgumentType,
   ObservableInputFunction,
   CommandInterface,
   Action,
+  State,
+  RequestArguments,
 } from "./types";
-import { DOCUMENT, isPlatformBrowser } from "@angular/common";
-import { guid, cacheRequest, requestsCache } from "./helpers";
-import { REQUEST_BACKEND_HANDLER } from "./token";
-
-/**
- * // Requests store state
- * @internal
- */
-export type State = {
-  performingAction: boolean;
-  requests: RequestState<RequestInterface | FuncRequestType>[];
-  lastRequest?: RequestState<RequestInterface | FuncRequestType>;
-};
-
-export const REQUEST_ACTIONS = new InjectionToken<RequestsConfig>(
-  "Request actions map definitions"
-);
+import {
+  guid,
+  cacheRequest,
+  requestsCache,
+  useRequestSelector,
+} from "./helpers";
 
 // Regex matching request action
 // @internal
@@ -63,32 +42,39 @@ const REQUEST_METHOD_REGEX = /^post|put|patch|get|delete|options|head/;
 //@internal
 const REQUEST_RESULT_ACTION = "[request_result_action]";
 
-@Injectable()
-export class Requests
-  implements CommandInterface<RequestInterface, string>, OnDestroy
-{
+export class Requests implements CommandInterface<RequestInterface, string> {
   //#region Properties definitions
   private readonly dispatch$!: (action: Required<Action<unknown>>) => void;
-  private readonly state$!: Observable<State>;
+  public readonly state$!: Observable<State>;
   // List of request cached by the current instance
-  private cache = requestsCache();
+  private _cache = requestsCache();
   private destroy$ = new Subject<void>();
   // Uncomment the code below to add support for performing action property observable
-  // public readonly performingAction$!: Observable<boolean>;
+  public readonly performingAction$;
+
+  // Provides an accessor to the request
+  get cache() {
+    return this._cache;
+  }
   //#endregion Properties definitions
 
   // Class constructor
   constructor(
-    @Inject(REQUEST_BACKEND_HANDLER) private client: RequestHandler,
-    @Inject(PLATFORM_ID) @Optional() private platformId: Object,
-    @Inject(REQUEST_ACTIONS) @Optional() private config?: RequestsConfig,
-    @Inject(DOCUMENT) private document?: Document
+    private backend: RequestHandler,
+    private config?: RequestsConfig,
+    private defaultView?: Window | undefined
   ) {
     [this.state$, this.dispatch$] = useRxReducer(
       (state, action: Required<Action<unknown>>) => {
         if (action.name.toLocaleLowerCase() === REQUEST_RESULT_ACTION) {
           const { payload } = action as Action<RequestState>;
-          const { id, response, error, ok } = (payload ?? {}) as RequestState;
+          const {
+            id,
+            response,
+            error,
+            ok,
+            state: _state,
+          } = (payload ?? {}) as RequestState;
           // If the response does not co][ntains any id field, we cannot process any further
           // therefor simply return the current state
           if (null === id || typeof id === "undefined") {
@@ -103,13 +89,17 @@ export class Requests
             response,
             error,
             ok,
+            state: _state,
+            timestamps: {
+              ...(requests[index].timestamps ?? {}),
+              updatedAt: Date.now(),
+            },
           });
           return {
             ...state,
             lastRequest: {
               ...requests[index],
             },
-            performingAction: false,
             requests: [...requests],
           } as State;
         }
@@ -127,9 +117,13 @@ export class Requests
         const req = {
           id,
           pending: true,
-          payload: argument,
+          state: "loading",
+          argument,
           response: undefined,
-        };
+          timestamps: {
+            createdAt: Date.now(),
+          },
+        } as RequestState<RequestArguments>;
         // We returns the currrent state adding the current request with a
         // request id and a pending status
         return {
@@ -147,11 +141,14 @@ export class Requests
       {
         performingAction: false,
         requests: [],
+        metadata: {
+          timestamp: undefined,
+        },
       } as State
     );
-    // this.performingAction$ = this.state$.pipe(
-    //   map((state) => state.performingAction)
-    // );
+    this.performingAction$ = this.state$.pipe(
+      map((state) => state.performingAction)
+    );
   }
 
   /**
@@ -170,15 +167,15 @@ export class Requests
    * Internally handle request using client provided request client
    *
    * @param name
-   * @param payload
+   * @param argument
    * @param config
    */
   private makeRequest(
     name: string,
-    payload: RequestInterface,
+    argument: RequestInterface,
     config?: RequestsConfig
   ) {
-    let { params, options, method, body } = payload;
+    let { params, options, method, body } = argument;
     // We remove any `[` `]` from the starts and the end of the name string
     // to avoid any issue when parsing the name
     name = name.startsWith("[") ? name.substring(1) : name;
@@ -194,9 +191,9 @@ export class Requests
       method =
         method ??
         (typeof config.actions[name] === "string"
-          ? "post"
+          ? "GET"
           : (config.actions[name] as RequestsConfigParamsType)!.method ??
-            "post");
+            "GET");
     }
     method = method ?? name.match(REQUEST_METHOD_REGEX)![0];
     if (method === null || typeof method === "undefined") {
@@ -204,6 +201,32 @@ export class Requests
         "Request action name must be of type [method_endpoint:param1:param2]"
       );
     }
+    // Get the request path from the request interface
+    path = this.buildRequestPath(
+      name,
+      method,
+      path ?? argument.path,
+      params ?? options?.params ?? undefined,
+      config
+    );
+    return () =>
+      this.backend.execute(path, method ?? "GET", body, {
+        headers: options?.headers ?? {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        responseType: options?.responseType ?? "json",
+        params: options?.params || new Object(),
+      });
+  }
+
+  private buildRequestPath(
+    name: string,
+    method: string,
+    path?: string,
+    params?: Record<string, any>,
+    config?: RequestsConfig
+  ) {
     if (path === null || typeof path === "undefined") {
       path = name.replace(new RegExp(`^${method}_`), "");
     }
@@ -218,8 +241,8 @@ export class Requests
       }/${path}`;
     }
 
-    // Replace request parameters with their values
-    params = params ?? options?.params ?? undefined;
+    // // Replace request parameters with their values
+    // params = params ?? options?.params ?? undefined;
     if (params) {
       for (const key in params) {
         if (Object.prototype.hasOwnProperty.call(params, key)) {
@@ -229,20 +252,7 @@ export class Requests
     }
     // API endpoint must be separeted with _ symbol when constructed with with action name
     // therefore, we replace any _ with / to match the endpoint path
-    path = path.replace(/[_]{2}/g, "/");
-    // Send the actual request to the server
-    // TODO: Memoize the request for it to be send later using a caching system
-
-    // Send the actual request to the backend server
-    return () =>
-      this.client.request(path, method ?? "GET", body, {
-        headers: options?.headers ?? {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        responseType: options?.responseType ?? "json",
-        params: options?.params || new Object(),
-      });
+    return path.replace(/[_]{2}/g, "/");
   }
 
   private sendRequest(request: () => ObservableInput<unknown>, id?: string) {
@@ -251,11 +261,16 @@ export class Requests
         observeOn(asyncScheduler),
         map((response) => ({
           name: REQUEST_RESULT_ACTION,
-          payload: { id, response, ok: true } as Partial<RequestState>,
+          payload: {
+            id,
+            response,
+            ok: true,
+            state: "success",
+          } as RequestState<RequestArguments>,
         })),
         catchError((error) => {
           // Request is configured to be cached if it exists in the cache
-          const cachedRequest = this.cache.at(this.cache.indexOf(id));
+          const cachedRequest = this.cache.get(id);
           if (cachedRequest) {
             cachedRequest.setError(error);
             // Call the cached request retry method
@@ -264,7 +279,12 @@ export class Requests
           } else {
             return of({
               name: REQUEST_RESULT_ACTION,
-              payload: { id, error, ok: false } as Partial<RequestState>,
+              payload: {
+                id,
+                error,
+                ok: false,
+                state: "error",
+              } as RequestState<RequestArguments>,
             });
           }
         }),
@@ -276,14 +296,12 @@ export class Requests
 
   private resolve<T extends ObservableInputFunction>(
     action: Action<RequestInterface> | T,
-    ...args:
-      | [...RequestPayloadLeastArgumentType<RequestInterface>]
-      | FnActionArgumentTypes<T>
-      | [...FnActionArgumentTypes<T>, FnActionArgumentLeastType]
+    ...args: [...DispatchLeastArgumentTypes<T>]
   ): [string, Required<Action<unknown>> | undefined, boolean] {
     let cached: boolean = false;
     const actionType = typeof action;
     let uuid!: string;
+    // TODO: finds a meaninful action name for function dispatch
     const name =
       actionType === "function" ? "[requests_fn_action]" : action.name;
     //#region caching request
@@ -298,7 +316,7 @@ export class Requests
     // We call the function with the slice of argument from the beginning to the element before the last element
     const argument:
       | [string, RequestInterface | undefined]
-      | [string, T, ...FnActionArgumentTypes<T>] =
+      | [string, T, ...DispatchLeastArgumentTypes<T>] =
       actionType === "function"
         ? [
             name,
@@ -306,19 +324,19 @@ export class Requests
             ...(((cacheConfig as FnActionArgumentLeastType)?.cacheQuery ||
             args.length > 0
               ? [...args].slice(0, args.length - 1)
-              : args) as FnActionArgumentTypes<T>),
+              : args) as DispatchLeastArgumentTypes<T>),
           ]
         : [name, (action as Action<RequestInterface>).payload];
     // Comparing functions in javascript is tedious, and error prone, therefore we will only rely
-    // not rely on function when searching cache for cached item by on constructed action
-    const cachePayload = this.buildCacheQuery(argument, actionType);
+    // not rely on function prototype when searching cache for cached item by on constructed action
+    const requestArgument = this.buildCacheQuery(
+      argument,
+      actionType,
+      cacheConfig
+    );
     //#region Resolves action type or name
-    if (cachePayload) {
-      const cachedRequestIndex = this.cache.indexOf(cachePayload);
-      const cachedRequest =
-        cachedRequestIndex === -1
-          ? undefined
-          : this.cache.at(cachedRequestIndex);
+    if (requestArgument) {
+      const cachedRequest = this.cache.get(requestArgument);
       // Evaluate the staleTime and cacheTime to know if the request expires or not and need to be refetched
       if (
         typeof cachedRequest !== "undefined" &&
@@ -334,7 +352,7 @@ export class Requests
       }
 
       if (Boolean(cachedRequest?.expires())) {
-        this.cache.removeAt(cachedRequestIndex);
+        this.cache.remove(cachedRequest);
       }
     }
     // Here we make sure the request UUID is generated for the request if missing
@@ -347,26 +365,35 @@ export class Requests
 
     //#region If request should be cached, we add request to cache
     if (cacheConfig) {
-      const { defaultView } = this.document ?? { defaultView: undefined };
       this.cache.add(
         cacheRequest({
           objectid: uuid,
           callback,
           properties: cacheConfig,
-          payload: cachePayload,
+          argument: requestArgument,
           refetchCallback: (response) => {
             this.dispatch$({
               name: REQUEST_RESULT_ACTION,
-              payload: { uuid, response, ok: true } as Partial<RequestState>,
+              payload: {
+                id: uuid,
+                response,
+                ok: true,
+                // state: "revalidate",
+              } as RequestState<RequestArguments>,
             });
           },
           errorCallback: (error) => {
             this.dispatch$({
               name: REQUEST_RESULT_ACTION,
-              payload: { uuid, error, ok: false },
+              payload: {
+                id: uuid,
+                error,
+                ok: false,
+                state: "error",
+              } as RequestState<RequestArguments>,
             });
           },
-          window: defaultView as Window,
+          window: this.defaultView as Window,
         })
       );
     }
@@ -384,11 +411,16 @@ export class Requests
   private buildCacheQuery<T extends ObservableInputFunction>(
     argument:
       | [string, RequestInterface | undefined]
-      | [string, T, ...FnActionArgumentTypes<T>],
-    actionType: typeof argument[0]
+      | [string, T, ...DispatchLeastArgumentTypes<T>],
+    actionType: typeof argument[0],
+    cacheConfig?: FnActionArgumentLeastType
   ) {
     if (actionType === "function") {
-      const _arguments = argument as [string, T, ...FnActionArgumentTypes<T>];
+      const _arguments = argument as [
+        string,
+        T,
+        ...DispatchLeastArgumentTypes<T>
+      ];
       const fn = _arguments[1];
       const funcName = fn.name === "" ? undefined : fn.name;
       const parameters = fn.toString().match(/\( *([^)]+?) *\)/gi);
@@ -399,6 +431,10 @@ export class Requests
             parameters ? parameters[0] : "()"
           } { ... }`,
         ...argument.slice(2),
+        // Is a cache name is provided, we use is, else we generate a random uuid
+        ...(cacheConfig
+          ? [cacheConfig.name ? cacheConfig.name : Requests.createRequestID()]
+          : []),
       ];
     }
     return [...argument] as [string, RequestInterface | undefined];
@@ -407,7 +443,7 @@ export class Requests
   private createRequestCallback<T extends ObservableInputFunction>(
     argument:
       | [string, RequestInterface | undefined]
-      | [string, T, ...FnActionArgumentTypes<T>],
+      | [string, T, ...DispatchLeastArgumentTypes<T>],
     name: string,
     config?: RequestsConfig
   ) {
@@ -420,7 +456,7 @@ export class Requests
     }
     const _least = argument.slice(1) as [
       T | RequestInterface,
-      ...FnActionArgumentTypes<T>
+      ...DispatchLeastArgumentTypes<T>
     ];
     const firstArgument = _least[0];
     if (typeof firstArgument === "function") {
@@ -435,10 +471,7 @@ export class Requests
   // Dispatch method implementation
   dispatch<T extends Function>(
     action: Action<RequestInterface> | T,
-    ...args:
-      | [...RequestPayloadLeastArgumentType<RequestInterface>]
-      | FnActionArgumentTypes<T>
-      | [...FnActionArgumentTypes<T>, FnActionArgumentLeastType]
+    ...args: [...DispatchLeastArgumentTypes<T>]
   ) {
     const [uuid, _action, cached] = this.resolve(action as any, ...args);
     // In case the request is cached, we do not dispatch any request action as the
@@ -452,36 +485,19 @@ export class Requests
   /**
    * Select a request from the state object based on the request uuid
    *
-   * @param id
+   * @param query
    * @returns
    */
-  select(id: string) {
-    const observalbe$ = this.state$.pipe(
-      takeUntil(this.destroy$),
-      map((state) => state.requests.find((request) => request.id === id)),
-      filter((state) => typeof state !== "undefined" && state !== null)
-    ) as Observable<RequestState>;
-    // When no subscriber for the current stream, we mark it as expired
-    observalbe$.pipe(
-      finalize(() => {
-        const cahedRequest = this.cache.at(this.cache.indexOf(id));
-        if (cahedRequest) {
-          cahedRequest.setExpiresAt();
-        }
-      })
-    );
-    return observalbe$;
+  select(query: unknown) {
+    // return this.state$.pipe(
+    //   selectRequest(query),
+    //   finalize(() => this.cache.invalidate(query))
+    // ) as Observable<RequestState<TResult>>;
+    return useRequestSelector([this.state$, this.cache])(query);
   }
 
   destroy() {
     this.cache.clear();
     this.destroy$.next();
-  }
-
-  // Handles object destruct action
-  ngOnDestroy() {
-    if (this && this.platformId && isPlatformBrowser(this.platformId)) {
-      this.destroy();
-    }
   }
 }

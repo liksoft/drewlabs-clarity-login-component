@@ -5,7 +5,7 @@ import { APP_CONFIG_MANAGER, ConfigurationManager } from "@azlabsjs/ngx-config";
 import { lastValueFrom, tap } from "rxjs";
 import { Log } from "src/app/lib/bloc";
 import { JSDate } from "@azlabsjs/js-datetime";
-import { MoralMembersService } from "../clients.service";
+// import { MoralMembersService } from "../clients.service";
 
 @Component({
   selector: "app-moral-member-add",
@@ -32,7 +32,7 @@ export class MoralMemberAddComponent implements OnInit {
     @Inject(FORM_CLIENT) private client: FormsClient,
     @Inject(APP_CONFIG_MANAGER) private configManager: ConfigurationManager,
     private activateRoute: ActivatedRoute,
-    private morals: MoralMembersService
+    // private morals: MoralMembersService
   ) {}
 
   ngOnInit(): void {}
@@ -53,7 +53,7 @@ export class MoralMemberAddComponent implements OnInit {
       }));
     }
     // TODO: Send the create member request
-    console.log(await lastValueFrom(this.morals.create(request)));
+    // console.log(await lastValueFrom(this.morals.create(request)));
     // TODO: Using the created member id, create the stake holders
   }
 }

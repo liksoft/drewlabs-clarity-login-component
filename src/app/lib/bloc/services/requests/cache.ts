@@ -83,6 +83,15 @@ export class RequestsCache<T = unknown> {
     return this.length === 0;
   }
 
+  /**
+   * Deletes an item from the cache
+   *
+   * @param argument
+   */
+  remove(argument: unknown) {
+    return this.removeAt(this.indexOf(argument));
+  }
+
   //#region Miscellanous
   at(index: number) {
     return index === -1 || index > this._state.length - 1
@@ -106,23 +115,31 @@ export class RequestsCache<T = unknown> {
     // the query value
     if (isPrimitive(argument)) {
       return this._state.findIndex(
-        (request) => request.id === argument || request.payload === argument
+        (request) => request.id === argument || request.argument === argument
       );
     }
     // Case the key is not found, index will still be -1, therefore we search
     return this._state.findIndex((request) => {
       if (
-        ((typeof request.payload === "undefined" || request.payload === null) &&
+        ((typeof request.argument === "undefined" ||
+          request.argument === null) &&
           typeof argument !== "undefined" &&
           argument !== null) ||
         ((typeof argument === "undefined" || argument === null) &&
-          typeof request.payload !== "undefined" &&
-          request.payload !== null)
+          typeof request.argument !== "undefined" &&
+          request.argument !== null)
       ) {
         return false;
       }
-      return deepEqual(request.payload, argument);
+      return deepEqual(request.argument, argument);
     });
+  }
+
+  invalidate(argument: unknown) {
+    const cahedRequest = this.at(this.indexOf(argument));
+    if (cahedRequest) {
+      cahedRequest.setExpiresAt();
+    }
   }
   //#region Miscellanous
 }
@@ -156,8 +173,8 @@ export class CachedRequest<T = unknown> {
   get id() {
     return this._id;
   }
-  get payload() {
-    return this._payload;
+  get argument() {
+    return this._argument;
   }
 
   get isStale() {
@@ -172,7 +189,7 @@ export class CachedRequest<T = unknown> {
     return {
       tries: this.tries,
       lastError: this.lastError,
-      payload: this.payload,
+      payload: this._argument,
       id: this.id,
     };
   }
@@ -181,7 +198,7 @@ export class CachedRequest<T = unknown> {
   // Creates an instance of {@see CachedRequest} class
   constructor(
     private _id: string,
-    private _payload: unknown,
+    private _argument: unknown,
     private properties: CacheQueryConfig,
     private readonly callback: () => ObservableInput<T>,
     private refetchCallback?: (response: T) => void,

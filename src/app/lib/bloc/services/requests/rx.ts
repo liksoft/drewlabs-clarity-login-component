@@ -1,5 +1,13 @@
-import { filter, first, map, Observable, OperatorFunction, tap } from "rxjs";
-import { RequestState } from "./types";
+import {
+  filter,
+  first,
+  map,
+  Observable,
+  OperatorFunction,
+  takeUntil,
+  tap,
+} from "rxjs";
+import { RequestArguments, RequestState, State } from "./types";
 
 /**
  * @internal
@@ -22,4 +30,12 @@ export function apiResponse<TResponse = unknown>(
       first(),
       project ? map(project) : map((request) => request.response as TResponse)
     );
+}
+
+export function selectRequest(argument: unknown) {
+  return (observable$: Observable<State>) =>
+    observable$.pipe(
+      map((state) => state.requests.find((request) => request.id === argument)),
+      filter((state) => typeof state !== "undefined" && state !== null)
+    ) as Observable<RequestState<RequestArguments>>;
 }

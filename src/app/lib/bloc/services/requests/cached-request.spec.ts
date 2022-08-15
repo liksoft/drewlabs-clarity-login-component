@@ -14,15 +14,15 @@ describe("Cached request class cache tests", () => {
   it("It should run the request 2 times, before 2000 ms given a refetchInterval of 700 ms", async () => {
     let resultCallCounts = 0;
     let resultState!: number[];
-    const payload = () => {
+    const argument = () => {
       return new Promise<number[]>((resolve) => {
         resolve([1, 2, 3, 4]);
       });
     };
     const request = cacheRequest({
-      payload,
+      argument,
       objectid: Requests.createRequestID(),
-      callback: payload,
+      callback: argument,
       refetchCallback: (state) => {
         resultCallCounts = resultCallCounts + 1;
         resultState = state;
@@ -44,15 +44,15 @@ describe("Cached request class cache tests", () => {
   });
 
   it("should not try more than 4 times on error", async () => {
-    const payload = () => {
+    const argument = () => {
       return new Promise<number[]>((_, reject) => {
         reject("Server Error");
       });
     };
     const request = cacheRequest({
       objectid: Requests.createRequestID(),
-      payload,
-      callback: payload,
+      argument,
+      callback: argument,
       refetchCallback: (state) => {
         //
       },

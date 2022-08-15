@@ -49,7 +49,7 @@ describe("Requests cache test", () => {
         callback: () => of("Server Response"),
         properties: true,
         refetchCallback: (response) => {},
-        payload: ["get_api/v1/comments:post_id", payload],
+        argument: ["get_api/v1/comments:post_id", payload],
       })
     );
     cache.add(
@@ -130,7 +130,7 @@ describe("Requests cache test", () => {
         callback: () => of("Server Response"),
         properties: true,
         refetchCallback: (response) => {},
-        payload: "Hello World!",
+        argument: "Hello World!",
       })
     );
     cache.add(
@@ -171,7 +171,7 @@ describe("Requests cache test", () => {
         callback: () => of("Server Response 1"),
         properties: true,
         refetchCallback: () => {},
-        payload: "Hello World!",
+        argument: "Hello World!",
       })
     );
     cache.add(
@@ -187,49 +187,5 @@ describe("Requests cache test", () => {
     expect(cache.length).toEqual(1);
     expect(cache.get("Hello World!")).toBeUndefined();
     expect(cache.contains(objectid2)).toBeTrue();
-  });
-
-  it("should return true for cached function call", () => {
-    const objectid = Requests.createRequestID();
-    cache.add(
-      cacheRequest({
-        objectid,
-        callback: () => {
-          return new Promise((resolve) => {
-            resolve("In publishing and graphic design");
-          });
-        },
-        properties: true,
-        refetchCallback: (response) => {},
-        payload: [
-          // "get_api/v1/comments:post_id",
-          (path: string, method: any) => {
-            return {
-              title: "In publishing and graphic design",
-              content:
-                "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available",
-              createdAt: "2022-11-20 18:20",
-            };
-          },
-          // "api/v1/books",
-          // "GET",
-        ],
-      })
-    );
-    expect(
-      cache.contains([
-        // "get_api/v1/comments:post_id",
-        (path: string, method: any) => {
-          return {
-            title: "In publishing and graphic design",
-            content:
-              "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available",
-            createdAt: "2022-11-20 18:20",
-          };
-        },
-        // "api/v1/books",
-        // "GET",
-      ])
-    ).toBeTrue();
   });
 });

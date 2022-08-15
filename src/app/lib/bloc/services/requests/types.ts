@@ -16,13 +16,18 @@ export type RequestState<TPayload = unknown> = {
   path: string;
   id: string;
   pending: boolean;
-  payload: TPayload;
-  response: unknown;
+  state: "success" | "revalidate" | "error" | "loading";
+  argument: TPayload;
 
   // Optional properties
+  response?: unknown;
   method?: string;
   ok?: boolean;
   error?: unknown;
+  timestamps: {
+    createdAt?: number;
+    updatedAt?: number;
+  };
 };
 
 /**
@@ -41,16 +46,17 @@ export type RequestsConfig = {
 /**
  * @internal
  */
-export type RequestInterface = {
-  method?: string;
+export type RequestInterface<TMethod extends string = string> = {
+  path?: string;
+  method?: TMethod;
   body?: unknown;
   params?: Record<string, any>;
   options?: {
     headers?: [string, string][] | Record<string, string>;
     responseType?: ResponseType;
-    params?: Record<string, any>;
+    params?: Record<string, any> | { [header: string]: string | string[] };
+    withCredentials?: boolean;
   };
-  cache?: boolean | CacheQueryConfig;
 };
 
 // @internal
@@ -58,7 +64,7 @@ export type FuncRequestType<T = unknown> = () => ObservableInput<T>;
 
 // @internal
 export type RequestPayload<TFunc extends Function> = {
-  argument: RequestInterface | [TFunc, ...FnActionArgumentTypes<TFunc>];
+  argument: RequestInterface | [TFunc, ...DispatchLeastArgumentTypes<TFunc>];
   callback: () => ObservableInput<unknown>;
   id: string;
 };
@@ -79,14 +85,15 @@ export interface RequestHandler {
    * @param body
    * @param options
    */
-  request<T = unknown>(
+  execute<T = unknown>(
     path: string,
     method: string,
     body: unknown,
     options?: {
       headers?: [string, string][] | Record<string, string>;
       responseType?: ResponseType;
-      params?: Record<string, any>;
+      params?: Record<string, any> | { [header: string]: string | string[] };
+      withCredentials?: boolean;
     }
   ): ObservableInput<T>;
 }
@@ -94,21 +101,17 @@ export interface RequestHandler {
 /**
  * @internal
  */
-export type FnActionArgumentTypes<F extends Function> = F extends (
+export type DispatchLeastArgumentTypes<F extends Function> = F extends (
   ...args: infer A
 ) => ObservableInput<unknown>
-  ? A
-  : F extends (...args: infer B) => Function
-  ? B
+  ? [...A, FnActionArgumentLeastType] | [...A]
+  : F extends RequestInterface
+  ? [CacheQueryConfig | boolean] | []
   : never;
 
-/**
- * @internal
- */
-export type RequestPayloadLeastArgumentType<F extends RequestInterface> =
-  F extends RequestInterface ? [CacheQueryConfig | boolean] | [] : never;
-
 export type CacheQueryConfig = {
+  // name?: string;
+  // key: string | ((params, queryParams) => string);
   retries?: number | ((attempt: number, error: unknown) => boolean);
   retryDelay?: number | ((retryAttempt: number) => number);
   refetchInterval?: number | Observable<unknown>;
@@ -120,6 +123,7 @@ export type CacheQueryConfig = {
 
 // @internal
 export type FnActionArgumentLeastType = CacheQueryConfig & {
+  name: string;
   cacheQuery: boolean;
 };
 
@@ -136,10 +140,44 @@ export type Action<T = unknown> = {
   payload?: T;
 };
 
+export interface CommandInterface<TRequest = unknown, R = unknown> {
+  dispatch<T extends Function>(
+    action: Action<TRequest> | T,
+    ...args: [...DispatchLeastArgumentTypes<T>]
+  ): R;
+}
+
 /**
  * @internal
  */
-export interface CommandInterface<T = unknown, R = unknown> {
-  dispatch(action: Action<T>): R;
-}
+export type RequestArguments =
+  | RequestInterface
+  | [ObservableInputFunction, ...unknown[]];
+
+/**
+ * // Requests store state
+ * @internal
+ */
+export type State = {
+  performingAction: boolean;
+  requests: RequestState<RequestArguments>[];
+  lastRequest?: RequestState<RequestArguments>;
+};
+
+export type QueryType<TMethod extends string = string> = {
+  provider?: unknown;
+  path: string;
+  method?: TMethod;
+  body?: unknown;
+  params?: Record<string, any> | { [prop: string]: string | string[] };
+};
+
+export type QueryParameter<
+  TFunc extends ObservableInputFunction,
+  TMethod extends string
+> = {
+  provider?: unknown;
+  query: QueryType<TMethod> | TFunc;
+  arguments?: [...DispatchLeastArgumentTypes<TFunc>];
+};
 //#endregion
