@@ -101,7 +101,7 @@ export interface RequestHandler {
 /**
  * @internal
  */
-export type DispatchLeastArgumentTypes<F extends Function> = F extends (
+export type DispatchLeastArgumentTypes<F> = F extends (
   ...args: infer A
 ) => ObservableInput<unknown>
   ? [...A, FnActionArgumentLeastType] | [...A]
@@ -110,8 +110,6 @@ export type DispatchLeastArgumentTypes<F extends Function> = F extends (
   : never;
 
 export type CacheQueryConfig = {
-  // name?: string;
-  // key: string | ((params, queryParams) => string);
   retries?: number | ((attempt: number, error: unknown) => boolean);
   retryDelay?: number | ((retryAttempt: number) => number);
   refetchInterval?: number | Observable<unknown>;
@@ -164,20 +162,62 @@ export type State = {
   lastRequest?: RequestState<RequestArguments>;
 };
 
-export type QueryType<TMethod extends string = string> = {
-  provider?: unknown;
+/**
+ * @internal
+ */
+export type BaseQueryType<TMethod extends string> = {
   path: string;
+  observe?: ObserveKeyType;
+  provider?: QueryClientType<TMethod>;
   method?: TMethod;
-  body?: unknown;
-  params?: Record<string, any> | { [prop: string]: string | string[] };
 };
 
-export type QueryParameter<
-  TFunc extends ObservableInputFunction,
-  TMethod extends string
-> = {
-  provider?: unknown;
+/**
+ * @internal
+ */
+export type ObserveKeyType = "request" | "response" | "body" | undefined;
+
+export type QueryType<TMethod extends string = string> =
+  BaseQueryType<TMethod> & {
+    body?: unknown;
+    params?: Record<string, any> | { [prop: string]: string | string[] };
+  };
+
+/**
+ * @internal
+ */
+export type QueryParameter<TFunc, TMethod extends string> = {
+  provider?: QueryClientType<TMethod>;
   query: QueryType<TMethod> | TFunc;
   arguments?: [...DispatchLeastArgumentTypes<TFunc>];
+};
+
+/**
+ * @description Query client base interface
+ */
+export type QueryClientType<TMethod extends string> = {
+  /**
+   * Sends a client request to a server enpoint and returns
+   * an observable of response type
+   *
+   * @param query
+   */
+  invoke<TFunc extends ObservableInputFunction>(
+    query: QueryType<TMethod> | TFunc,
+    ...args: [...DispatchLeastArgumentTypes<TFunc>]
+  ): Observable<RequestState<RequestArguments>>;
+};
+
+/**
+ * @description Provides implementation for querying a resource
+ */
+export type QueryProviderType<TQueryParameters extends [...any[]] = any, ProvidesType extends any = any> = {
+  /**
+   * Sends a client request to a server enpoint and returns
+   * an observable of response type
+   *
+   * @param query
+   */
+  provides: (...args: TQueryParameters) => Observable<ProvidesType>;
 };
 //#endregion

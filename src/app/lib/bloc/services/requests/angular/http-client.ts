@@ -1,25 +1,25 @@
 import { Injectable } from "@angular/core";
 import { useRequestSelector } from "../helpers";
-import { HTTPQueryClientType, HTTPRequestMethods } from "../http/types";
+import { HTTPRequestMethods } from "../http/types";
 import {
   Action,
   DispatchLeastArgumentTypes,
+  QueryClientType,
   QueryType,
   RequestInterface,
 } from "../types";
 import { QueryRequestsProvider } from "./query-requests";
 
 @Injectable()
-export class RESTHTTPQueryClient implements HTTPQueryClientType {
+export class RESTHTTPQueryClient
+  implements QueryClientType<HTTPRequestMethods>
+{
   // Creates an instance of { @see NgHTTPClientClient }
   constructor(private requests: QueryRequestsProvider) {}
 
   // Handles HTTP requests
-  invoke<
-    TFunc extends Function,
-    TMethod extends HTTPRequestMethods = HTTPRequestMethods
-  >(
-    query: QueryType<TMethod> | TFunc,
+  invoke<TFunc extends Function>(
+    query: QueryType<HTTPRequestMethods> | TFunc,
     ...args: [...DispatchLeastArgumentTypes<TFunc>]
   ) {
     // For /GET and /DELETE requests, we treat query.body as a query parameter

@@ -37,7 +37,7 @@ import {
 
 // Regex matching request action
 // @internal
-const REQUEST_METHOD_REGEX = /^post|put|patch|get|delete|options|head/;
+const REQUEST_METHOD_REGEX = /^post|put|patch|get|delete|options|head/i;
 
 //@internal
 const REQUEST_RESULT_ACTION = "[request_result_action]";
@@ -322,7 +322,7 @@ export class Requests implements CommandInterface<RequestInterface, string> {
             name,
             action as T,
             ...(((cacheConfig as FnActionArgumentLeastType)?.cacheQuery ||
-            args.length > 0
+            args.length > 1
               ? [...args].slice(0, args.length - 1)
               : args) as DispatchLeastArgumentTypes<T>),
           ]
@@ -421,21 +421,24 @@ export class Requests implements CommandInterface<RequestInterface, string> {
         T,
         ...DispatchLeastArgumentTypes<T>
       ];
-      const fn = _arguments[1];
-      const funcName = fn.name === "" ? undefined : fn.name;
-      const parameters = fn.toString().match(/\( *([^)]+?) *\)/gi);
-      return [
-        _arguments[0],
-        fn.prototype ??
+      let name!: string;
+      if (
+        cacheConfig &&
+        typeof cacheConfig.name !== "undefined" &&
+        cacheConfig.name !== null
+      ) {
+        name = cacheConfig.name;
+      } else {
+        const fn = _arguments[1];
+        const funcName = fn.name === "" ? undefined : fn.name;
+        const parameters = fn.toString().match(/\( *([^)]+?) *\)/gi);
+        name =
+          fn.prototype ??
           `${funcName ?? `native anonymous`}${
             parameters ? parameters[0] : "()"
-          } { ... }`,
-        ...argument.slice(2),
-        // Is a cache name is provided, we use is, else we generate a random uuid
-        ...(cacheConfig
-          ? [cacheConfig.name ? cacheConfig.name : Requests.createRequestID()]
-          : []),
-      ];
+          } { ... }`;
+      }
+      return [_arguments[0], name, ...argument.slice(2)];
     }
     return [...argument] as [string, RequestInterface | undefined];
   }

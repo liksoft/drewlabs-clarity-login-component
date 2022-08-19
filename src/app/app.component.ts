@@ -5,16 +5,12 @@ import {
   UIStateProvider,
   UI_STATE_PROVIDER,
 } from "./lib/views/partials/ui-state";
-import { map, Observable, tap } from "rxjs";
+import { map } from "rxjs";
 import { isEmpty } from "@azlabsjs/utilities";
 import { JSDate } from "@azlabsjs/js-datetime";
 import { HttpClient } from "@angular/common/http";
-import { TranslateService } from "@ngx-translate/core";
-import { QueryState } from "./lib/bloc/services/requests/angular";
-import { RequestState } from "./lib/bloc/services/requests";
-import { QueryType } from "./lib/bloc/services/requests/types";
 import { APP_CONFIG_MANAGER, ConfigurationManager } from "@azlabsjs/ngx-config";
-import { HTTPRequestMethods } from "./lib/bloc/services/requests/http";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-root",
@@ -36,12 +32,6 @@ export class AppComponent implements OnInit {
   // tslint:disable-next-line: variable-name
   // private _destroy$ = new Subject<void>();
 
-  @QueryState<QueryType<HTTPRequestMethods>>({
-    path: "api/v1/customers",
-    method: "GET",
-  })
-  queryState$!: Observable<RequestState>;
-
   constructor(
     private translate: TranslateService,
     private router: Router,
@@ -59,15 +49,7 @@ export class AppComponent implements OnInit {
     // Set moment locale
     JSDate.locale(browserLang);
   }
-  ngOnInit(): void {
-    this.queryState$
-      .pipe(
-        tap((state) => {
-          console.log("Response: ", state);
-        })
-      )
-      .subscribe();
-  }
+  ngOnInit(): void {}
 
   onIsAuthenticated(value: boolean) {
     setTimeout(() => {

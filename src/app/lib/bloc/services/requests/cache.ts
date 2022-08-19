@@ -137,6 +137,7 @@ export class RequestsCache<T = unknown> {
 
   invalidate(argument: unknown) {
     const cahedRequest = this.at(this.indexOf(argument));
+    console.log('Invalidating...');
     if (cahedRequest) {
       cahedRequest.setExpiresAt();
     }
@@ -214,7 +215,7 @@ export class CachedRequest<T = unknown> {
 
     // Configure the refresh interval
     if (refetchInterval) {
-      this.configureRefreshInterval(refetchInterval);
+      this.configureRefetchInterval(refetchInterval);
     }
     if (refetchOnReconnect) {
       // TODO: Inject the window instance in the constructor and use it in the current call
@@ -231,7 +232,7 @@ export class CachedRequest<T = unknown> {
     }
   }
 
-  private configureRefreshInterval(
+  private configureRefetchInterval(
     refetchInterval?: number | Observable<unknown>
   ) {
     if (typeof refetchInterval === "undefined" || refetchInterval === null) {
@@ -376,7 +377,7 @@ export class CachedRequest<T = unknown> {
     await lastValueFrom(this.doRequest());
     // Reconfigure the refetch action
     if (refetchInterval) {
-      this.configureRefreshInterval(refetchInterval);
+      this.configureRefetchInterval(refetchInterval);
     }
   }
 

@@ -26,7 +26,7 @@ export const environment = {
     },
   },
   api: {
-    host: "http://127.0.0.1:3000", // "https://coopec-clients.lik.tg",
+    host: "http://127.0.0.1:8899", // "https://coopec-clients.lik.tg",
     endpoints: {
       clients: {
         addresses: "api/v1/addresses",

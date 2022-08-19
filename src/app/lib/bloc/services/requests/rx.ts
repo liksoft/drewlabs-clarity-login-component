@@ -1,12 +1,4 @@
-import {
-  filter,
-  first,
-  map,
-  Observable,
-  OperatorFunction,
-  takeUntil,
-  tap,
-} from "rxjs";
+import { distinctUntilChanged, filter, first, map, Observable, OperatorFunction } from "rxjs";
 import { RequestArguments, RequestState, State } from "./types";
 
 /**
@@ -21,14 +13,35 @@ export function firstWhere<T = unknown>(predicate: (value: T) => boolean) {
 /**
  * @description RxJS operator that returns the api response from
  */
-export function apiResponse<TResponse = unknown>(
+export function apiResponse<TResponse>(
   project?: (request: RequestState) => TResponse
 ): OperatorFunction<RequestState, TResponse> {
   return (observable$: Observable<RequestState>) =>
     observable$.pipe(
       filter((request) => !request.pending),
-      first(),
+      distinctUntilChanged(),
       project ? map(project) : map((request) => request.response as TResponse)
+    );
+}
+
+/**
+ * Query [body] stream of the query response if any or returns the
+ * entire response if none
+ *
+ * @param key
+ */
+export function apiResponseBody<TBody = unknown>(
+  key?: string
+): OperatorFunction<RequestState, TBody> {
+  return (observable$: Observable<RequestState>) =>
+    observable$.pipe(
+      apiResponse((request) => {
+        key = key ?? "body";
+        const response = request.response as Record<string, any>;
+        return response && typeof response === "object" && key in response
+          ? response[key]
+          : response;
+      })
     );
 }
 

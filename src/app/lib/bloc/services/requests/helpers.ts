@@ -1,3 +1,4 @@
+import { deepEqual } from "@azlabsjs/utilities";
 import { finalize, Observable, ObservableInput } from "rxjs";
 import { CachedRequest, RequestsCache } from "./cache";
 import { selectRequest } from "./rx";
@@ -5,13 +6,20 @@ import { CacheQueryConfig, State } from "./types";
 
 // @internal
 const defaultCacheConfig = {
-  retries: 3,
+  retries: 3, // By default each query is executed 3 times
   retryDelay: 1000,
-  refetchInterval: 300000, // each 5min
+  refetchInterval: 300000, // Refetch the query each 5 min interval
   refetchOnReconnect: true,
-  staleTime: 0,
-  cacheTime: 300000,
+  staleTime: 0, // By default query is mark stale automatically when it's fetch/refetch
+  cacheTime: 300000, // After 5 minutes, if no subscriber listens to the query object, the query is invalidate
 };
+
+/**
+ * @interface
+ */
+export function useDefaultCacheConfig() {
+  return defaultCacheConfig;
+}
 
 /**
  * Creates query parameters by parsing request params options
@@ -87,7 +95,12 @@ export function cacheRequest<T>(prop: {
   return new CachedRequest<T>(
     objectid,
     argument,
-    typeof properties === "boolean" ? defaultCacheConfig : properties,
+    typeof properties === "boolean" ||
+    (typeof properties === "object" &&
+      properties !== null &&
+      deepEqual(properties, {}))
+      ? defaultCacheConfig
+      : properties,
     callback,
     refetchCallback,
     errorCallback,

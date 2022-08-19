@@ -1,9 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable, Optional } from "@angular/core";
-import { Observable, ObservableInput, tap } from "rxjs";
+import { Observable, ObservableInput } from "rxjs";
 import { getHttpHost, HTTP_HOST, isValidHttpUrl } from "../http";
 import { RequestHandler, ResponseType } from "../types";
-
 
 /**
  * Provides a request handler that uses angular HTTP client for sending
@@ -57,15 +56,13 @@ export class HTTPRequestHandler implements RequestHandler {
         }, {} as Record<string, unknown | string>)
       : headers;
     //#endregion Prepare request headers
-    return this.httpClient
-      .request(method, url, {
-        body,
-        responseType: responseType,
-        headers: _headers as { [header: string]: string | string[] },
-        params: params,
-        withCredentials,
-        observe: 'response'
-      })
-      .pipe(tap(console.log)) as Observable<T>;
+    return this.httpClient.request(method, url, {
+      body,
+      responseType: responseType,
+      headers: _headers as { [header: string]: string | string[] },
+      params: params,
+      withCredentials,
+      observe: "response",
+    }) as Observable<T>;
   }
 }

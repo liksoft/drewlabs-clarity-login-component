@@ -1,12 +1,5 @@
 import { Observable } from "rxjs";
-import {
-  CacheQueryConfig,
-  FnActionArgumentLeastType,
-  DispatchLeastArgumentTypes,
-  QueryType,
-  RequestArguments,
-  RequestState,
-} from "../types";
+import { CacheQueryConfig, QueryClientType } from "../types";
 
 export type HTTPRequestMethods =
   | "GET"
@@ -24,26 +17,7 @@ export type HTTPRequestMethods =
   | "put"
   | "patch";
 
-/**
- * @description An HTTP client interface that can be implemented by any inheriting library
- */
-export type HTTPQueryClientType = {
-  /**
-   * Sends a client request to a server enpoint and returns
-   * an observable of response type
-   *
-   * @param query
-   */
-  invoke<
-    TFunc extends Function,
-    TMethod extends HTTPRequestMethods = HTTPRequestMethods
-  >(
-    query: QueryType<TMethod> | TFunc,
-    ...args: [...DispatchLeastArgumentTypes<TFunc>]
-  ): Observable<RequestState<RequestArguments>>;
-};
-
-export type RestHTTPClient = HTTPQueryClientType & {
+export type RestHTTPClient = QueryClientType<HTTPRequestMethods> & {
   /**
    * Sends an HTTP request to the backend server using the /GET HTTP verb
    *

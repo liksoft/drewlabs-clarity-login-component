@@ -5,7 +5,9 @@ export {
   RequestsConfig,
   RequestState,
   CacheQueryConfig,
-  State
+  State,
+  QueryType,
+  QueryProviderType
 } from "./types";
 export { apiResponse } from "./rx";
 export { createQueryParams } from "./helpers";

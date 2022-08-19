@@ -52,6 +52,7 @@ import { HttpResponse } from "@azlabsjs/requests";
 import { NgxClrSmartGridModule } from "@azlabsjs/ngx-clr-smart-grid";
 import { HTTPQueryModule } from "./lib/bloc/services/requests/angular";
 import { HTTP_HOST } from "./lib/bloc/services/requests/http";
+import { QueryStateComponent } from "./query-state.component";
 // #endregion Dropzone configuration
 
 registerLocaleData(localeFr, "fr", localeFrExtra);
@@ -104,7 +105,7 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
 };
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, QueryStateComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
