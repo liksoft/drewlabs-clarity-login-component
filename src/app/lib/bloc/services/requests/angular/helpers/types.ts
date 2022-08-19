@@ -13,7 +13,7 @@ import {
 type QueryProviderProvidesParamType<
   TParam extends [...unknown[]],
   T extends QueryProviderType<TParam>
-> = Parameters<T["provides"]>;
+> = Parameters<T["query"]>;
 
 export type QueryTypeLeastArgumentType<F> = F extends QueryType
   ? [CacheQueryConfig | boolean] | []
@@ -24,7 +24,7 @@ export type QueryStateLeastParameters<F> = F extends (
 ) => ObservableInput<unknown>
   ? [...A, FnActionArgumentLeastType] | [...A]
   : F extends QueryProviderType
-  ? [...QueryProviderProvidesParamType<Parameters<F["provides"]>, F>]
+  ? [...QueryProviderProvidesParamType<Parameters<F["query"]>, F>]
   : F extends Partial<QueryType>
   ? [CacheQueryConfig | boolean] | []
   : F extends Partial<

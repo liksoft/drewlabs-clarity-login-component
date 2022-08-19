@@ -20,7 +20,7 @@ export class TestQueryStateProvider
     @Inject(APP_CONFIG_MANAGER) private config: ConfigurationManager
   ) {}
 
-  provides(path: string, params?: Record<string, any>) {
+  query(path: string, params?: Record<string, any>) {
     const host = this.config.get<string>("api.host", environment.api.host);
     return this.httpClient.get(
       isValidHttpUrl(path)

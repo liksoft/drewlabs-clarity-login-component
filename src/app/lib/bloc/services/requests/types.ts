@@ -168,7 +168,6 @@ export type State = {
 export type BaseQueryType<TMethod extends string> = {
   path: string;
   observe?: ObserveKeyType;
-  provider?: QueryClientType<TMethod>;
   method?: TMethod;
 };
 
@@ -187,8 +186,7 @@ export type QueryType<TMethod extends string = string> =
  * @internal
  */
 export type QueryParameter<TFunc, TMethod extends string> = {
-  provider?: QueryClientType<TMethod>;
-  query: QueryType<TMethod> | TFunc;
+  methodOrConfig: QueryType<TMethod> | TFunc;
   arguments?: [...DispatchLeastArgumentTypes<TFunc>];
 };
 
@@ -218,6 +216,6 @@ export type QueryProviderType<TQueryParameters extends [...any[]] = any, Provide
    *
    * @param query
    */
-  provides: (...args: TQueryParameters) => Observable<ProvidesType>;
+  query: (...args: TQueryParameters) => Observable<ProvidesType>;
 };
 //#endregion

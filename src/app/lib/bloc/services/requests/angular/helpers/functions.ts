@@ -10,7 +10,6 @@ import { HTTPRequestMethods } from "../../http";
 import { apiResponse, apiResponseBody } from "../../rx";
 import {
   BaseQueryType,
-  ObserveKeyType,
   QueryProviderType,
   QueryType,
   RequestArguments,
@@ -20,7 +19,7 @@ import { createQueryCreator, parseQueryArguments } from "./internal";
 import { CacheQueryProviderType, QueryStateLeastParameters } from "./types";
 
 type UseQueryReturnType<T> = T extends QueryProviderType<any>
-  ? ReturnType<T["provides"]>
+  ? ReturnType<T["query"]>
   : Observable<unknown>;
 
 /**
@@ -34,17 +33,16 @@ export const useQuery = <T, TResponse = unknown>(
   params: T,
   ...args: [...QueryStateLeastParameters<T>]
 ) => {
-  const [_provider, _query, _arguments, observe] = parseQueryArguments(
+  const [_query, _arguments, observe] = parseQueryArguments(
     params,
     args
   );
   let _observe = observe as unknown;
-  const result = createQueryCreator(_provider)(_query as any, ..._arguments);
+  const result = createQueryCreator()(_query as any, ..._arguments);
   const _params = params as unknown;
-  if (typeof (_params as CacheQueryProviderType).provides === "function") {
+  if (typeof (_params as CacheQueryProviderType).query === "function") {
     _observe = observe ?? (_params as CacheQueryProviderType).cacheConfig.observe;
   }
-  console.log(_observe);
   return (
     (!isObservable(result) ? of(result) : result) as Observable<
       RequestState<RequestArguments>
