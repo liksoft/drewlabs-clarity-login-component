@@ -1,4 +1,4 @@
-import { InjectorServiceLocator } from "../service-locator";
+import { ServiceLocator } from "../service-locator";
 import { HTTP_QUERY_CLIENT } from "../token";
 import { HTTPRequestMethods } from "../../http";
 import { ObserveKeyType, QueryParameter, QueryType } from "../../types";
@@ -9,7 +9,7 @@ import { CacheQueryProviderType, QueryStateLeastParameters } from "./types";
  *
  */
 export const createQueryCreator = () => {
-  const service = InjectorServiceLocator.getInstance().get(HTTP_QUERY_CLIENT);
+  const service = ServiceLocator.get(HTTP_QUERY_CLIENT);
   // We Bind the invoke query to the resolved service for references to this to point to the service itself
   return service.invoke.bind(service);
 };

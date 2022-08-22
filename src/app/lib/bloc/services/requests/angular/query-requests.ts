@@ -1,12 +1,5 @@
-import { DOCUMENT, isPlatformBrowser } from "@angular/common";
-import {
-  inject,
-  Inject,
-  Injectable,
-  InjectionToken,
-  Optional,
-  PLATFORM_ID,
-} from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
+import { Inject, Injectable, Optional, PLATFORM_ID } from "@angular/core";
 import { REQUEST_ACTIONS } from "../http";
 import { Requests } from "../requests";
 import {
@@ -17,22 +10,7 @@ import {
   RequestsConfig,
 } from "../types";
 import { HTTPRequestHandler } from "./http-request-handler";
-
-const DEFAULT_PLATFORM_VIEW = new InjectionToken<Window>(
-  "Platform View Object",
-  {
-    providedIn: "root",
-    factory: () => {
-      const { defaultView } = inject(DOCUMENT);
-
-      if (!defaultView) {
-        throw new Error("Window is not available");
-      }
-
-      return defaultView;
-    },
-  }
-);
+import { WINDOW } from "./token";
 
 @Injectable({
   providedIn: "root",
@@ -59,7 +37,7 @@ export class QueryRequestsProvider
     private backend: HTTPRequestHandler,
     @Inject(PLATFORM_ID) @Optional() private platformId: Object,
     @Inject(REQUEST_ACTIONS) @Optional() private config?: RequestsConfig,
-    @Inject(DEFAULT_PLATFORM_VIEW) @Optional() private defaultView?: Window
+    @Inject(WINDOW) @Optional() private defaultView?: Window
   ) {}
 
   dispatch<TFunction extends Function>(

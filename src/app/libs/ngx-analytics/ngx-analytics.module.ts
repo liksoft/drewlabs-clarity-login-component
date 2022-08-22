@@ -20,7 +20,9 @@ import { NgxAnalyticsNavigationDirective } from "./ngx-analytics-navigation.dire
 import { CommonModule } from "@angular/common";
 import { NgxRouterAnalytics } from "./ngx-router-analytics.service";
 
-export function appInitializers(routerAnalytics: NgxRouterAnalytics): Promise<unknown> {
+export function appInitializers(
+  routerAnalytics: NgxRouterAnalytics
+): Promise<unknown> {
   return new Promise<void>((resolve, reject) => {
     routerAnalytics.subscribe();
     resolve();
@@ -64,10 +66,12 @@ export class NgxAnalyticsModule {
           return (props as DefaultNgxAnalyticsConfig).plugins
             ? (props as DefaultNgxAnalyticsConfig).plugins
             : [
-                typeof (props as FallbackNgxAnalyticsConfig).google === "string"
+                typeof (props as FallbackNgxAnalyticsConfig).google ===
+                  "string" ||
+                Array.isArray((props as FallbackNgxAnalyticsConfig).google)
                   ? googleAnalytics({
-                      trackingId: (props as FallbackNgxAnalyticsConfig)
-                        .google as string,
+                      measurementIds: (props as FallbackNgxAnalyticsConfig)
+                        .google as string[] | string,
                     })
                   : googleAnalytics(
                       (props as FallbackNgxAnalyticsConfig)

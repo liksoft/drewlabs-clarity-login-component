@@ -11,4 +11,3 @@ export {
 } from "./types";
 export { apiResponse } from "./rx";
 export { createQueryParams } from "./helpers";
-export { REQUEST_BACKEND_HANDLER } from './token';

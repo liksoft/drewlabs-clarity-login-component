@@ -276,10 +276,6 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
   providers: [
     TranslateService,
     {
-      provide: "FILE_STORE_PATH",
-      useValue: environment.APP_FILE_SERVER_URL,
-    },
-    {
       provide: AUTH_CLIENT_CONFIG,
       useValue: {
         id: environment.auth.clientID,

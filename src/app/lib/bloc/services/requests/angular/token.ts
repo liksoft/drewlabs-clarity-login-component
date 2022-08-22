@@ -1,4 +1,5 @@
-import { InjectionToken } from "@angular/core";
+import { DOCUMENT } from '@angular/common';
+import { inject, InjectionToken } from "@angular/core";
 import { HTTPRequestMethods } from '../http';
 import { QueryClientType, RequestsConfig } from "../types";
 
@@ -12,4 +13,21 @@ export const REQUEST_ACTIONS = new InjectionToken<RequestsConfig>(
 
 export const HTTP_QUERY_CLIENT = new InjectionToken<QueryClientType<HTTPRequestMethods>>(
   "HTTP Query client injected type"
+);
+
+
+export const WINDOW = new InjectionToken<Window>(
+  "Platform View Object",
+  {
+    providedIn: "root",
+    factory: () => {
+      const { defaultView } = inject(DOCUMENT);
+
+      if (!defaultView) {
+        throw new Error("window$ object is not available in the global context");
+      }
+
+      return defaultView;
+    },
+  }
 );

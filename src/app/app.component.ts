@@ -1,12 +1,11 @@
 import { Location } from "@angular/common";
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component, Inject } from "@angular/core";
 import { Router } from "@angular/router";
 import {
   UIStateProvider,
   UI_STATE_PROVIDER,
 } from "./lib/views/partials/ui-state";
 import { map } from "rxjs";
-import { isEmpty } from "@azlabsjs/utilities";
 import { JSDate } from "@azlabsjs/js-datetime";
 import { HttpClient } from "@angular/common/http";
 import { APP_CONFIG_MANAGER, ConfigurationManager } from "@azlabsjs/ngx-config";
@@ -17,20 +16,19 @@ import { TranslateService } from "@ngx-translate/core";
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
 })
-export class AppComponent implements OnInit {
-  title = "CNSS PAIEMENTS";
-  uiState$ = this.uiState.uiState.pipe(
+export class AppComponent {
+  state$ = this.uiState.uiState.pipe(
     map((state) => ({
-      ...state,
+      message: state.uiMessage,
+      status: state.status,
+      hasError: state.hasError,
       hidden:
         state.performingAction ||
         typeof state.status === "undefined" ||
         state.status === null,
+      performingAction: state.performingAction,
     }))
   );
-
-  // tslint:disable-next-line: variable-name
-  // private _destroy$ = new Subject<void>();
 
   constructor(
     private translate: TranslateService,
@@ -48,17 +46,6 @@ export class AppComponent implements OnInit {
     this.translate.use(browserLang.match(/en|fr/) ? browserLang : "fr");
     // Set moment locale
     JSDate.locale(browserLang);
-  }
-  ngOnInit(): void {}
-
-  onIsAuthenticated(value: boolean) {
-    setTimeout(() => {
-      const currentPath = this.location.path();
-      if (value && isEmpty(currentPath)) {
-        this.router.navigateByUrl("/dashboard");
-        return;
-      }
-    }, 1000);
   }
 
   onEndActionEvent({ status, message }: { status?: number; message?: string }) {

@@ -1,34 +1,61 @@
 declare module "@analytics/google-analytics" {
   export type GoogleAnalyticsOptions = {
-    /** Google Analytics site tracking Id */
-    trackingId: string;
+    /**
+     * Google Analytics MEASUREMENT IDs
+     */
+    measurementIds: string | string[];
 
     /** Enable Google Analytics debug mode */
     debug?: boolean;
 
-    /** Enable Anonymizing IP addresses sent to Google Analytics. See details below */
-    anonymizeIp?: boolean;
-
-    /** Map Custom dimensions to send extra information to Google Analytics. See details below */
-    customDimensions?: object;
-
-    /** Reset custom dimensions by key on analytics.page() calls. Useful for single page apps. */
-    resetCustomDimensionsOnPage?: object;
-
-    /** Mapped dimensions will be set to the page & sent as properties of all subsequent events on that page. If false, analytics will only pass custom dimensions as part of individual events */
-    setCustomDimensionsToPage?: boolean;
-
-    /** Custom tracker name for google analytics. Use this if you need multiple googleAnalytics scripts loaded */
-    instanceName?: string;
-
-    /** Custom URL for google analytics script, if proxying calls */
-    customScriptSrc?: string;
-
-    /** Additional cookie properties for configuring the ga cookie */
-    cookieConfig?: object;
-
     /** Set custom google analytic tasks */
     tasks?: object;
+
+    /**
+     * The optional name for dataLayer object. Defaults to ga4DataLayer.
+     */
+    dataLayerName?: string;
+
+    /**
+     * The optional name for dataLayer object. Defaults to ga4DataLayer.
+     */
+    gtagName?: string;
+
+    gtagConfig?: {
+      /**
+       * Enable [Anonymizing IP addresses](https://bit.ly/3c660Rd) sent to Google Analytics.
+       */
+      anonymize_ip?: boolean;
+      /**
+       * Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
+       */
+      cookie_domain: unknown;
+
+      /**
+       * Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
+       */
+      cookie_expires: number | Date;
+
+      /**
+       * Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
+       */
+      cookie_prefix: string;
+
+      /**
+       * Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
+       */
+      cookie_update: boolean;
+
+      /**
+       * Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
+       */
+      cookie_flags: string;
+
+      /**
+       *  Custom URL for google analytics script, if proxying calls
+       */
+      customScriptSrc: string;
+    };
   };
   type AnalyticsPlugin = {
     /** Name of plugin */

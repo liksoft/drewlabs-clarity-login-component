@@ -76,7 +76,7 @@ export type DefaultNgxAnalyticsConfig = BaseNgxAnalyticsConfig & {
  * @internal
  */
 export type FallbackNgxAnalyticsConfig = BaseNgxAnalyticsConfig & {
-  google: string | GoogleAnalyticsOptions;
+  google: string | string[] | GoogleAnalyticsOptions;
 };
 
 /**

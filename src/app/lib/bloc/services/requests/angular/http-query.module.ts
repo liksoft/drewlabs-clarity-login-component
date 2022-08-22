@@ -6,10 +6,10 @@ import {
   NgModule,
   Provider,
 } from "@angular/core";
-import { RESTHTTPQueryClient } from "./http-client";
+import { RESTHTTPQueryClient } from "./http-query-client";
 import { HTTPRequestHandler } from "./http-request-handler";
 import { QueryRequestsProvider } from "./query-requests";
-import { InjectorServiceLocator } from "./service-locator";
+import { ServiceLocator } from "./service-locator";
 import { HTTP_HOST, HTTP_QUERY_CLIENT } from "./token";
 import {
   HostProviderParamType,
@@ -52,7 +52,7 @@ export class HTTPQueryModule {
           provide: APP_INITIALIZER,
           useFactory: (injector: Injector) => {
             return () => {
-              InjectorServiceLocator.setInstance(injector);
+              ServiceLocator.setInstance(injector);
             }
           },
           deps: [Injector],
