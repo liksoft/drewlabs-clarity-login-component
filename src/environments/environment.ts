@@ -4,10 +4,10 @@
 
 export const environment = {
   production: false,
-  applicationUniqueID: "CNSS_PAYMENTS_ADMIN_",
-  userInfoStorageKey: "CNSS_PAYMENTS_ADMIN_USER_INFO",
-  authTokenStorageKey: "CNSS_PAYMENTS_ADMIN_X_AUTH_TOKEN",
-  authRememberTokenStorageKey: "CNSS_PAYMENTS_ADMIN_AUTH_REMEMBER_TOKEN",
+  applicationUniqueID: "COOPECTRASTO_ADMIN_",
+  userInfoStorageKey: "COOPECTRASTO_ADMIN_USER_INFO",
+  authTokenStorageKey: "COOPECTRASTO_ADMIN_X_AUTH_TOKEN",
+  authRememberTokenStorageKey: "COOPECTRASTO_ADMIN_AUTH_REMEMBER_TOKEN",
   APP_FILE_SERVER_URL: "https://auth.lik.tg/",
   forms: {
     host: "https://coopec-clients.lik.tg",
@@ -26,7 +26,7 @@ export const environment = {
     },
   },
   api: {
-    host: "http://127.0.0.1:8899", // "https://coopec-clients.lik.tg",
+    host: "http://127.0.0.1:8899", //"https://coopec-clients.lik.tg",
     endpoints: {
       clients: {
         addresses: "api/v1/addresses",
@@ -35,7 +35,7 @@ export const environment = {
       },
     },
   },
-  auth: {
+  auth: { //
     host: "https://auth.lik.tg/",
     clientID: "859782E1-9A2F-49A4-9D42-B59A78E520FB",
     clientSecret:
@@ -43,8 +43,8 @@ export const environment = {
   },
   storage: {
     secret: "V1HQkt03PoGdlxN",
-    prefix: "coopec_client_",
-  },
+    prefix: "coopectrasto_",
+  }
 };
 
 /*
