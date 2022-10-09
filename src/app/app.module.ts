@@ -52,7 +52,6 @@ import { HttpResponse } from "@azlabsjs/requests";
 import { NgxClrSmartGridModule } from "@azlabsjs/ngx-clr-smart-grid";
 import { HTTPQueryModule } from "./lib/bloc/services/requests/angular";
 import { HTTP_HOST } from "./lib/bloc/services/requests/http";
-import { QueryStateComponent } from "./query-state.component";
 // #endregion Dropzone configuration
 
 registerLocaleData(localeFr, "fr", localeFrExtra);
@@ -105,7 +104,7 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
 };
 
 @NgModule({
-  declarations: [AppComponent, QueryStateComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -207,7 +206,6 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
               );
             },
             onAuthenticaltionSuccessful: () => {
-              console.log("Redirecting...");
               uiState.endAction(
                 "login.successful",
                 UIStateStatusCode.AUTHENTICATED
@@ -267,7 +265,7 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
       hostProvider: {
         provide: HTTP_HOST,
         useFactory: (configManager: ConfigurationManager) => {
-          return configManager.get("api.host", "https://coopec-clients.lik.tg");
+          return configManager.get("api.host", "https://coopecclients.lik.tg");
         },
         deps: [APP_CONFIG_MANAGER],
       },
