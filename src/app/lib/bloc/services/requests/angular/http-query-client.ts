@@ -22,19 +22,25 @@ export class RESTHTTPQueryClient
     query: QueryType<HTTPRequestMethods> | TFunc,
     ...args: [...DispatchLeastArgumentTypes<TFunc>]
   ) {
+    const { path, method, params, body, observe } =
+      typeof query !== "function"
+        ? query
+        : ({} as QueryType<HTTPRequestMethods>);
     // For /GET and /DELETE requests, we treat query.body as a query parameter
     const cacheId = this.requests.dispatch(
       typeof query !== "function"
         ? ({
-            name: `${query.method ?? ""}_${query.path ?? ""}`,
+            name: method ? `${method}_${path}` : `${path}`,
             payload: {
-              ...query,
+              params,
+              body,
+              observe,
               options: {
                 params:
-                  query.method?.toUpperCase() === "GET" &&
-                  typeof query.body === "object" &&
-                  query.body !== null
-                    ? { ...(query.params ?? {}), ...query.body }
+                  method?.toUpperCase() === "GET" &&
+                  typeof body === "object" &&
+                  body !== null
+                    ? { ...(query.params ?? {}), ...body }
                     : query.params,
               },
             },

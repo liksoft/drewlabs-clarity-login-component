@@ -73,7 +73,7 @@ describe("Requests", () => {
     service
       .select(
         service.dispatch({
-          name: "[get_api/v1/posts:post_id/users:user_id/post_user:user_id",
+          name: "[get_api/v1/posts:post_id/users:user_id/post_user:user_id]",
           payload: {
             body: {
               _query: {

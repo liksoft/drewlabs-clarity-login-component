@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { useQuery } from "./lib/bloc/services/requests/angular";
 import { tap } from "rxjs";
 import { TestQueryStateProvider } from "./query-state.service";
+import { QueryType } from './lib/bloc/services/requests';
 
 @Component({
   selector: "app-query-state",
@@ -9,15 +10,15 @@ import { TestQueryStateProvider } from "./query-state.service";
   providers: [TestQueryStateProvider],
 })
 export class QueryStateComponent {
-  // state$ = useQuery<QueryType>(
-  //   {
-  //     path: "api/v1/customers",
-  //     method: "GET",
-  //     observe: "request",
-  //     // provider: this.httpClient
-  //   },
-  //   true
-  // );
+  myState$ = useQuery<QueryType>(
+    {
+      path: "api/v1/customers",
+      method: "GET",
+      observe: "request",
+      // provider: this.httpClient
+    },
+    true
+  );
   state$ = useQuery(this.queryProvider, "api/v1/customers").pipe(
     tap(console.log)
   );

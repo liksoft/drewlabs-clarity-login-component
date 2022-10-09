@@ -39,7 +39,7 @@ import {
 const REQUEST_METHOD_REGEX = /^post|put|patch|get|delete|options|head/i;
 
 //@internal
-const REQUEST_RESULT_ACTION = "[request_result_action]";
+const REQUEST_RESULT_ACTION = "[query_result]";
 
 export class Requests implements CommandInterface<RequestInterface, string> {
   //#region Properties definitions
@@ -289,7 +289,7 @@ export class Requests implements CommandInterface<RequestInterface, string> {
         }),
         tap(this.dispatch$)
       ),
-      [this]
+      [this, "destroy"]
     );
   }
 

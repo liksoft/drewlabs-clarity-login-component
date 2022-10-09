@@ -20,7 +20,7 @@ export const createQueryCreator = () => {
  * @param params
  * @param _args
  */
-export function parseQueryArguments<T, TMethod extends string>(
+export function parseQueryArguments<T>(
   params: T,
   _args: [...QueryStateLeastParameters<T>]
 ) {

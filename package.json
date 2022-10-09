@@ -35,7 +35,7 @@
     "@azlabsjs/ngx-smart-form": "^0.13.22",
     "@azlabsjs/ngx-storage": "^0.13.13",
     "@azlabsjs/requests": "^0.1.15",
-    "@azlabsjs/rx-hooks": "^0.1.10",
+    "@azlabsjs/rx-hooks": "^0.1.13",
     "@azlabsjs/rx-state": "^0.1.10",
     "@azlabsjs/smart-form-core": "^0.1.21",
     "@azlabsjs/str": "^0.1.10",

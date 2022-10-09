@@ -33,15 +33,13 @@ export const useQuery = <T, TResponse = unknown>(
   params: T,
   ...args: [...QueryStateLeastParameters<T>]
 ) => {
-  const [_query, _arguments, observe] = parseQueryArguments(
-    params,
-    args
-  );
+  const [_query, _arguments, observe] = parseQueryArguments(params, args);
   let _observe = observe as unknown;
   const result = createQueryCreator()(_query as any, ..._arguments);
   const _params = params as unknown;
   if (typeof (_params as CacheQueryProviderType).query === "function") {
-    _observe = observe ?? (_params as CacheQueryProviderType).cacheConfig.observe;
+    _observe =
+      observe ?? (_params as CacheQueryProviderType).cacheConfig.observe;
   }
   return (
     (!isObservable(result) ? of(result) : result) as Observable<
@@ -77,7 +75,7 @@ export const useHTTPPostQuery = (
 
 /**
  * Functional interface for sending HTTP Query using PUT verb.
- * Unlike {@see createQuery } functional interface, it does not
+ * Unlike {@see useQuery } functional interface, it does not
  * reexecute the query on an interval basics, but will retry
  * 3 times the query if it fails.
  *
@@ -89,14 +87,14 @@ export const useHTTPPutQuery = (
   useQuery(
     {
       ...query,
-      method: "PUT" as HTTPRequestMethods,
+      method: "PUT",
     } as QueryType,
     { retries: 3, refetchInterval: undefined }
   ).pipe(first());
 
 /**
  * Functional interface for sending HTTP Query using DELETE verb.
- * Unlike {@see createQuery } functional interface, it does not
+ * Unlike {@see useQuery } functional interface, it does not
  * reexecute the query on an interval basics, but will retry
  * 3 times the query if it fails.
  *
@@ -108,7 +106,7 @@ export const useHTTPDeleteQuery = (
   useQuery(
     {
       ...query,
-      method: "DELETE" as HTTPRequestMethods,
+      method: "DELETE",
     } as QueryType,
     { retries: 3, refetchInterval: undefined }
-  );
+  ).pipe(first());
