@@ -17,5 +17,4 @@ export {
   Individual,
   Moral,
   MoralMemberPartiesSignatory,
-  Membership
 } from "./clients";

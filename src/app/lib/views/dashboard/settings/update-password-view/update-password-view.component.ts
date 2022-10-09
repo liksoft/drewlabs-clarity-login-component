@@ -6,9 +6,11 @@ import {
   EventEmitter,
 } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import {
+  ComponentReactiveFormHelpers,
+  CustomValidators,
+} from "@azlabsjs/ngx-smart-form";
 import { Subject } from "rxjs";
-import { CustomValidators } from "src/app/lib/core/components/dynamic-inputs/angular/validators";
-import { ComponentReactiveFormHelpers } from "src/app/lib/core/components/dynamic-inputs/angular";
 
 @Component({
   selector: "app-update-password-view",

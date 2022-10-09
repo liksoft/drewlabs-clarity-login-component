@@ -1,5 +1,5 @@
 import { BrowserModule } from "@angular/platform-browser";
-import { NgModule } from "@angular/core";
+import { Injector, NgModule } from "@angular/core";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -10,21 +10,16 @@ import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { registerLocaleData } from "@angular/common";
 import localeFr from "@angular/common/locales/fr";
 import localeFrExtra from "@angular/common/locales/extra/fr";
-import { StorageModule } from "./lib/core/storage";
-import { AuthModule } from "./lib/core/auth";
 import { environment } from "src/environments/environment";
 import {
-  MissingTranslationHandler,
-  MissingTranslationHandlerParams,
   TranslateModule,
   TranslateService,
   TranslateLoader,
 } from "@ngx-translate/core";
 import { HttpClient } from "@angular/common/http";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-import { TranslationService } from "./lib/core/translator";
-import { parseV3HttpResponse } from "./lib/core/http/core/v3/http-response";
-import { HttpModule } from "./lib/core/http";
+import { NgxSmartFormModule } from "@azlabsjs/ngx-smart-form";
+import { DOCUMENT_SESSION_STORAGE, StorageModule } from "@azlabsjs/ngx-storage";
 
 // #region UI state module imports
 import {
@@ -37,7 +32,6 @@ import {
 // #endregion UI state module imports
 
 // #region Dropzone configuration
-import { DROPZONE_DICT } from "./lib/core/components/dropzone";
 import { first, map, tap } from "rxjs/operators";
 import { LocalStrategy, StrategyBasedAuthModule } from "./lib/views/login/core";
 import {
@@ -47,10 +41,18 @@ import {
   AUTH_SERVICE_CONFIG,
 } from "./lib/views/login/constants";
 import { interval, lastValueFrom } from "rxjs";
-import { SESSION_STORAGE } from "./lib/core/utils/ng/common";
-import { SecureWebStorage } from "./lib/core/storage/core";
 import { Router } from "@angular/router";
-import { NgxSmartFormModule } from "./lib/core/components/dynamic-inputs/angular";
+import {
+  APP_CONFIG_MANAGER,
+  ConfigurationManager,
+  NgxConfigModule,
+} from "@azlabsjs/ngx-config";
+import { NgxIntlTelInputModule } from "@azlabsjs/ngx-intl-tel-input";
+import { HttpResponse } from "@azlabsjs/requests";
+import { NgxClrSmartGridModule } from "@azlabsjs/ngx-clr-smart-grid";
+import { HTTPQueryModule } from "./lib/bloc/services/requests/angular";
+import { HTTP_HOST } from "./lib/bloc/services/requests/http";
+import { QueryStateComponent } from "./query-state.component";
 // #endregion Dropzone configuration
 
 registerLocaleData(localeFr, "fr", localeFrExtra);
@@ -58,12 +60,6 @@ registerLocaleData(localeFr, "fr", localeFrExtra);
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http);
-}
-
-export class TranslateHandler implements MissingTranslationHandler {
-  handle = (params: MissingTranslationHandlerParams) => {
-    return params.key;
-  };
 }
 
 export const DropzoneDictLoader = async (translate: TranslateService) => {
@@ -109,54 +105,94 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
 };
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, QueryStateComponent],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
         deps: [HttpClient],
       },
-      missingTranslationHandler: environment?.production
-        ? undefined
-        : {
-            provide: MissingTranslationHandler,
-            useClass: TranslateHandler,
-          },
     }),
     SharedModule.forRoot(),
-    HttpModule.forRoot({
-      serverURL: environment.api.host,
-      requestResponseHandler: parseV3HttpResponse,
-    }),
-    StorageModule.forRoot({ secretKey: environment.APP_SECRET }),
-    AuthModule.forRoot(),
     // UI STATE PROVIDERS
     UIStateModule.forRoot(),
     UIStateComponentsModule.forRoot(),
+    // Load NgxIntel Input
+    NgxIntlTelInputModule.forRoot(),
     // DYNAMIC CONTROLS PROVIDERS
     NgxSmartFormModule.forRoot({
+      // Optional : Required only to get data dynamically from the server
+      // Server configuration for dynamically loading
+      // Select, Checkbox and Radio button from server
       serverConfigs: {
         api: {
           host: environment.forms.host,
+          // Custom path on the server else the default is used
           bindings: environment.forms.endpoints.bindingsPath,
         },
       },
-      formsAssets: "/assets/resources/jsonforms.json",
-      dropzoneConfigs: {
-        url: environment.APP_FILE_SERVER_URL,
-        maxFilesize: 10,
-        acceptedFiles: "image/*",
-        autoProcessQueue: false,
-        uploadMultiple: false,
-        maxFiles: 1,
-        addRemoveLinks: true,
+      // Path to the form assets
+      // This path will be used the http handler to load the forms in cache
+      formsAssets: "/assets/resources/forms.json",
+
+      // templateTextProvider: {
+      //   provide: TEMPLATE_DICTIONARY,
+      //   useFactory: (translate: TranslateService) => {
+      //     return translate.stream();
+      //   },
+      //   deps: [TranslateService]
+      // },
+      uploadOptions: {
+        interceptorFactory: (injector: Injector) => {
+          // Replace the interceptor function by using the injector
+          return (request, next) => {
+            request = request.clone({
+              options: {
+                ...request.options,
+                headers: {
+                  ...request.options.headers,
+                  "x-client-id": environment.forms.upload.clientid,
+                  "x-client-secret": environment.forms.upload.clientsecret,
+                },
+              },
+            });
+            return next(request);
+          };
+        },
       },
+      optionsRequest: {
+        interceptorFactory: (injector: Injector) => {
+          // Replace the interceptor function by using the injector
+          return async (request, next) => {
+            // request = request.clone({
+            //   options: {
+            //     ...request.options,
+            //     headers: {
+            //       ...request.options.headers,
+            //       Authorization: `Basic ${btoa('user:password')}`,
+            //     },
+            //   },
+            // });
+            const response = await (next(request) as Promise<HttpResponse>);
+            let res = response["response"] as Record<string, any>;
+            response["response"] =
+              typeof res["data"] !== "undefined" && res["data"] !== null
+                ? res["data"]
+                : res;
+            return response;
+          };
+        },
+      },
+    }),
+    StorageModule.forRoot({
+      secret: environment.storage.secret,
+      prefix: environment.storage.prefix, // Not required, include only to prefix keys before they are added to the cache
     }),
     // TODO: ADD STRATEGY BASED AUTH MODULE
     StrategyBasedAuthModule.forRoot(
@@ -207,35 +243,38 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
               strategy: new LocalStrategy(
                 client,
                 environment.auth.host,
-                new SecureWebStorage(storage, environment.APP_SECRET)
+                storage
               ),
             },
           ],
           autoLogin: true,
         }),
-        deps: [HttpClient, SESSION_STORAGE],
+        deps: [HttpClient, DOCUMENT_SESSION_STORAGE],
       }
     ),
-
-    // Pagination
-    // PaginationModule.forRoot({
-    //   // module configurations definitions
-    // })
+    NgxConfigModule.forRoot({
+      environment: environment, // The angular enviroment values to fallback to if not JSON configuration are provided
+      // jsonConfigURL: '<URL_To_Webservice_or_JSON_ASSETS>', // Optional
+      // jsonLoader: {
+      //   factory: () => {
+      //     // Load json configuration and return an instance of {@see JSONConfigLoader} type
+      //   }; // Provider factory function
+      //   deps: any[]; // Provider
+      // },
+    }),
+    NgxClrSmartGridModule,
+    HTTPQueryModule.forRoot({
+      hostProvider: {
+        provide: HTTP_HOST,
+        useFactory: (configManager: ConfigurationManager) => {
+          return configManager.get("api.host", "https://coopec-clients.lik.tg");
+        },
+        deps: [APP_CONFIG_MANAGER],
+      },
+    }),
   ],
   providers: [
-    TranslationService,
     TranslateService,
-    {
-      provide: DROPZONE_DICT,
-      useFactory: async (translate: TranslateService) => {
-        return await DropzoneDictLoader(translate);
-      },
-      deps: [TranslateService],
-    },
-    {
-      provide: "FILE_STORE_PATH",
-      useValue: environment.APP_FILE_SERVER_URL,
-    },
     {
       provide: AUTH_CLIENT_CONFIG,
       useValue: {

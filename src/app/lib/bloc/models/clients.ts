@@ -41,16 +41,16 @@ export interface StakeHolder {
 export interface Address {
   id: number;
   city: number;
-  district: number;
-  country: number;
-  address?: string;
+  district: string;
+  country: string;
   phoneNumber: string;
-  otherPhoneNumber: string;
-  postalBox: string;
-  email: string;
-  prefecture: string;
-  municipality: string;
-  detail: string;
+  address?: string;
+  otherPhoneNumber?: string;
+  postalBox?: string;
+  email?: string;
+  prefecture?: string;
+  municipality?: string;
+  detail?: string;
   addressDistrict?: Place;
   addressCity?: Place;
   addressCountry?: Place;
@@ -105,41 +105,29 @@ export interface Moral {
 export interface Member extends TimeStampsAware {
   // Interface definitions
   id: number;
-  membershipId: number;
+  categoryId: number;
   activitySectorId: number;
   businessLinkId: number;
   activity: string;
-  businesslink?: BusinessLink | string;
-  activitysector?: ActivitySector;
-  membership?: Membership;
-  individual?: Individual;
-  moral?: Moral;
-}
-
-export interface Membership extends TimeStampsAware {
-  id: number | number;
-  categoryId: number;
   statusId: number;
   closedAt?: string;
   deactivatedAt?: string;
   validatedAt?: string;
   revokedAt?: string;
-
-  // Relations
+  businesslink?: BusinessLink | string;
+  activitysector?: ActivitySector;
   status?: MembershipStatus;
-  member?: Member;
-  statusChanges?: MembershipStatusChanges[];
+  statusChanges?: MemberStatusChanges[];
   category?: Category;
 }
 
-export interface MembershipStatusChanges extends TimeStampsAware {
+
+export interface MemberStatusChanges extends TimeStampsAware {
   id: number;
-  membershipId: number;
   currentStatusId: number;
   previousStatusId: number;
   reason?: string;
   date: string;
-  membership?: Membership;
   currentstatus?: MembershipStatus;
   previoustatus?: MembershipStatus;
 }

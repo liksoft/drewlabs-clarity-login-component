@@ -2,13 +2,12 @@
   <div class="app-page-header">
     <h2 [translate]="'settings.accountSettings'"></h2>
     <div class="app-intro">
-      {{ "settings.profileInformationAsideDescription" | translate }}
+      {{ 'settings.profileInformationAsideDescription' | translate }}
     </div>
   </div>
-  <ng-container *ngIf="state$ | async as vm">
+  <ng-container>
     <div class="clr-row section-row">
-      <!-- <h6 [translate]="'settings.profileInformationAsideDescription'"></h6> -->
-      <table class="table table-sm user-infos-table">
+      <!-- <table class="table table-sm user-infos-table">
         <tbody>
           <tr>
             <th><span [translate]="'settings.firstname'"></span></th>
@@ -50,7 +49,7 @@
             <td>{{ vm?.user?.userDetails?.phoneNumber }}</td>
           </tr>
         </tbody>
-      </table>
+      </table> -->
     </div>
   </ng-container>
 </div>

@@ -1,6 +1,4 @@
 import { Component, Inject, OnDestroy } from "@angular/core";
-// import { FORM_CLIENT } from "../../core/components/dynamic-inputs/angular";
-// import { FormsClient } from "../../core/components/dynamic-inputs/core";
 import { partialConfigs } from "../partials/partials-configs";
 import { RoutesMap } from "../partials/routes";
 import { UIStateProvider, UI_STATE_PROVIDER } from "../partials/ui-state";
@@ -30,21 +28,12 @@ export class DashboardComponent implements OnDestroy {
   //
   public loading: boolean = false;
 
-  // form$ = this.formsClient.get(65);
-
-  constructor(
-    @Inject(UI_STATE_PROVIDER) uiState: UIStateProvider,
-    // @Inject(FORM_CLIENT) private formsClient: FormsClient
-  ) {
+  constructor(@Inject(UI_STATE_PROVIDER) uiState: UIStateProvider) {
     uiState.endAction();
   }
 
   // tslint:disable-next-line: typedef
   ngOnDestroy() {}
-
-  onLargeFiles(event: File[]) {
-    console.log(event);
-  }
 
   onAcceptFilesChange(event: File | File[]) {
     console.log(event);
