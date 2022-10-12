@@ -37,7 +37,7 @@ const LOCAL_SIGNIN_RESULT_CACHE = "LOCAL_STRATEGY_SIGNIN_RESULT_CACHE";
 
 export class LocalStrategy implements StrategyInterface {
   // Properties definition
-  _signInState$ = new BehaviorSubject<SignInResultInterface|undefined>(undefined);
+  _signInState$ = new BehaviorSubject<SignInResultInterface | undefined>(undefined);
   signInState$ = this._signInState$.asObservable();
 
   private _request2FaConsent$ = new Subject<string>();
@@ -47,9 +47,16 @@ export class LocalStrategy implements StrategyInterface {
   constructor(
     private http: RequestClient,
     private host: string,
+    private local_api_login?: string,
+    private local_api_get_user?: string,
     private cache?: Storage
   ) {
-    // sdfdsfvdsfmhbmbms
+    if (!this.local_api_login) {
+      this.local_api_login = LOCAL_API_LOGIN;
+    }
+    if (!this.local_api_get_user) {
+      this.local_api_get_user = LOCAL_API_GET_USER;
+    }
   }
 
   initialize(autologin?: boolean): Observable<void> {
@@ -59,7 +66,7 @@ export class LocalStrategy implements StrategyInterface {
   }
 
   getLoginStatus() {
-    return new Promise<SignInResultInterface|undefined>((resolve, reject) => {
+    return new Promise<SignInResultInterface | undefined>((resolve, reject) => {
       if (this.cache) {
         const value = this.cache.getItem(LOCAL_SIGNIN_RESULT_CACHE) as any;
         if (typeof value === "undefined" || value === null) {
@@ -76,7 +83,7 @@ export class LocalStrategy implements StrategyInterface {
 
   signIn(options?: SignInOptionsType) {
     return this.http
-      .post(`${host(this.host)}/${LOCAL_API_LOGIN}`, options)
+      .post(`${host(this.host)}/${this.local_api_login}`, options)
       .pipe(
         mergeMap((state: SignInResult) => {
           if ((state as DoubleAuthSignInResultInterface).is2faEnabled) {
@@ -89,8 +96,7 @@ export class LocalStrategy implements StrategyInterface {
           if (Boolean((state as UnAuthenticatedResultInterface).locked)) {
             return of(false);
           }
-          const authenticated = (state as UnAuthenticatedResultInterface)
-            .authenticated;
+          const authenticated = (state as UnAuthenticatedResultInterface).authenticated;
           if (
             !(null === authenticated || typeof authenticated === "undefined") &&
             Boolean(authenticated) === false
@@ -98,11 +104,10 @@ export class LocalStrategy implements StrategyInterface {
             return of(false);
           }
           return this.http
-            .get(`${host(this.host)}/${LOCAL_API_GET_USER}`, {
+            .get(`${host(this.host)}/${this.local_api_get_user}`, {
               headers: {
-                Authorization: `Bearer ${
-                  (state as Partial<SignInResultInterface>).authToken
-                }`,
+                Authorization: `Bearer ${(state as Partial<SignInResultInterface>).authToken
+                  }`,
               },
             })
             .pipe(
