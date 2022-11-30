@@ -21,7 +21,7 @@ describe("Cached request class cache tests", () => {
     };
     const request = cacheRequest({
       argument,
-      objectid: Requests.createRequestID(),
+      objectid: Requests.guid(),
       callback: argument,
       refetchCallback: (state) => {
         resultCallCounts = resultCallCounts + 1;
@@ -50,7 +50,7 @@ describe("Cached request class cache tests", () => {
       });
     };
     const request = cacheRequest({
-      objectid: Requests.createRequestID(),
+      objectid: Requests.guid(),
       argument,
       callback: argument,
       refetchCallback: (state) => {
@@ -78,7 +78,7 @@ describe("Cached request class cache tests", () => {
     };
     let refetchCount = 0;
     const request = cacheRequest({
-      objectid: Requests.createRequestID(),
+      objectid: Requests.guid(),
       callback: payload,
       refetchCallback: (response) => {
         refetchCount = refetchCount + 1;

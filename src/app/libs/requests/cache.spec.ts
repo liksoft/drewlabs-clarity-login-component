@@ -1,7 +1,7 @@
 import { of } from "rxjs";
+import { Requests } from ".";
 import { CachedRequest, RequestsCache } from "./cache";
 import { cacheRequest, requestsCache } from "./helpers";
-import { Requests } from ".";
 import { RequestInterface } from "./types";
 
 describe("Requests cache test", () => {
@@ -19,7 +19,7 @@ describe("Requests cache test", () => {
   it("should test add RequestsCache.add() method and expect cache length to grow by the size of 1", () => {
     cache.add(
       cacheRequest({
-        objectid: Requests.createRequestID(),
+        objectid: Requests.guid(),
         callback: () => of("Server Response"),
         properties: true,
         refetchCallback: (response) => {},
@@ -45,7 +45,7 @@ describe("Requests cache test", () => {
     };
     cache.add(
       cacheRequest({
-        objectid: Requests.createRequestID(),
+        objectid: Requests.guid(),
         callback: () => of("Server Response"),
         properties: true,
         refetchCallback: (response) => {},
@@ -54,7 +54,7 @@ describe("Requests cache test", () => {
     );
     cache.add(
       cacheRequest({
-        objectid: Requests.createRequestID(),
+        objectid: Requests.guid(),
         callback: () => of("Server Response"),
         properties: true,
         refetchCallback: (response) => {},
@@ -97,8 +97,8 @@ describe("Requests cache test", () => {
         post_id: 23,
       },
     };
-    const objecId = Requests.createRequestID();
-    const objectid2 = Requests.createRequestID();
+    const objecId = Requests.guid();
+    const objectid2 = Requests.guid();
     cache.add(
       cacheRequest({
         objectid: objecId,
@@ -122,8 +122,8 @@ describe("Requests cache test", () => {
   });
 
   it("should return false if cache does not contains a given key else it returns true", () => {
-    const objectid = Requests.createRequestID();
-    const objectid2 = Requests.createRequestID();
+    const objectid = Requests.guid();
+    const objectid2 = Requests.guid();
     cache.add(
       cacheRequest({
         objectid,
@@ -141,13 +141,13 @@ describe("Requests cache test", () => {
         refetchCallback: (response) => {},
       })
     );
-    expect(cache.contains(Requests.createRequestID())).toBeFalse();
+    expect(cache.contains(Requests.guid())).toBeFalse();
     expect(cache.contains("Hello World!")).toBeTrue();
     expect(cache.contains(objectid)).toBeTrue();
   });
 
   it("should test if the cache is empty when clear() is called", () => {
-    const objectid = Requests.createRequestID();
+    const objectid = Requests.guid();
     cache.add(
       cacheRequest({
         objectid,
@@ -163,8 +163,8 @@ describe("Requests cache test", () => {
   });
 
   it("should return false when RequestsCache.contains() is called a cache item that has been removed", () => {
-    const objectid = Requests.createRequestID();
-    const objectid2 = Requests.createRequestID();
+    const objectid = Requests.guid();
+    const objectid2 = Requests.guid();
     cache.add(
       cacheRequest({
         objectid,

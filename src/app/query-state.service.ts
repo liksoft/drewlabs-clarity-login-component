@@ -3,13 +3,13 @@ import { Inject, Injectable } from "@angular/core";
 import { APP_CONFIG_MANAGER, ConfigurationManager } from "@azlabsjs/ngx-config";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
-import { QueryProviderType } from "./lib/bloc/services/requests";
-import { ProvidesQuery } from "./lib/bloc/services/requests/angular";
-import { getHttpHost, isValidHttpUrl } from "./lib/bloc/services/requests/http";
+import { QueryProviderType } from "./libs/requests";
+import { ProvidesQuery } from "./libs/requests/angular";
+import { getHttpHost, isValidHttpUrl } from "./libs/requests/http";
 
 @Injectable()
 @ProvidesQuery({
-  observe: 'body'
+  observe: "body",
 })
 export class TestQueryStateProvider
   implements

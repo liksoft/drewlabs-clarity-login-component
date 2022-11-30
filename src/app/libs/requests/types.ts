@@ -59,12 +59,11 @@ export type RequestInterface<TMethod extends string = string> = {
   };
 };
 
-// @internal
-export type FuncRequestType<T = unknown> = () => ObservableInput<T>;
-
-// @internal
+/**
+ * @internal
+ */
 export type RequestPayload<TFunc extends Function> = {
-  argument: RequestInterface | [TFunc, ...DispatchLeastArgumentTypes<TFunc>];
+  argument: RequestInterface | [TFunc, ...QueryArguments<TFunc>];
   callback: () => ObservableInput<unknown>;
   id: string;
 };
@@ -72,8 +71,9 @@ export type RequestPayload<TFunc extends Function> = {
 /**
  * @description Execute the request based on user provided options.
  *
- * It's internally used by the { @see Requests } service for sending data to
- * backend server used the implemented protocol
+ * **Note**
+ * It's internally used by the { @see Requests } service for sending
+ * data to backend server used the implemented protocol
  */
 export interface RequestHandler {
   /**
@@ -98,10 +98,16 @@ export interface RequestHandler {
   ): ObservableInput<T>;
 }
 
+// @internal
+export type FnActionArgumentLeastType = CacheQueryConfig & {
+  name: string;
+  cacheQuery: boolean;
+};
+
 /**
  * @internal
  */
-export type DispatchLeastArgumentTypes<F> = F extends (
+export type QueryArguments<F> = F extends (
   ...args: infer A
 ) => ObservableInput<unknown>
   ? [...A, FnActionArgumentLeastType] | [...A]
@@ -117,15 +123,12 @@ export type CacheQueryConfig = {
   refetchOnReconnect?: boolean;
   staleTime?: number;
   cacheTime?: number;
+  defaultView?: Window;
 };
 
-// @internal
-export type FnActionArgumentLeastType = CacheQueryConfig & {
-  name: string;
-  cacheQuery: boolean;
-};
-
-// @internal
+/**
+ * @internal
+ */
 export type ObservableInputFunction = (
   ...args: unknown[]
 ) => ObservableInput<unknown>;
@@ -138,10 +141,10 @@ export type Action<T = unknown> = {
   payload?: T;
 };
 
-export interface CommandInterface<TRequest = unknown, R = unknown> {
+export interface CommandInterface<R = unknown> {
   dispatch<T extends Function>(
-    action: Action<TRequest> | T,
-    ...args: [...DispatchLeastArgumentTypes<T>]
+    action: T,
+    ...args: [...QueryArguments<T>]
   ): R;
 }
 
@@ -187,7 +190,7 @@ export type QueryType<TMethod extends string = string> =
  */
 export type QueryParameter<TFunc, TMethod extends string> = {
   methodOrConfig: QueryType<TMethod> | TFunc;
-  arguments?: [...DispatchLeastArgumentTypes<TFunc>];
+  arguments?: [...QueryArguments<TFunc>];
 };
 
 /**
@@ -202,14 +205,29 @@ export type QueryClientType<TMethod extends string> = {
    */
   invoke<TFunc extends ObservableInputFunction>(
     query: QueryType<TMethod> | TFunc,
-    ...args: [...DispatchLeastArgumentTypes<TFunc>]
+    ...args: [...QueryArguments<TFunc>]
   ): Observable<RequestState<RequestArguments>>;
 };
+
+export type RESTQueryFunc<T> = (
+  path: string,
+  method: string,
+  body: unknown,
+  options?: {
+    headers?: [string, string][] | Record<string, string>;
+    responseType?: ResponseType;
+    params?: Record<string, any> | { [header: string]: string | string[] };
+    withCredentials?: boolean;
+  }
+) => ObservableInput<T> | any;
 
 /**
  * @description Provides implementation for querying a resource
  */
-export type QueryProviderType<TQueryParameters extends [...any[]] = any, ProvidesType extends any = any> = {
+export type QueryProviderType<
+  TQueryParameters extends [...any[]] = any,
+  ProvidesType extends any = any
+> = {
   /**
    * Sends a client request to a server enpoint and returns
    * an observable of response type
@@ -218,4 +236,12 @@ export type QueryProviderType<TQueryParameters extends [...any[]] = any, Provide
    */
   query: (...args: TQueryParameters) => Observable<ProvidesType>;
 };
+
+/**
+ * @description Functional type definition for user provided query function
+ */
+export type QueryProviderFunc<
+  TQueryParameters extends [...any[]] = any,
+  ProvidesType extends any = any
+> = (...args: TQueryParameters) => ObservableInput<ProvidesType>;
 //#endregion

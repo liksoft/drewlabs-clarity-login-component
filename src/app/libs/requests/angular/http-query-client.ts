@@ -1,31 +1,33 @@
-import { Injectable } from "@angular/core";
-import { useRequestSelector } from "../helpers";
+import { Inject, Injectable, Optional } from "@angular/core";
+import { useHTTPActionQuery, useRequestSelector } from "../helpers";
 import { HTTPRequestMethods } from "../http/types";
 import {
-  Action,
-  DispatchLeastArgumentTypes,
-  QueryClientType,
-  QueryType,
-  RequestInterface,
+  Action, QueryArguments, QueryClientType, QueryType,
+  RequestInterface
 } from "../types";
+import { HTTPRequestHandler } from "./http-request-handler";
 import { QueryRequestsProvider } from "./query-requests";
+import { WINDOW } from "./token";
 
 @Injectable()
 export class RESTHTTPQueryClient
   implements QueryClientType<HTTPRequestMethods>
 {
   // Creates an instance of { @see NgHTTPClientClient }
-  constructor(private requests: QueryRequestsProvider) {}
+  constructor(
+    private requests: QueryRequestsProvider,
+    private backend: HTTPRequestHandler,
+    @Inject(WINDOW) @Optional() private defaultView?: Window
+  ) {}
 
   // Handles HTTP requests
-  invoke<TFunc extends Function>(
+  invoke<TFunc extends (...args: any) => any>(
     query: QueryType<HTTPRequestMethods> | TFunc,
-    ...args: [...DispatchLeastArgumentTypes<TFunc>]
+    ...args: [...QueryArguments<TFunc>]
   ) {
-    // For /GET and /DELETE requests, we treat query.body as a query parameter
-    const cacheId = this.requests.dispatch(
+    const query$ =
       typeof query !== "function"
-        ? ({
+        ? (useHTTPActionQuery(this.backend, {
             name: `${query.method ?? ""}_${query.path ?? ""}`,
             payload: {
               ...query,
@@ -38,10 +40,10 @@ export class RESTHTTPQueryClient
                     : query.params,
               },
             },
-          } as Action<RequestInterface>)
-        : (query as TFunc),
-      ...args
-    );
+          } as Action<RequestInterface>) as (...args: any) => any)
+        : query;
+    // For /GET and /DELETE requests, we treat query.body as a query parameter
+    const cacheId = this.requests.dispatch(query$, ...args);
     return useRequestSelector([this.requests.state$, this.requests.cache])(
       cacheId
     );

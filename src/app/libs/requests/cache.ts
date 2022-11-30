@@ -16,7 +16,7 @@ import {
   observeOn,
   Subject,
   takeUntil,
-  tap,
+  tap
 } from "rxjs";
 import { CacheQueryConfig } from "./types";
 
@@ -204,7 +204,7 @@ export class CachedRequest<T = unknown> {
     private readonly callback: () => ObservableInput<T>,
     private refetchCallback?: (response: T) => void,
     private errorCallback?: (error: unknown) => void,
-    defaultWindow?: Window,
+    view?: Window,
     lastError?: unknown
   ) {
     const { refetchInterval, refetchOnReconnect, refetchOnWindowFocus } =
@@ -219,11 +219,11 @@ export class CachedRequest<T = unknown> {
     }
     if (refetchOnReconnect) {
       // TODO: Inject the window instance in the constructor and use it in the current call
-      this.refetchOnReconnect(defaultWindow);
+      this.refetchOnReconnect(view);
     }
     if (refetchOnWindowFocus) {
       // TODO: Inject the window instance in the constructor and use it in the current call
-      this.refetchOnFocus(defaultWindow);
+      this.refetchOnFocus(view);
     }
 
     if (typeof lastError !== "undefined" && lastError !== null) {

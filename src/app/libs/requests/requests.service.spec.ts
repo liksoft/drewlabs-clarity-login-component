@@ -7,8 +7,9 @@ import {
   ObservableInput,
   of,
   tap,
-  throwError,
+  throwError
 } from "rxjs";
+import { useHTTPActionQuery } from "./helpers";
 import { Requests } from "./requests";
 import { apiResponse, firstWhere } from "./rx";
 
@@ -44,25 +45,25 @@ const fnTestResult = {
   description: "SCALA PROGRAMMING LANGUAGE EBOOK 2",
 };
 
+const queryBackend = (
+  path: string,
+  method: string,
+  body: unknown,
+  options?: unknown
+) => {
+  if (path.includes("comments")) {
+    return throwError(() => "Comments path not supported");
+  }
+  return (
+    path.includes("comments") ? of(commentResult) : of(testResult)
+  ) as ObservableInput<any>;
+};
+
 describe("Requests", () => {
   let service!: Requests;
 
   beforeEach(() => {
-    service = new Requests({
-      execute: (
-        path: string,
-        method: string,
-        body: unknown,
-        options?: unknown
-      ) => {
-        if (path.includes("comments")) {
-          return throwError(() => "Comments path not supported");
-        }
-        return (
-          path.includes("comments") ? of(commentResult) : of(testResult)
-        ) as ObservableInput<any>;
-      },
-    });
+    service = new Requests();
   });
 
   it("should create the request service", async () => {
@@ -70,30 +71,29 @@ describe("Requests", () => {
   });
 
   it("should handle request an log the request to cache", async () => {
-    service
-      .select(
-        service.dispatch({
-          name: "[get_api/v1/posts:post_id/users:user_id/post_user:user_id",
-          payload: {
-            body: {
-              _query: {
-                where: ["id", "dh356-hdfg53-fgnr67-fghg68"],
-              },
-            },
-            params: {
-              user_id: 2,
-              post_id: 1032,
-            },
-            options: {
-              headers: {
-                "Content-Type": "application/json",
-                Accept: "*/*",
-              },
-              responseType: "json",
-            },
+    const query$ = useHTTPActionQuery(queryBackend, {
+      name: "[get_api/v1/posts:post_id/users:user_id/post_user:user_id",
+      payload: {
+        body: {
+          _query: {
+            where: ["id", "dh356-hdfg53-fgnr67-fghg68"],
           },
-        })
-      )
+        },
+        params: {
+          user_id: 2,
+          post_id: 1032,
+        },
+        options: {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "*/*",
+          },
+          responseType: "json",
+        },
+      },
+    });
+    service
+      .select(service.dispatch(query$))
       .pipe(
         filter((state) => state.pending === false),
         map((state) => {
@@ -104,17 +104,19 @@ describe("Requests", () => {
 
     service
       .select(
-        service.dispatch({
-          name: "[get_api/v1/post/:post_id/comments]",
-          payload: {
-            params: {
-              post_id: 1,
+        service.dispatch(
+          useHTTPActionQuery(queryBackend, {
+            name: "[get_api/v1/post/:post_id/comments]",
+            payload: {
+              params: {
+                post_id: 1,
+              },
+              options: {
+                responseType: "json",
+              },
             },
-            options: {
-              responseType: "json",
-            },
-          },
-        })
+          })
+        )
       )
       .pipe(
         firstWhere((state) => state.pending === false),

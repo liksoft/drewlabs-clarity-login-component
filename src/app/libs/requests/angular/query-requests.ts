@@ -2,28 +2,15 @@ import { isPlatformBrowser } from "@angular/common";
 import { Inject, Injectable, Optional, PLATFORM_ID } from "@angular/core";
 import { REQUEST_ACTIONS } from "../http";
 import { Requests } from "../requests";
-import {
-  Action,
-  CommandInterface,
-  DispatchLeastArgumentTypes,
-  RequestInterface,
-  RequestsConfig,
-} from "../types";
-import { HTTPRequestHandler } from "./http-request-handler";
-import { WINDOW } from "./token";
+import { CommandInterface, QueryArguments, RequestsConfig } from "../types";
 
 @Injectable({
   providedIn: "root",
 })
-export class QueryRequestsProvider
-  implements CommandInterface<RequestInterface, unknown>
-{
+export class QueryRequestsProvider implements CommandInterface<unknown> {
   //#region Service properties
-  private readonly client = new Requests(
-    this.backend,
-    this.config,
-    this.defaultView
-  );
+  private readonly client = new Requests();
+  // this.config,
   get state$() {
     return this.client.state$;
   }
@@ -34,15 +21,13 @@ export class QueryRequestsProvider
 
   // Creates an instance of { @see NgHTTPClientClient }
   constructor(
-    private backend: HTTPRequestHandler,
     @Inject(PLATFORM_ID) @Optional() private platformId: Object,
-    @Inject(REQUEST_ACTIONS) @Optional() private config?: RequestsConfig,
-    @Inject(WINDOW) @Optional() private defaultView?: Window
+    @Inject(REQUEST_ACTIONS) @Optional() private config?: RequestsConfig
   ) {}
 
-  dispatch<TFunction extends Function>(
-    action: Action<RequestInterface> | TFunction,
-    ...args: [...DispatchLeastArgumentTypes<TFunction>]
+  dispatch<T extends Function>(
+    action: T,
+    ...args: [...QueryArguments<typeof action>]
   ): unknown {
     return this.client.dispatch(action, ...args);
   }

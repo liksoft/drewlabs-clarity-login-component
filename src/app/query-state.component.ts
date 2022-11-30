@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
-import { useQuery } from "./lib/bloc/services/requests/angular";
 import { tap } from "rxjs";
+import { useQuery } from './libs/requests/angular';
 import { TestQueryStateProvider } from "./query-state.service";
 
 @Component({
