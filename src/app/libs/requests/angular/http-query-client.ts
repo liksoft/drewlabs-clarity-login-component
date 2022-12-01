@@ -2,6 +2,7 @@ import { isPlatformBrowser } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable, Optional, PLATFORM_ID } from "@angular/core";
 import { Observable, ObservableInput } from "rxjs";
+import { CacheQueryConfig, useDefaultCacheConfig } from "../caching";
 import {
   getHttpHost,
   HTTPRequestMethods,
@@ -107,7 +108,57 @@ export class HTTPRESTQueryClient
             } as Action<RequestInterface>
           ) as (...args: any) => any)
         : query;
+    if (
+      typeof query !== "function" &&
+      Array.isArray(args) &&
+      (typeof args[0] === "boolean" ||
+        (typeof args[0] === "object" &&
+          args[0] !== null &&
+          args[0].cacheTime !== null &&
+          typeof args[0].cacheTime! == "undefined"))
+    ) {
+      // Here we expect the first item of arguments list to be cache config
+      args[0] =
+        typeof args[0] === "boolean"
+          ? ({
+              ...useDefaultCacheConfig(),
+              name: `useHTTPActionQuery::${query.method ?? ""}_${
+                query.path ?? ""
+              }[${this.createQueryCacheName(query)}]`,
+            } as CacheQueryConfig)
+          : ({
+              ...args[0],
+              name: `useHTTPActionQuery::${query.method ?? ""}_${
+                query.path ?? ""
+              }[${this.createQueryCacheName(query)}]`,
+            } as CacheQueryConfig);
+      // useHTTPActionQuery
+    }
     return this.query.invoke(query$, ...args);
+  }
+
+  private createQueryCacheName(query: {
+    params?: Record<string, unknown> | undefined;
+    body?: unknown;
+    method?: string;
+  }) {
+    const queryParam: Record<string, unknown> = {
+      ...(query.params ?? {}),
+      ...{
+        ...(typeof query.body === "object" &&
+        query.body !== null &&
+        query?.method?.toUpperCase() === "GET"
+          ? query.body
+          : {}),
+      },
+    };
+    let outputString = "";
+    for (const key in queryParam) {
+      if (Object.prototype.hasOwnProperty.call(queryParam, key)) {
+        outputString += `,${key} -> ${queryParam[key]}`;
+      }
+    }
+    return outputString[0] === ', ' ? outputString.slice(1, ) : outputString;
   }
 
   ngOnDestroy() {

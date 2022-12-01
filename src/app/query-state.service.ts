@@ -23,7 +23,6 @@ export class TestQueryStateProvider
   ) {}
 
   query(path: string, params?: Record<string, any>) {
-    console.log("TestQueryStateProvider: ", path, params);
     const host = this.config.get<string>("api.host", environment.api.host);
     return interval(path === "posts" ? 1500 : 500).pipe(
       first(),

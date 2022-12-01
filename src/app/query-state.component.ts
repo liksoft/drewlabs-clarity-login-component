@@ -46,6 +46,10 @@ export class QueryStateComponent {
           path: "posts",
           method: "GET",
           observe: "request",
+          params: {
+            type: "Orange",
+            id: 90678
+          },
         } as QueryType,
         true
       )

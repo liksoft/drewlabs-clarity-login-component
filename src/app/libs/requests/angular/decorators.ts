@@ -57,7 +57,7 @@ export function ProvidesQuery(
         ...(typeof cacheConfig === "boolean" && cacheConfig === true
           ? useDefaultCacheConfig()
           : cacheConfig),
-        name,
+        name: `query::bindTo[${name}]`,
       };
     };
   };
