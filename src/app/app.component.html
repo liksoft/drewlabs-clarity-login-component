@@ -1,12 +1,8 @@
-<!-- <ng-container *ngIf="state$ | async as state">
+<ng-container *ngIf="state$ | async as state">
   <app-ui-notification [props]="state">
     <app-online-state-monitoring></app-online-state-monitoring>
   </app-ui-notification>
-  <app-progress-bar
-    [performingAction]="state.performingAction"
-    [indeterminate]="true"
-    [overlay]="true"
-  ></app-progress-bar>
+  <app-progress-bar [performingAction]="state.performingAction" [indeterminate]="true" [overlay]="true">
+  </app-progress-bar>
 </ng-container>
-<router-outlet></router-outlet> -->
-<app-query-state></app-query-state>
+<router-outlet></router-outlet>
