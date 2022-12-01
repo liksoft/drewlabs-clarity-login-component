@@ -60,7 +60,7 @@ export const useQuery = <T, TResponse = unknown>(
  *
  * @param query
  */
-export const useHTTPPostQuery = (
+export const useHTTPPostQuery = <TResponse = unknown>(
   query: Omit<BaseQueryType<HTTPRequestMethods, ObserveKeyType>, "method">
 ) =>
   useQuery<QueryType<string>, TResponse>(
@@ -79,7 +79,7 @@ export const useHTTPPostQuery = (
  *
  * @param query
  */
-export const useHTTPPutQuery = (
+export const useHTTPPutQuery = <TResponse = unknown>(
   query: Omit<BaseQueryType<HTTPRequestMethods, ObserveKeyType>, "method">
 ) =>
   useQuery<QueryType<string>, TResponse>(
@@ -98,7 +98,7 @@ export const useHTTPPutQuery = (
  *
  * @param query
  */
-export const useHTTPDeleteQuery = (
+export const useHTTPDeleteQuery = <TResponse = unknown>(
   query: Omit<BaseQueryType<HTTPRequestMethods, ObserveKeyType>, "method">
 ) =>
   useQuery<QueryType<string>, TResponse>(
