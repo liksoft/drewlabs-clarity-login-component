@@ -6,7 +6,7 @@ import {
   NgModule,
   Provider
 } from "@angular/core";
-import { RESTHTTPQueryClient } from "./http-query-client";
+import { HTTPRESTQueryClient } from "./http-query-client";
 import { ServiceLocator } from "./service-locator";
 import { HTTP_HOST, HTTP_QUERY_CLIENT } from "./token";
 import {
@@ -19,7 +19,6 @@ import {
   imports: [HttpClientModule],
 })
 export class HTTPQueryModule {
-
   static forRoot(
     value?: ModuleParamType
   ): ModuleWithProviders<HTTPQueryModule> {
@@ -38,7 +37,7 @@ export class HTTPQueryModule {
       providers: [
         {
           provide: HTTP_QUERY_CLIENT,
-          useClass: RESTHTTPQueryClient,
+          useClass: HTTPRESTQueryClient,
         },
         hostProvider,
         // We make use of an anti-pattern service locator implementation
@@ -48,10 +47,10 @@ export class HTTPQueryModule {
           useFactory: (injector: Injector) => {
             return () => {
               ServiceLocator.setInstance(injector);
-            }
+            };
           },
           deps: [Injector],
-          multi: true
+          multi: true,
         },
       ],
     };

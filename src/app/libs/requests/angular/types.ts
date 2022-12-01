@@ -1,8 +1,14 @@
 import { Provider } from "@angular/core";
-import { ObservableInput } from "rxjs";
+import { Observable, ObservableInput } from "rxjs";
 import { CacheQueryConfig } from "../caching";
 import { RequestInterface } from "../http";
-import { FnActionArgumentLeastType } from "../types";
+import {
+  CommandInterface,
+  Disposable,
+  FnActionArgumentLeastType,
+  QueryManager,
+  QueryState
+} from "../types";
 
 /**
  * @internal
@@ -38,3 +44,12 @@ export type HostProviderParamType = {
  * @internal
  */
 export type ModuleParamType = HostStringParamType | HostProviderParamType;
+
+/**
+ * Composed query manager type definition
+ *
+ * @internal
+ */
+export type QueryManagerType = CommandInterface<unknown> &
+  QueryManager<Observable<QueryState>> &
+  Disposable;

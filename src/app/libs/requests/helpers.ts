@@ -28,10 +28,12 @@ export function createQueryParams<
  *
  * @param param0
  */
-export function useRequestSelector([state$, cache]: [
-  Observable<State>,
-  CacheType<RequestsCacheItemType> | undefined
-]) {
+export function useRequestSelector(
+  ...[state$, cache]: [
+    Observable<State>,
+    CacheType<RequestsCacheItemType> | undefined
+  ]
+) {
   return (argument: unknown) => {
     return state$.pipe(
       selectRequest(argument),
@@ -42,10 +44,8 @@ export function useRequestSelector([state$, cache]: [
   };
 }
 
-export function refetch(query: QueryState) {
-  if (typeof query.id === "undefined" || query.id === null) {
-    throw new Error(
-      "Invalid query state, missing query `id` property, but required in instance of QueryState"
-    );
+export function refetchQuery(query: QueryState) {
+  if (typeof query.refetch === "function") {
+    query.refetch();
   }
 }

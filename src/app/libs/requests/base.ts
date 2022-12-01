@@ -21,9 +21,11 @@ import { guid } from "./internal";
 import {
   Action,
   CommandInterface,
+  Disposable,
   FnActionArgumentLeastType,
   ObservableInputFunction,
   QueryArguments,
+  QueryManager,
   QueryPayload,
   QueryState,
   State
@@ -75,7 +77,12 @@ export function useRxReducer<T, ActionType = any>(
   ] as UseReducerReturnType<T, ActionType>;
 }
 
-export class Requests implements CommandInterface<string> {
+export class Requests
+  implements
+    CommandInterface<string>,
+    QueryManager<Observable<QueryState>>,
+    Disposable
+{
   //#region Properties definitions
   private readonly dispatch$!: (action: Required<Action<unknown>>) => void;
   public readonly state$!: Observable<State>;
@@ -199,6 +206,13 @@ export class Requests implements CommandInterface<string> {
       } as State,
       (_initial) => _initial as State
     );
+  }
+
+  invoke<T extends Function>(action: T, ...args_0: QueryArguments<T>) {
+    return useRequestSelector(
+      this.state$,
+      this.cache
+    )(this.dispatch(action, ...args_0));
   }
 
   /**
@@ -377,11 +391,19 @@ export class Requests implements CommandInterface<string> {
    * @returns
    */
   select(query: unknown) {
-    return useRequestSelector([this.state$, this.cache])(query);
+    return useRequestSelector(this.state$, this.cache)(query);
   }
 
   destroy() {
     this.cache.clear();
     this.destroy$.next();
   }
+}
+
+/**
+ * Creates an instance of the query manager class
+ * It's a factory function that creates the default query manager instance
+ */
+export function createQueryManager() {
+  return new Requests();
 }

@@ -1,6 +1,6 @@
 import { first, interval, lastValueFrom } from "rxjs";
+import { Requests } from "./base";
 import { cacheRequest } from "./caching";
-import { Requests } from "./requests";
 
 describe("Cached request class cache tests", () => {
   let defaultWindow = window;

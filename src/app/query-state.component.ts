@@ -8,7 +8,7 @@ import { TestQueryStateProvider } from "./query-state.service";
   selector: "app-query-state",
   template: `
     <pre *ngIf="state3$ | async as state">
-      <pre>Post Query Observe request</pre>
+      <pre>Fruits Query Observe request</pre>
       <pre>{{ state | json }}</pre>
       <pre *ngIf="state3_1$ | async as state">{{ state | json }}</pre>
     </pre>
@@ -32,7 +32,7 @@ import { TestQueryStateProvider } from "./query-state.service";
 export class QueryStateComponent {
   state3$ = useQuery(
     {
-      path: "posts",
+      path: "fruits",
       method: "GET",
       observe: "request",
     } as QueryType,

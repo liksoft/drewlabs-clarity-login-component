@@ -1,22 +1,20 @@
+import { isPlatformBrowser } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable, Optional, PLATFORM_ID } from "@angular/core";
 import { Observable, ObservableInput } from "rxjs";
-import { useRequestSelector } from "../helpers";
 import {
   getHttpHost,
   HTTPRequestMethods,
   HTTP_HOST,
   isValidHttpUrl,
   RequestInterface,
-  RequestsConfig,
   ResponseType,
   RESTQueryFunc,
   useHTTPActionQuery
 } from "../http";
-import { Requests } from "../requests";
 import { Action, QueryClientType, QueryType } from "../types";
-import { REQUEST_ACTIONS, WINDOW } from "./token";
-import { ObserveKeyType, QueryArguments } from "./types";
+import { QUERY_MANAGER } from "./token";
+import { ObserveKeyType, QueryArguments, QueryManagerType } from "./types";
 
 function useHTTPRequestHandler<T = unknown>(client: HttpClient, host?: string) {
   return (
@@ -70,19 +68,15 @@ function useHTTPRequestHandler<T = unknown>(client: HttpClient, host?: string) {
 @Injectable({
   providedIn: "root",
 })
-export class RESTHTTPQueryClient
+export class HTTPRESTQueryClient
   implements QueryClientType<HTTPRequestMethods>
 {
-  //#region Service properties
-  private readonly query = new Requests();
-  //#endregion Service properties
   // Creates an instance of { @see NgHTTPClientClient }
   constructor(
+    @Inject(QUERY_MANAGER) private readonly query: QueryManagerType,
     private client: HttpClient,
     @Inject(PLATFORM_ID) @Optional() private platformId: Object,
-    @Inject(REQUEST_ACTIONS) @Optional() private config?: RequestsConfig,
-    @Inject(HTTP_HOST) @Optional() private host?: string,
-    @Inject(WINDOW) @Optional() private defaultView?: Window
+    @Inject(HTTP_HOST) @Optional() private host?: string
   ) {}
 
   // Handles HTTP requests
@@ -113,7 +107,12 @@ export class RESTHTTPQueryClient
             } as Action<RequestInterface>
           ) as (...args: any) => any)
         : query;
-    const cacheId = this.query.dispatch(query$, ...args);
-    return useRequestSelector([this.query.state$, this.query.cache])(cacheId);
+    return this.query.invoke(query$, ...args);
+  }
+
+  ngOnDestroy() {
+    if (this && this.platformId && isPlatformBrowser(this.platformId)) {
+      this.query.destroy();
+    }
   }
 }

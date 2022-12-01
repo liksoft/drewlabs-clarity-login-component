@@ -9,8 +9,8 @@ import {
   tap,
   throwError
 } from "rxjs";
+import { Requests } from "./base";
 import { useHTTPActionQuery } from './http/query';
-import { Requests } from "./requests";
 import { apiResponse, firstWhere } from "./rx";
 
 const testResult = {

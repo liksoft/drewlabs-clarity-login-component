@@ -2,6 +2,10 @@ import { Observable, ObservableInput } from "rxjs";
 import { CacheQueryConfig } from "./caching";
 
 //#region Requests service types
+export interface Disposable {
+  destroy(): void | Promise<void>;
+}
+
 /**
  * @internal
  */
@@ -67,6 +71,10 @@ export type Action<T = unknown> = {
 
 export interface CommandInterface<R = unknown> {
   dispatch<T extends Function>(action: T, ...args: [...QueryArguments<T>]): R;
+}
+
+export interface QueryManager<R> {
+  invoke<T extends Function>(action: T, ...args: [...QueryArguments<T>]): R;
 }
 
 /**

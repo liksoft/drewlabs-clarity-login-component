@@ -4,6 +4,6 @@ export {
     QueryTypeLeastArgumentType,
     useQuery
 } from "./helpers";
-export { RESTHTTPQueryClient } from "./http-query-client";
+export { HTTPRESTQueryClient } from "./http-query-client";
 export { HTTPQueryModule } from "./http-query.module";
 
