@@ -110,4 +110,5 @@ dist
 
 package-lock.json
 
+.vscode/
 /.tmp

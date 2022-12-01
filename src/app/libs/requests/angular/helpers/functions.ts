@@ -63,7 +63,7 @@ export const useQuery = <T, TResponse = unknown>(
 export const useHTTPPostQuery = (
   query: Omit<BaseQueryType<HTTPRequestMethods, ObserveKeyType>, "method">
 ) =>
-  useQuery(
+  useQuery<QueryType<string>, TResponse>(
     {
       ...query,
       method: "POST",
@@ -73,7 +73,7 @@ export const useHTTPPostQuery = (
 
 /**
  * Functional interface for sending HTTP Query using PUT verb.
- * Unlike {@see createQuery } functional interface, it does not
+ * Unlike {@see useQuery } functional interface, it does not
  * reexecute the query on an interval basics, but will retry
  * 3 times the query if it fails.
  *
@@ -82,17 +82,17 @@ export const useHTTPPostQuery = (
 export const useHTTPPutQuery = (
   query: Omit<BaseQueryType<HTTPRequestMethods, ObserveKeyType>, "method">
 ) =>
-  useQuery(
+  useQuery<QueryType<string>, TResponse>(
     {
       ...query,
-      method: "PUT" as HTTPRequestMethods,
+      method: "PUT",
     } as QueryType,
     { retries: 3, refetchInterval: undefined }
   ).pipe(first());
 
 /**
  * Functional interface for sending HTTP Query using DELETE verb.
- * Unlike {@see createQuery } functional interface, it does not
+ * Unlike {@see useQuery } functional interface, it does not
  * reexecute the query on an interval basics, but will retry
  * 3 times the query if it fails.
  *
@@ -101,10 +101,10 @@ export const useHTTPPutQuery = (
 export const useHTTPDeleteQuery = (
   query: Omit<BaseQueryType<HTTPRequestMethods, ObserveKeyType>, "method">
 ) =>
-  useQuery(
+  useQuery<QueryType<string>, TResponse>(
     {
       ...query,
-      method: "DELETE" as HTTPRequestMethods,
+      method: "DELETE",
     } as QueryType,
     { retries: 3, refetchInterval: undefined }
-  );
+  ).pipe(first());

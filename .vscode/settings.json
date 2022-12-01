@@ -21,5 +21,7 @@
   },
   "peacock.color": "#080808",
   "explorer.compactFolders": false,
-  "compile-hero.disable-compile-files-on-did-save-code": true
+  "compile-hero.disable-compile-files-on-did-save-code": true,
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single"
 }
