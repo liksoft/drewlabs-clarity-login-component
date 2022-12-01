@@ -1,6 +1,7 @@
-import { useDefaultCacheConfig } from "../helpers";
-import { CacheQueryConfig, ObserveKeyType, QueryProviderType } from "../types";
-import { useQuery, QueryStateLeastParameters } from "./helpers";
+import { CacheQueryConfig, useDefaultCacheConfig } from "../caching";
+import { QueryProviderType } from "../types";
+import { QueryStateLeastParameters, useQuery } from "./helpers";
+import { ObserveKeyType } from "./types";
 
 /**
  * Class property decorator sending query using HTTP Query client.

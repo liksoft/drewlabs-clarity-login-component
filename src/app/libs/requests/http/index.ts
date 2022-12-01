@@ -1,3 +1,11 @@
 export { HTTP_HOST, REQUEST_ACTIONS } from "../angular/token";
-export { isValidHttpUrl, getHttpHost } from "./utils";
-export { HTTPRequestMethods, RestHTTPClient } from "./types";
+export { useHTTPActionQuery } from "./query";
+export {
+    HTTPRequestMethods,
+    RequestInterface, RequestsConfig, ResponseType,
+    RestHTTPClient,
+    RESTQueryFunc
+} from "./types";
+export { getHttpHost, isValidHttpUrl } from "./utils";
+
+

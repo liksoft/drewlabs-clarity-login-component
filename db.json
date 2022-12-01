@@ -1,0 +1,96 @@
+{
+    "posts": [
+        {
+            "id": 1,
+            "title": "json-server",
+            "author": "typicode"
+        }
+    ],
+    "comments": [
+        {
+            "id": 1,
+            "body": "some comment",
+            "postId": 1
+        }
+    ],
+    "articles": [
+        {
+            "id": "0002",
+            "type": "donut",
+            "name": "Raised",
+            "ppu": 0.55
+        },
+        {
+            "id": "0003",
+            "type": "donut",
+            "name": "Old Fashioned",
+            "ppu": 0.55
+        },
+        {
+            "id": "0001",
+            "type": "donut",
+            "name": "Cake",
+            "ppu": 0.55
+        }
+    ],
+    "toppings": [
+        {
+            "id": "5001",
+            "type": "None"
+        },
+        {
+            "id": "5002",
+            "type": "Glazed"
+        },
+        {
+            "id": "5005",
+            "type": "Sugar"
+        },
+        {
+            "id": "5007",
+            "type": "Powdered Sugar"
+        },
+        {
+            "id": "5006",
+            "type": "Chocolate with Sprinkles"
+        },
+        {
+            "id": "5003",
+            "type": "Chocolate"
+        },
+        {
+            "id": "5004",
+            "type": "Maple"
+        }
+    ],
+    "fruits": [
+        {
+            "id": "5001",
+            "type": "None"
+        },
+        {
+            "id": "5002",
+            "type": "Banana"
+        },
+        {
+            "id": "5005",
+            "type": "Orange"
+        },
+        {
+            "id": "5007",
+            "type": "Mango"
+        },
+        {
+            "id": "5006",
+            "type": "Pineapple"
+        },
+        {
+            "id": "5003",
+            "type": "Avocado"
+        },
+        {
+            "id": "5004",
+            "type": "Lemon"
+        }
+    ]
+}

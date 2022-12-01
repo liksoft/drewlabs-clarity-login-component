@@ -9,7 +9,7 @@ import {
   tap,
   throwError
 } from "rxjs";
-import { useHTTPActionQuery } from "./helpers";
+import { useHTTPActionQuery } from './http/query';
 import { Requests } from "./requests";
 import { apiResponse, firstWhere } from "./rx";
 
@@ -70,7 +70,7 @@ describe("Requests", () => {
     expect(service).toBeTruthy();
   });
 
-  it("should handle request an log the request to cache", async () => {
+  it("should handle request and log the request to cache", async () => {
     const query$ = useHTTPActionQuery(queryBackend, {
       name: "[get_api/v1/posts:post_id/users:user_id/post_user:user_id",
       payload: {
@@ -206,7 +206,6 @@ describe("Requests", () => {
       interval(3000).pipe(
         first(),
         tap(() => {
-          service.destroy();
           expect(executionCount).toEqual(3);
         })
       )

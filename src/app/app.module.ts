@@ -1,57 +1,55 @@
-import { BrowserModule } from "@angular/platform-browser";
 import { Injector, NgModule } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { SharedModule } from "./lib/views/shared.module";
-import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 
 // Register Fr local for it to be applied to global application local
 import { registerLocaleData } from "@angular/common";
-import localeFr from "@angular/common/locales/fr";
-import localeFrExtra from "@angular/common/locales/extra/fr";
-import { environment } from "src/environments/environment";
-import {
-  TranslateModule,
-  TranslateService,
-  TranslateLoader,
-} from "@ngx-translate/core";
 import { HttpClient } from "@angular/common/http";
-import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import localeFrExtra from "@angular/common/locales/extra/fr";
+import localeFr from "@angular/common/locales/fr";
 import { NgxSmartFormModule } from "@azlabsjs/ngx-smart-form";
 import { DOCUMENT_SESSION_STORAGE, StorageModule } from "@azlabsjs/ngx-storage";
+import {
+  TranslateLoader, TranslateModule,
+  TranslateService
+} from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { environment } from "src/environments/environment";
 
 // #region UI state module imports
 import {
-  UIStateModule,
+  UIStateComponentsModule, UIStateModule,
   UIStateProvider,
   UIStateStatusCode,
-  UI_STATE_PROVIDER,
-  UIStateComponentsModule,
+  UI_STATE_PROVIDER
 } from "./lib/views/partials/ui-state";
 // #endregion UI state module imports
 
 // #region Dropzone configuration
+import { Router } from "@angular/router";
+import { NgxClrSmartGridModule } from "@azlabsjs/ngx-clr-smart-grid";
+import {
+  APP_CONFIG_MANAGER,
+  ConfigurationManager,
+  NgxConfigModule
+} from "@azlabsjs/ngx-config";
+import { NgxIntlTelInputModule } from "@azlabsjs/ngx-intl-tel-input";
+import { HttpResponse } from "@azlabsjs/requests";
+import { interval, lastValueFrom } from "rxjs";
 import { first, map, tap } from "rxjs/operators";
-import { LocalStrategy, StrategyBasedAuthModule } from "./lib/views/login/core";
 import {
   AuthStrategies,
   AUTH_ACTION_HANDLERS,
   AUTH_CLIENT_CONFIG,
-  AUTH_SERVICE_CONFIG,
+  AUTH_SERVICE_CONFIG
 } from "./lib/views/login/constants";
-import { interval, lastValueFrom } from "rxjs";
-import { Router } from "@angular/router";
-import {
-  APP_CONFIG_MANAGER,
-  ConfigurationManager,
-  NgxConfigModule,
-} from "@azlabsjs/ngx-config";
-import { NgxIntlTelInputModule } from "@azlabsjs/ngx-intl-tel-input";
-import { HttpResponse } from "@azlabsjs/requests";
-import { NgxClrSmartGridModule } from "@azlabsjs/ngx-clr-smart-grid";
-import { HTTPQueryModule } from "./lib/bloc/services/requests/angular";
-import { HTTP_HOST } from "./lib/bloc/services/requests/http";
+import { LocalStrategy, StrategyBasedAuthModule } from "./lib/views/login/core";
+import { HTTPQueryModule } from './libs/requests/angular';
+import { HTTP_HOST } from './libs/requests/http';
 import { QueryStateComponent } from "./query-state.component";
 // #endregion Dropzone configuration
 

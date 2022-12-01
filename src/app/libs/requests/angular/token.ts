@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { inject, InjectionToken } from "@angular/core";
-import { HTTPRequestMethods } from '../http';
-import { QueryClientType, RequestsConfig } from "../types";
+import { HTTPRequestMethods, RequestsConfig } from '../http';
+import { QueryClientType } from "../types";
 
 export const HTTP_HOST = new InjectionToken<string>(
   "URI to the backend http host"

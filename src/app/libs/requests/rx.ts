@@ -1,5 +1,12 @@
-import { distinctUntilChanged, filter, first, map, Observable, OperatorFunction } from "rxjs";
-import { RequestArguments, RequestState, State } from "./types";
+import {
+  distinctUntilChanged,
+  filter,
+  first,
+  map,
+  Observable,
+  OperatorFunction
+} from "rxjs";
+import { QueryState, State } from "./types";
 
 /**
  * @internal
@@ -14,9 +21,9 @@ export function firstWhere<T = unknown>(predicate: (value: T) => boolean) {
  * @description RxJS operator that returns the api response from
  */
 export function apiResponse<TResponse>(
-  project?: (request: RequestState) => TResponse
-): OperatorFunction<RequestState, TResponse> {
-  return (observable$: Observable<RequestState>) =>
+  project?: (request: QueryState) => TResponse
+): OperatorFunction<QueryState, TResponse> {
+  return (observable$: Observable<QueryState>) =>
     observable$.pipe(
       filter((request) => !request.pending),
       distinctUntilChanged(),
@@ -32,8 +39,8 @@ export function apiResponse<TResponse>(
  */
 export function apiResponseBody<TBody = unknown>(
   key?: string
-): OperatorFunction<RequestState, TBody> {
-  return (observable$: Observable<RequestState>) =>
+): OperatorFunction<QueryState, TBody> {
+  return (observable$: Observable<QueryState>) =>
     observable$.pipe(
       apiResponse((request) => {
         key = key ?? "body";
@@ -50,5 +57,5 @@ export function selectRequest(argument: unknown) {
     observable$.pipe(
       map((state) => state.requests.find((request) => request.id === argument)),
       filter((state) => typeof state !== "undefined" && state !== null)
-    ) as Observable<RequestState<RequestArguments>>;
+    ) as Observable<QueryState>;
 }

@@ -1,11 +1,11 @@
 import { of } from "rxjs";
 import { Requests } from ".";
-import { CachedRequest, RequestsCache } from "./cache";
-import { cacheRequest, requestsCache } from "./helpers";
-import { RequestInterface } from "./types";
+import { cacheRequest, requestsCache } from "./caching";
+import { CachedRequest, RequestsCache } from "./caching/cache";
+import { RequestInterface } from "./http";
 
 describe("Requests cache test", () => {
-  let cache!: RequestsCache<string>;
+  let cache!: RequestsCache;
 
   beforeEach(() => {
     cache = requestsCache();

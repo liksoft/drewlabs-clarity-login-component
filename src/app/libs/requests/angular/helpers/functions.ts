@@ -4,17 +4,17 @@ import {
   map,
   Observable,
   of,
-  OperatorFunction,
+  OperatorFunction
 } from "rxjs";
 import { HTTPRequestMethods } from "../../http";
 import { apiResponse, apiResponseBody } from "../../rx";
 import {
   BaseQueryType,
   QueryProviderType,
-  QueryType,
-  RequestArguments,
-  RequestState,
+  QueryState,
+  QueryType
 } from "../../types";
+import { ObserveKeyType } from "../types";
 import { createQueryCreator, parseQueryArguments } from "./internal";
 import { CacheQueryProviderType, QueryStateLeastParameters } from "./types";
 
@@ -33,26 +33,22 @@ export const useQuery = <T, TResponse = unknown>(
   params: T,
   ...args: [...QueryStateLeastParameters<T>]
 ) => {
-  const [_query, _arguments, observe] = parseQueryArguments(
-    params,
-    args
-  );
+  const [_query, _arguments, observe] = parseQueryArguments(params, args);
   let _observe = observe as unknown;
   const result = createQueryCreator()(_query as any, ..._arguments);
   const _params = params as unknown;
   if (typeof (_params as CacheQueryProviderType).query === "function") {
-    _observe = observe ?? (_params as CacheQueryProviderType).cacheConfig.observe;
+    _observe =
+      observe ?? (_params as CacheQueryProviderType).cacheConfig.observe;
   }
   return (
-    (!isObservable(result) ? of(result) : result) as Observable<
-      RequestState<RequestArguments>
-    >
+    (!isObservable(result) ? of(result) : result) as Observable<QueryState>
   ).pipe(
     _observe === "response"
       ? apiResponse<TResponse>()
       : ((_observe === "body"
           ? apiResponseBody()
-          : map((state) => state)) as OperatorFunction<RequestState, unknown>)
+          : map((state) => state)) as OperatorFunction<QueryState, unknown>)
   ) as UseQueryReturnType<T>;
 };
 
@@ -65,7 +61,7 @@ export const useQuery = <T, TResponse = unknown>(
  * @param query
  */
 export const useHTTPPostQuery = (
-  query: Omit<BaseQueryType<HTTPRequestMethods>, "method">
+  query: Omit<BaseQueryType<HTTPRequestMethods, ObserveKeyType>, "method">
 ) =>
   useQuery(
     {
@@ -84,7 +80,7 @@ export const useHTTPPostQuery = (
  * @param query
  */
 export const useHTTPPutQuery = (
-  query: Omit<BaseQueryType<HTTPRequestMethods>, "method">
+  query: Omit<BaseQueryType<HTTPRequestMethods, ObserveKeyType>, "method">
 ) =>
   useQuery(
     {
@@ -103,7 +99,7 @@ export const useHTTPPutQuery = (
  * @param query
  */
 export const useHTTPDeleteQuery = (
-  query: Omit<BaseQueryType<HTTPRequestMethods>, "method">
+  query: Omit<BaseQueryType<HTTPRequestMethods, ObserveKeyType>, "method">
 ) =>
   useQuery(
     {

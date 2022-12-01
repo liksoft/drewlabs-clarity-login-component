@@ -26,16 +26,22 @@ export const environment = {
     },
   },
   api: {
-    host: "http://127.0.0.1:8899", //"https://coopec-clients.lik.tg",
+    // host: 'https://coopec-clients.lik.tg',
+    host: "http://localhost:3000",
     endpoints: {
       clients: {
         addresses: "api/v1/addresses",
         individuals: "api/v1/individuals",
         morals: "api/v1/morals",
       },
+      test: {
+        posts: "posts",
+        comments: "comments",
+      },
     },
   },
-  auth: { //
+  auth: {
+    //
     host: "https://auth.lik.tg/",
     clientID: "859782E1-9A2F-49A4-9D42-B59A78E520FB",
     clientSecret:
@@ -44,7 +50,7 @@ export const environment = {
   storage: {
     secret: "V1HQkt03PoGdlxN",
     prefix: "coopectrasto_",
-  }
+  },
 };
 
 /*

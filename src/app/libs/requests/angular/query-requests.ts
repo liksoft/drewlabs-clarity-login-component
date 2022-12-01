@@ -1,8 +1,8 @@
 import { isPlatformBrowser } from "@angular/common";
 import { Inject, Injectable, Optional, PLATFORM_ID } from "@angular/core";
-import { REQUEST_ACTIONS } from "../http";
+import { RequestsConfig, REQUEST_ACTIONS } from "../http";
 import { Requests } from "../requests";
-import { CommandInterface, QueryArguments, RequestsConfig } from "../types";
+import { CommandInterface, QueryArguments } from "../types";
 
 @Injectable({
   providedIn: "root",
@@ -10,7 +10,6 @@ import { CommandInterface, QueryArguments, RequestsConfig } from "../types";
 export class QueryRequestsProvider implements CommandInterface<unknown> {
   //#region Service properties
   private readonly client = new Requests();
-  // this.config,
   get state$() {
     return this.client.state$;
   }

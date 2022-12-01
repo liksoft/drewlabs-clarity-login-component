@@ -4,17 +4,15 @@ import {
   Injector,
   ModuleWithProviders,
   NgModule,
-  Provider,
+  Provider
 } from "@angular/core";
 import { RESTHTTPQueryClient } from "./http-query-client";
-import { HTTPRequestHandler } from "./http-request-handler";
-import { QueryRequestsProvider } from "./query-requests";
 import { ServiceLocator } from "./service-locator";
 import { HTTP_HOST, HTTP_QUERY_CLIENT } from "./token";
 import {
   HostProviderParamType,
   HostStringParamType,
-  ModuleParamType,
+  ModuleParamType
 } from "./types";
 
 @NgModule({
@@ -38,9 +36,6 @@ export class HTTPQueryModule {
     return {
       ngModule: HTTPQueryModule,
       providers: [
-        RESTHTTPQueryClient,
-        QueryRequestsProvider,
-        HTTPRequestHandler,
         {
           provide: HTTP_QUERY_CLIENT,
           useClass: RESTHTTPQueryClient,

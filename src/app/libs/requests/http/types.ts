@@ -1,5 +1,14 @@
-import { Observable } from "rxjs";
-import { CacheQueryConfig, QueryClientType } from "../types";
+import { Observable, ObservableInput } from "rxjs";
+import { CacheQueryConfig } from "../caching";
+import { QueryClientType } from "../types";
+
+/**
+ * @internal
+ */
+export type QueryConfigParamsType = {
+  method?: string;
+  path: string;
+};
 
 export type HTTPRequestMethods =
   | "GET"
@@ -16,6 +25,46 @@ export type HTTPRequestMethods =
   | "post"
   | "put"
   | "patch";
+
+export declare type ResponseType =
+  | "arraybuffer"
+  | "text"
+  | "blob"
+  | "json"
+  | "document";
+
+export type RequestsConfig = {
+  prefix?: string;
+  actions?: Record<string, string | QueryConfigParamsType>;
+};
+
+/**
+ * @internal
+ */
+export type RequestInterface<TMethod extends string = string> = {
+  path?: string;
+  method?: TMethod;
+  body?: unknown;
+  params?: Record<string, any>;
+  options?: {
+    headers?: [string, string][] | Record<string, string>;
+    responseType?: ResponseType;
+    params?: Record<string, any> | { [header: string]: string | string[] };
+    withCredentials?: boolean;
+  };
+};
+
+export type RESTQueryFunc<T> = (
+  path: string,
+  method: string,
+  body: unknown,
+  options?: {
+    headers?: [string, string][] | Record<string, string>;
+    responseType?: ResponseType;
+    params?: Record<string, any> | { [header: string]: string | string[] };
+    withCredentials?: boolean;
+  }
+) => ObservableInput<T> | any;
 
 export type RestHTTPClient = QueryClientType<HTTPRequestMethods> & {
   /**

@@ -1,14 +1,14 @@
 import { ObservableInput } from "rxjs";
+import { CacheQueryConfig } from "../../caching";
 import { HTTPRequestMethods } from "../../http";
 import {
-  CacheQueryConfig,
   FnActionArgumentLeastType,
   ObservableInputFunction,
-  ObserveKeyType,
   QueryParameter,
   QueryProviderType,
-  QueryType,
+  QueryType
 } from "../../types";
+import { ObserveKeyType } from "../types";
 
 type QueryProviderProvidesParamType<
   TParam extends [...unknown[]],
@@ -30,7 +30,7 @@ export type QueryStateLeastParameters<F> = F extends (
   : F extends Partial<
       QueryParameter<ObservableInputFunction, HTTPRequestMethods>
     >
-  ? []
+  ? [CacheQueryConfig | boolean] | []
   : never;
 
 type QueryProviderQuerConfigType = {

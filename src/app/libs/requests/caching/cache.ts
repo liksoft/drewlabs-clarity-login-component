@@ -18,20 +18,22 @@ import {
   takeUntil,
   tap
 } from "rxjs";
-import { CacheQueryConfig } from "./types";
+import { CacheQueryConfig, RequestsCacheItemType } from "./types";
 
 /**
  * Internal caching implementation of requests.
  *
  * @internal
  */
-export class RequestsCache<T = unknown> {
+export class RequestsCache<
+  T extends RequestsCacheItemType = RequestsCacheItemType
+> {
   /**
    * @internal
    *
    * State of the cache instance
    */
-  private _state: CachedRequest<T>[] = [];
+  private _state: T[] = [];
 
   get length() {
     return this._state.length;
@@ -52,7 +54,7 @@ export class RequestsCache<T = unknown> {
    *
    * @param item
    */
-  add(item: CachedRequest<T>): void {
+  add(item: T): void {
     this._state = [item, ...(this._state ?? [])];
   }
 
@@ -137,7 +139,6 @@ export class RequestsCache<T = unknown> {
 
   invalidate(argument: unknown) {
     const cahedRequest = this.at(this.indexOf(argument));
-    console.log('Invalidating...');
     if (cahedRequest) {
       cahedRequest.setExpiresAt();
     }
@@ -151,7 +152,7 @@ export class RequestsCache<T = unknown> {
  *
  * @internal
  */
-export class CachedRequest<T = unknown> {
+export class CachedRequest {
   //#region Properties definitions
   private tries = 0;
   private lastError!: unknown;
@@ -201,8 +202,8 @@ export class CachedRequest<T = unknown> {
     private _id: string,
     private _argument: unknown,
     private properties: CacheQueryConfig,
-    private readonly callback: () => ObservableInput<T>,
-    private refetchCallback?: (response: T) => void,
+    private readonly callback: () => ObservableInput<unknown>,
+    private refetchCallback?: (response: unknown) => void,
     private errorCallback?: (error: unknown) => void,
     view?: Window,
     lastError?: unknown

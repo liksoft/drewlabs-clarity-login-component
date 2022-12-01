@@ -1,5 +1,5 @@
 import { first, interval, lastValueFrom } from "rxjs";
-import { cacheRequest } from "./helpers";
+import { cacheRequest } from "./caching";
 import { Requests } from "./requests";
 
 describe("Cached request class cache tests", () => {
@@ -25,7 +25,7 @@ describe("Cached request class cache tests", () => {
       callback: argument,
       refetchCallback: (state) => {
         resultCallCounts = resultCallCounts + 1;
-        resultState = state;
+        resultState = state as number[];
       },
       properties: {
         refetchInterval: 700,
@@ -66,8 +66,8 @@ describe("Cached request class cache tests", () => {
 
     await lastValueFrom(interval(2000).pipe(first()));
     request.destroy();
-    expect(request.retryState.tries).toEqual(2);
-    expect(request.retryState.lastError).toEqual("Server Error");
+    expect((request as any).retryState.tries).toEqual(2);
+    expect((request as any).retryState.lastError).toEqual("Server Error");
   });
 
   it("should not invoke the background request when the request is not mark as stale", async () => {
