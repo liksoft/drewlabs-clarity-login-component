@@ -2,16 +2,16 @@
 
 ## Usage
 
-The Rx-Query state library provides as most of angular library a module that exposes the API to the end users. Therefore in the root of your angular project add the following:
+The Query state library provides as most of angular library a module that exposes the API to the end users. Therefore in the root of your angular project add the following:
 
 ```ts
 // app.module.ts
 
 // Imports the angular library
-import { HTTPQueryModule } from "@azlabjs/ngx-rx-query";
+import { HTTPQueryModule } from "@azlabjs/ngx-query";
 
 // Import the core library
-import { HTTP_HOST } from "@azlabsjs/rx-query";
+import { HTTP_HOST } from "@azlabsjs/query";
 
 @NgModule({
   imports: [
@@ -39,8 +39,8 @@ There are various way to perform query. You either use an angular service, a Jav
 When using query parameters, a default query provider, based on Angular HTTP client library, is internally used by the module.
 
 ```ts
-import { useQuery } from "@azlabjs/ngx-rx-query";
-import { QueryType } from '@azlabsjs/rx-query';
+import { useQuery } from "@azlabjs/ngx-query";
+import { QueryType } from '@azlabsjs/query';
 
 export class TestComponent {
   state$ = useQuery<QueryType>(
@@ -59,8 +59,8 @@ export class TestComponent {
   Instead of manually specifying the query method, we must sometimes pass a query  string `METHOD_path[/:param1][/path2/:param2]` along with required parameters as `parameters` to the request object and the query library will internally resolve and build the query path along with the method before sending the request.
 
 ```ts
-import { useQuery } from "@azlabjs/ngx-rx-query";
-import { QueryType } from '@azlabsjs/rx-query';
+import { useQuery } from "@azlabjs/ngx-query";
+import { QueryType } from '@azlabsjs/query';
 
 @Component({
   // ...
@@ -93,7 +93,7 @@ import { Inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { QueryProviderType } from "./lib/bloc/services/requests";
-import { ProvidesQuery } from "@azlabjs/ngx-rx-query";
+import { ProvidesQuery } from "@azlabjs/ngx-query";
 import { getHttpHost, isValidHttpUrl } from "./helpers";
 
 @Injectable()
@@ -125,7 +125,7 @@ export class TestQueryStateProvider
 
 ```ts
 import { Component } from '@angular/core';
-import { useQuery } from "@azlabjs/ngx-rx-query";
+import { useQuery } from "@azlabjs/ngx-query";
 import { TestQueryStateProvider } from './query-state.service.ts'
 
 @Component({

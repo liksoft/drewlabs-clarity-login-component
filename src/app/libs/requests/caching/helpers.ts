@@ -87,6 +87,5 @@ export function buildCacheQuery<T extends (...args: any) => any>(
         parameters ? parameters[0] : "()"
       } { ... }`;
   }
-  console.log("Cache config: ", name);
   return [_arguments[0], name, ...argument.slice(2)];
 }
