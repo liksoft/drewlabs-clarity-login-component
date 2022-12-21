@@ -1,8 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { ProvidesQuery } from "@azlabsjs/ngx-query";
+import { QueryProviderType } from "@azlabsjs/rx-query";
 import { Observable } from "rxjs";
-import { QueryProviderType } from "src/app/libs/requests";
-import { ProvidesQuery } from "src/app/libs/requests/angular";
 
 @Injectable()
 @ProvidesQuery()

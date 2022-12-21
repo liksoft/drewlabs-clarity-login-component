@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
+import { QueryProviderType } from "@azlabsjs/rx-query";
 import { Observable } from "rxjs";
-import { QueryProviderType } from "src/app/libs/requests";
 
 export class ProcurationsQueryState
   implements QueryProviderType<[string, Record<string, unknown>]>
