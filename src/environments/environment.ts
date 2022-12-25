@@ -8,9 +8,8 @@ export const environment = {
   userInfoStorageKey: "COOPECTRASTO_ADMIN_USER_INFO",
   authTokenStorageKey: "COOPECTRASTO_ADMIN_X_AUTH_TOKEN",
   authRememberTokenStorageKey: "COOPECTRASTO_ADMIN_AUTH_REMEMBER_TOKEN",
-  APP_FILE_SERVER_URL: "https://auth.lik.tg/",
   forms: {
-    host: "https://coopec-clients.lik.tg",
+    host: "https://coopecclients.lik.tg/",
     endpoints: {
       bindingsPath: "api/v2/control-bindings",
     },
@@ -26,22 +25,17 @@ export const environment = {
     },
   },
   api: {
-    // host: 'https://coopec-clients.lik.tg',
-    host: "http://localhost:3000",
+    // host: '',
+    host: "https://coopecclients.lik.tg/",
     endpoints: {
       clients: {
         addresses: "api/v1/addresses",
         individuals: "api/v1/individuals",
         morals: "api/v1/morals",
       },
-      test: {
-        posts: "posts",
-        comments: "comments",
-      },
     },
   },
   auth: {
-    //
     host: "https://auth.lik.tg/",
     clientID: "859782E1-9A2F-49A4-9D42-B59A78E520FB",
     clientSecret:
