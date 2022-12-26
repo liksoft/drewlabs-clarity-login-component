@@ -1,11 +1,12 @@
 import { CommonModule } from "@angular/common";
 import { ModuleWithProviders, NgModule } from "@angular/core";
+import { defaultSettingConfigs } from "./defaults";
 import { RESTQueryProvider } from "./settings-query.provider";
 import { SettingPipe } from "./settings.pipe";
 import {
-    SETTINGS_QUERY_CLIENT,
-    SETTING_PROVIDER_CONFIG,
-    SettingProviderConfigType,
+  SETTINGS_QUERY_CLIENT,
+  SETTING_PROVIDER_CONFIG,
+  SettingProviderConfigType,
 } from "./types";
 
 @NgModule({
@@ -23,7 +24,13 @@ export class SettingsModule {
       providers: [
         {
           provide: SETTING_PROVIDER_CONFIG,
-          useValue: config,
+          useValue: {
+            ...config,
+            responseInterceptor:
+              config.responseInterceptor ??
+              defaultSettingConfigs.responseInterceptor,
+            pagination: config.pagination ?? defaultSettingConfigs.pagination,
+          } as SettingProviderConfigType,
         },
         {
           provide: SETTINGS_QUERY_CLIENT,

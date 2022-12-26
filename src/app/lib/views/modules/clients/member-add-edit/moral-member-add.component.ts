@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component, Inject } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { JSDate } from "@azlabsjs/js-datetime";
 import { APP_CONFIG_MANAGER, ConfigurationManager } from "@azlabsjs/ngx-config";
@@ -18,7 +18,7 @@ import { Log } from "src/app/lib/bloc";
     </ng-container>
   `,
 })
-export class MoralMemberAddComponent implements OnInit {
+export class MoralMemberAddComponent {
   form$ = this.client
     .get(
       this.configManager.get(
@@ -34,8 +34,6 @@ export class MoralMemberAddComponent implements OnInit {
     private activateRoute: ActivatedRoute,
     // private morals: MoralMembersService
   ) {}
-
-  ngAfterViewInit(): void {}
 
   async onSubmit(event: Record<string, unknown>) {
     const details = event["by"] as Record<string, unknown>;

@@ -1,15 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-credits-list',
-  templateUrl: './credits-list.component.html',
-  styleUrls: ['./credits-list.component.scss']
+  selector: "app-credits-list",
+  templateUrl: "./credits-list.component.html",
+  styleUrls: ["./credits-list.component.scss"],
 })
-export class CreditsListComponent implements OnInit {
-
-  constructor() { }
-
-  ngAfterViewInit(): void {
-  }
-
-}
+export class CreditsListComponent {}

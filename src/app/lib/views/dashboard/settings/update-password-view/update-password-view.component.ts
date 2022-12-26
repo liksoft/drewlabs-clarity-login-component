@@ -51,7 +51,7 @@ export class UpdatePasswordViewComponent implements OnInit, OnDestroy {
   constructor(private builder: FormBuilder) {}
 
   // tslint:disable-next-line: typedef
-  ngAfterViewInit() {
+  ngOnInit() {
     this.formGroup.setValidators(
       CustomValidators.match("password", "password_confirmation")
     );

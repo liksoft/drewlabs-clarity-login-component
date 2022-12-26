@@ -275,7 +275,10 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
       httpClient: HttpClient as Type<any>,
     }),
     SettingsModule.forRoot({
-      debug: true
+      debug: true,
+      pagination: {
+        perPage: 3
+      }
     }),
 
     // Feature modules

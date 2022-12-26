@@ -1,6 +1,5 @@
 import { Inject, Injectable, OnDestroy, Optional } from "@angular/core";
 import { useQuery } from "@azlabsjs/ngx-query";
-import { QueryProviderType } from "@azlabsjs/rx-query";
 import {
   BehaviorSubject,
   Subject,
@@ -11,26 +10,23 @@ import {
   takeUntil,
   tap,
 } from "rxjs";
+import { defaultSettingConfigs } from "./defaults";
 import {
   QueryConfigType,
-  ResponseInterceptorType,
   SETTINGS_QUERY_CLIENT,
   SETTING_PROVIDER_CONFIG,
   SettingProviderConfigType,
   SettingsProviderType,
+  SettingsQueryProviderType,
   SliceQueryType,
 } from "./types";
-
-const CHUNK_SIZE_LIMIT = 5;
-const QUERY_INTERVAL = 30000;
 
 @Injectable({
   providedIn: "root",
 })
 export class SettingsProvider implements SettingsProviderType, OnDestroy {
-  /**
-   * @internal
-   */
+
+  // #region class properties
   private _settings = new BehaviorSubject(
     new Map<string, Record<string, unknown>[]>()
   );
@@ -38,24 +34,14 @@ export class SettingsProvider implements SettingsProviderType, OnDestroy {
     return this._settings.asObservable();
   }
   private _destroy$ = new Subject<void>();
+  // #region class properties
 
   constructor(
     @Inject(SETTINGS_QUERY_CLIENT)
-    private queryProvider: QueryProviderType<
-      [
-        string,
-        string,
-        Record<string, string> | undefined,
-        ResponseInterceptorType | undefined
-      ]
-    >,
+    private queryProvider: SettingsQueryProviderType,
     @Inject(SETTING_PROVIDER_CONFIG)
     @Optional()
-    private config: SettingProviderConfigType = {
-      debug: false,
-      chunkSize: CHUNK_SIZE_LIMIT,
-      resultItemsKey: "data",
-    }
+    private config: SettingProviderConfigType = defaultSettingConfigs
   ) {
     // For debugging purpose
     if (this.config.debug) {
@@ -63,7 +49,7 @@ export class SettingsProvider implements SettingsProviderType, OnDestroy {
         .pipe(
           takeUntil(this._destroy$),
           tap((state) => {
-            console.log("Setting state: ", state);
+            console.log("Settings state: ", state);
           })
         )
         .subscribe();
@@ -73,14 +59,15 @@ export class SettingsProvider implements SettingsProviderType, OnDestroy {
   loadSlice(query: SliceQueryType) {
     // For better performance and in order not to load the server
     // with request, we will create a chunk of query parameters
-    const chunks = this.chunkQueryParams(query, this.config?.chunkSize);
+    // We default the chunk size to 5, if configuration instance is not injected
+    const chunks = this.chunkQueryParams(query, this.config?.chunkSize ?? 5);
     let _interval = 0;
     // For the first chunk we do not provide any delay
-    const first = chunks[0];
-    const requests = [forkJoin(first.map((param) => this.querySlice(param)))];
-    const least = chunks.slice(1);
-    for (const chunk of least) {
-      _interval += QUERY_INTERVAL;
+    const requests = [
+      forkJoin(chunks[0].map((param) => this.querySlice(param))),
+    ];
+    for (const chunk of chunks.slice(1)) {
+      _interval += this.config?.queryInterval ?? 300000;
       const request = interval(_interval).pipe(
         take(1),
         mergeMap(() => forkJoin(chunk.map((param) => this.querySlice(param))))
@@ -93,11 +80,7 @@ export class SettingsProvider implements SettingsProviderType, OnDestroy {
   /**
    * Chuck the query parameters in a predefined size
    */
-  private chunkQueryParams<T>(
-    list: T[],
-    size: number = CHUNK_SIZE_LIMIT
-  ): T[][] {
-    size = Math.min(CHUNK_SIZE_LIMIT, size);
+  private chunkQueryParams<T>(list: T[], size: number): T[][] {
     const temp = [];
     for (let index = 0; index < list.length; index += size) {
       temp.push(list.slice(index, index + size));
@@ -110,26 +93,31 @@ export class SettingsProvider implements SettingsProviderType, OnDestroy {
    * cache provider
    */
   private querySlice(param: QueryConfigType) {
-    const { method, endpoint, params, responseInterceptor } = param;
+    const { method, endpoint, params, responseInterceptor, key } = param;
     return useQuery(
       this.queryProvider,
       method ?? "GET",
       endpoint,
+      this.createResponseCallback(key).bind(this),
       params,
-      responseInterceptor
-    ).pipe(
-      tap((state) => {
-        if (state) {
-          const items = state[this.config?.resultItemsKey ?? "data"] ?? state;
-          const cache = this._settings.getValue();
-          const entries = [
-            ...(cache.get(param.key) ?? []),
-            ...(items as Record<string, unknown>[]),
-          ];
-          this._settings.next(cache.set(param.key, entries));
-        }
-      })
+      responseInterceptor ?? this.config?.responseInterceptor
     );
+  }
+
+  /**
+   * Creates a callback that is invoked whenever a new slice of 
+   * data is loaded from the backend server. It will notify the settings
+   * store whenever the data became available
+   */
+  createResponseCallback(key: string) {
+    return (items: Record<string, unknown>[], partial: boolean) => {
+      const cache = this._settings.getValue();
+      if (partial && cache.has(key) && (cache.get(key) ?? []).length !== 0) {
+        console.log('Updating store with partially loaded values, while store does not have data...');
+        return;
+      }
+      this._settings.next(cache.set(key, items));
+    };
   }
 
   /**

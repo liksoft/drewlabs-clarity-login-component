@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component, Inject } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { JSDate } from "@azlabsjs/js-datetime";
 import { APP_CONFIG_MANAGER, ConfigurationManager } from "@azlabsjs/ngx-config";
@@ -21,7 +21,7 @@ import {
     </ng-container>
   `,
 })
-export class IndividualMemberAddComponent implements OnInit {
+export class IndividualMemberAddComponent {
   form$ = this.client.get(
     this.configManager.get(
       "forms.views.createIndividualClient",
@@ -33,11 +33,9 @@ export class IndividualMemberAddComponent implements OnInit {
     @Inject(FORM_CLIENT) private client: FormsClient,
     @Inject(APP_CONFIG_MANAGER) private configManager: ConfigurationManager,
     private activateRoute: ActivatedRoute,
-    @Inject(UI_STATE_PROVIDER) private uiState: UIStateProvider,
-    // private individuals: IndividualMembersService
-  ) {}
-
-  ngAfterViewInit(): void {}
+    @Inject(UI_STATE_PROVIDER) private uiState: UIStateProvider
+  ) // private individuals: IndividualMembersService
+  {}
 
   async onSubmit(event: Record<string, unknown>) {
     const details = event["by"] as Record<string, unknown>;

@@ -1,15 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-dat-list',
-  templateUrl: './dat-list.component.html',
-  styleUrls: ['./dat-list.component.scss']
+  selector: "app-dat-list",
+  templateUrl: "./dat-list.component.html",
+  styleUrls: ["./dat-list.component.scss"],
 })
-export class DatListComponent implements OnInit {
-
-  constructor() { }
-
-  ngAfterViewInit(): void {
-  }
-
-}
+export class DatListComponent {}

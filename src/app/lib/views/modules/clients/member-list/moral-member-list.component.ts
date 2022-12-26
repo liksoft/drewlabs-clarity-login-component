@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef } from "@angular/core";
+import { Component, Input, TemplateRef } from "@angular/core";
 import { Router } from "@angular/router";
 import { GridColumnType } from "@azlabsjs/ngx-clr-smart-grid";
 import { routes } from "src/app/lib/views/routes";
@@ -38,7 +38,7 @@ import { routes } from "src/app/lib/views/routes";
   `,
   styles: [],
 })
-export class MoralMemberListComponent implements OnInit {
+export class MoralMemberListComponent {
   //#region Component inputs
   @Input() overflowTemplate!: TemplateRef<any>;
   @Input() actionBarTemplate!: TemplateRef<any>;
@@ -48,9 +48,6 @@ export class MoralMemberListComponent implements OnInit {
 
   // Creates an instance of the current component
   constructor(private router: Router) {}
-
-  // Component init cycle listener
-  ngAfterViewInit(): void {}
 
   dgOnCreate(event: Event) {
     this.router.navigateByUrl(

@@ -2,24 +2,40 @@ import { InjectionToken } from "@angular/core";
 import { QueryProviderType } from "@azlabsjs/rx-query";
 import { Observable } from "rxjs";
 
+/**
+ * Type definition of the settings query provider type
+ */
+export type SettingsQueryProviderType = QueryProviderType<
+  [
+    string,
+    string,
+    (items: Record<string, unknown>[], partial: boolean) => void,
+    Record<string, string> | undefined,
+    ResponseInterceptorType | undefined
+  ]
+>;
+
+export type ResponseInterceptorType = <T extends any>(
+  response: T
+) => Record<string, unknown>[];
+
 export type SettingProviderConfigType = {
   debug: boolean;
   chunkSize?: number;
-  resultItemsKey?: string
+  queryInterval?: number;
+  responseInterceptor?: ResponseInterceptorType;
+  pagination?: {
+    perPage: number;
+  };
 };
 
-export const SETTINGS_QUERY_CLIENT = new InjectionToken<QueryProviderType>(
-  "Setting query provider type"
-);
+export const SETTINGS_QUERY_CLIENT =
+  new InjectionToken<SettingsQueryProviderType>("Setting query provider type");
 
 export const SETTING_PROVIDER_CONFIG =
   new InjectionToken<SettingProviderConfigType>(
     "Provides setting provider configuration values"
   );
-
-export type ResponseInterceptorType = <T extends any>(
-  response: T
-) => Record<string, unknown>;
 
 export type QueryConfigType = {
   key: string;
@@ -51,3 +67,12 @@ export interface SettingsProviderType {
    */
   loadSlice(query: SliceQueryType): void;
 }
+
+/**
+ * @internal
+ */
+export type PaginationChunkFunctionType = (
+  total: number,
+  perPage: number,
+  chunkSize: number
+) => number[][];
