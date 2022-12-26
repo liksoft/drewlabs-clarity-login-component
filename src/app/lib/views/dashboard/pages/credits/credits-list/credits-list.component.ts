@@ -9,7 +9,7 @@ export class CreditsListComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
   }
 
 }

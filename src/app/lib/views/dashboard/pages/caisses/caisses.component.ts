@@ -9,7 +9,7 @@ export class CaissesComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
   }
 
 }

@@ -9,7 +9,7 @@ export class DatListComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
   }
 
 }

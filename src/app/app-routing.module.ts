@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { Routes, RouterModule } from "@angular/router";
+import { RouterModule, Routes } from "@angular/router";
 import { AUTH_RESOURCES_AUTHORIZATIONS } from "./lib/views/authorizations";
 import { routes as routeDefinitions } from "./lib/views/routes";
 
@@ -18,6 +18,15 @@ const routes: Routes = [
       authorizations: AUTH_RESOURCES_AUTHORIZATIONS,
       moduleName: "Système de Gestion Intégré",
     },
+  },
+  // Porvides independant module routing before the dashboard routing
+  // for more specific routing when navigating to the dashboard components
+  {
+    path: `${routeDefinitions.dashboardRoute}/${routeDefinitions.clientsModuleRoute}`,
+    loadChildren: () =>
+      import("./lib/views/modules/clients/clients.module").then(
+        (m) => m.ClientsModule
+      ),
   },
   {
     path: routeDefinitions.dashboardRoute,

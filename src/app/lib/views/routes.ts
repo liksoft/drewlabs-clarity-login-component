@@ -1,3 +1,6 @@
+import { partialConfigs } from "./partials/partials-configs";
+import { RoutesMap } from "./partials/routes";
+
 export const routes = {
   // CLIENTS
   clientsModuleRoute: "clients",
@@ -35,6 +38,19 @@ export const routes = {
   datAddRoute: "dat_add",
 
   // Common
-  dashboardRoute: 'dashboard',
-  dashboardHome: 'home'
+  dashboardRoute: "dashboard",
+  dashboardHome: "home",
+};
+
+// Routes Mapping
+export const defaults = {
+  map: [
+    {
+      key: "topbar_dashboard",
+      route: `/${partialConfigs.routes.commonRoutes.dashboardRoute}/${partialConfigs.routes.commonRoutes.homeRoute}`,
+    },
+  ] as RoutesMap[],
+  definitions: {
+    topbar_dashboard: "Tableau de bord",
+  },
 };

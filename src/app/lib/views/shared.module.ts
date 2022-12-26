@@ -1,17 +1,20 @@
+import { DragDropModule } from "@angular/cdk/drag-drop";
 import { CommonModule } from "@angular/common";
-import { NgModule, ModuleWithProviders, LOCALE_ID } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
+import { LOCALE_ID, ModuleWithProviders, NgModule } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { NgxClrSmartGridModule } from "@azlabsjs/ngx-clr-smart-grid";
+import { NgxSmartFormModule } from "@azlabsjs/ngx-smart-form";
 import { ClarityModule } from "@clr/angular";
 import { TranslateModule } from "@ngx-translate/core";
-import { DragDropModule } from "@angular/cdk/drag-drop";
-import { ProgressBarModule } from "./partials/progress-bar";
-import { UIStateComponentsModule } from "./partials/ui-state";
-import { TopBarModule } from "./partials/topbar";
-import { SidebarModule } from "./partials/sidebar";
+import { SettingsModule } from "src/app/libs/ngx-settings";
 import { StrategyBasedAuthModule } from "./login/core";
-import { NgxSmartFormModule } from "@azlabsjs/ngx-smart-form";
-import { NgxClrSmartGridModule } from "@azlabsjs/ngx-clr-smart-grid";
+import { NavModule } from "./modules/nav";
+import { AzlDashboardModule } from "./partials/dashboard/dashboard.module";
+import { ProgressBarModule } from "./partials/progress-bar";
+import { SidebarModule } from "./partials/sidebar";
+import { TopBarModule } from "./partials/topbar";
+import { UIStateComponentsModule } from "./partials/ui-state";
 
 @NgModule({
   imports: [
@@ -39,10 +42,17 @@ import { NgxClrSmartGridModule } from "@azlabsjs/ngx-clr-smart-grid";
 
     // TODO : EXPORT StrategyBasedAuthModule
     StrategyBasedAuthModule,
+    NavModule,
 
     // azlabsjs modules
     NgxSmartFormModule,
     NgxClrSmartGridModule,
+
+    // Export Azl dashboard module
+    AzlDashboardModule,
+
+    // Azl Settings module
+    SettingsModule,
   ],
   declarations: [],
   providers: [{ provide: LOCALE_ID, useValue: "fr" }],

@@ -4,7 +4,7 @@ import { GridColumnType } from "@azlabsjs/ngx-clr-smart-grid";
 import { routes } from "src/app/lib/views/routes";
 
 @Component({
-  selector: "app-moral-member-list",
+  selector: "app-individual-member-list",
   template: `
     <ngx-clr-smart-grid
       [config]="{
@@ -38,27 +38,26 @@ import { routes } from "src/app/lib/views/routes";
   `,
   styles: [],
 })
-export class MoralMemberListComponent implements OnInit {
-  //#region Component inputs
+export class IndividualMemberListComponent implements OnInit {
   @Input() overflowTemplate!: TemplateRef<any>;
   @Input() actionBarTemplate!: TemplateRef<any>;
   @Input() columns!: GridColumnType[];
   @Input() createRoute!: string;
-  //#endregion Component inputs
 
   // Creates an instance of the current component
   constructor(private router: Router) {}
 
   // Component init cycle listener
-  ngOnInit(): void {}
+  ngAfterViewInit(): void {}
 
   dgOnCreate(event: Event) {
     this.router.navigateByUrl(
       this.createRoute ??
-        `${routes.dashboardRoute}/${routes.clientsModuleRoute}/${routes.moralClientRoute}`
+        `${routes.dashboardRoute}/${routes.clientsModuleRoute}/${routes.individualClientRoute}`
     );
   }
+
   dgOnRefresh(event: Event) {
-    console.log("MoralMemberListComponent: Refresh button clicked!");
+    console.log("IndividualMemberListComponent: Refresh button clicked!");
   }
 }

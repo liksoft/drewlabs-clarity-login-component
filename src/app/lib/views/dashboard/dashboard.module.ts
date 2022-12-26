@@ -1,20 +1,14 @@
 import { NgModule } from "@angular/core";
+import { HighchartsChartModule } from "highcharts-angular";
+import { SharedModule } from "../shared.module";
 import {
-  MODULE_DECLARATIONS,
   AdminDashboardRoutingModule,
   COMPONENTS_PROVIDERS,
+  MODULE_DECLARATIONS,
 } from "./dashboard-routing.module";
-import { SharedModule } from "../shared.module";
-import { HighchartsChartModule } from "highcharts-angular";
-import { ClientsModule } from "./pages/clients/clients.module";
 
 @NgModule({
-  imports: [
-    AdminDashboardRoutingModule,
-    SharedModule,
-    HighchartsChartModule,
-    ClientsModule,
-  ],
+  imports: [AdminDashboardRoutingModule, SharedModule, HighchartsChartModule],
   declarations: [...MODULE_DECLARATIONS],
   exports: [...MODULE_DECLARATIONS],
   providers: [...COMPONENTS_PROVIDERS],

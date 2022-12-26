@@ -9,7 +9,7 @@ export class BanksOperationAddComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
   }
 
 }

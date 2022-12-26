@@ -9,7 +9,7 @@ export class CaisseOperationsComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
   }
 
 }

@@ -8,7 +8,7 @@ import { SharedModule } from "./lib/views/shared.module";
 
 // Register Fr local for it to be applied to global application local
 import { registerLocaleData } from "@angular/common";
-import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from "@angular/common/http";
 import localeFrExtra from "@angular/common/locales/extra/fr";
 import localeFr from "@angular/common/locales/fr";
 import { NgxSmartFormModule } from "@azlabsjs/ngx-smart-form";
@@ -44,6 +44,7 @@ import { HTTP_HOST, QueryModule } from "@azlabsjs/ngx-query";
 import { HttpResponse } from "@azlabsjs/requests";
 import { interval, lastValueFrom } from "rxjs";
 import { first, map, tap } from "rxjs/operators";
+import { TestAuthInterceptor } from './lib/bloc';
 import {
   AUTH_ACTION_HANDLERS,
   AUTH_CLIENT_CONFIG,
@@ -51,6 +52,8 @@ import {
   AuthStrategies,
 } from "./lib/views/login/constants";
 import { LocalStrategy, StrategyBasedAuthModule } from "./lib/views/login/core";
+import { ClientsModule } from './lib/views/modules/clients';
+import { SettingsModule } from './libs/ngx-settings';
 // #endregion Dropzone configuration
 
 registerLocaleData(localeFr, "fr", localeFrExtra);
@@ -271,6 +274,12 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
       },
       httpClient: HttpClient as Type<any>,
     }),
+    SettingsModule.forRoot({
+      debug: true
+    }),
+
+    // Feature modules
+    ClientsModule.forRoot()
   ],
   providers: [
     TranslateService,
@@ -281,6 +290,11 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
         secret: environment.auth.clientSecret,
       },
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TestAuthInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent],
 })

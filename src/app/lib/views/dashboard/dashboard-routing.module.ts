@@ -1,29 +1,26 @@
-import { CreditsComponent } from "./pages/credits/credits.component";
+import { LOCALE_ID, NgModule, Provider } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
+import { routes } from "../routes";
+import { DashboardComponent } from "./dashboard.component";
 import { AccountListComponent } from "./pages/accounts/account-list/account-list.component";
 import { AccountsComponent } from "./pages/accounts/accounts.component";
-import { NgModule, LOCALE_ID, Provider } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
-import { DashboardComponent } from "./dashboard.component";
-import { DashboardHomeComponent } from "./pages/home/home.component";
-import { AppNavComponent } from "./app-nav/app-nav.component";
-import { SettingsComponent } from "./settings/settings.component";
-import { UpdatePasswordViewComponent } from "./settings/update-password-view/update-password-view.component";
-import { CreditsListComponent } from "./pages/credits/credits-list/credits-list.component";
-import { CreditsAddComponent } from "./pages/credits/credits-add/credits-add.component";
-import { CaissesComponent } from "./pages/caisses/caisses.component";
-import { CaissesListComponent } from "./pages/caisses/caisses-list/caisses-list.component";
-import { CaissesAddComponent } from "./pages/caisses/caisses-add/caisses-add.component";
-import { BanksComponent } from "./pages/banks/banks.component";
+import { BanksAddComponent } from "./pages/banks/banks-add/banks-add.component";
 import { BanksListComponent } from "./pages/banks/banks-list/banks-list.component";
 import { BanksOperationAddComponent } from "./pages/banks/banks-operation-add/banks-operation-add.component";
-import { BanksAddComponent } from "./pages/banks/banks-add/banks-add.component";
-import { DatComponent } from "./pages/dat/dat.component";
-import { DatListComponent } from "./pages/dat/dat-list/dat-list.component";
-import { DatAddComponent } from "./pages/dat/dat-add/dat-add.component";
+import { BanksComponent } from "./pages/banks/banks.component";
 import { CaisseOperationsComponent } from "./pages/caisses/caisse-operations/caisse-operations.component";
-import { routes } from "../routes";
-import { ClientsComponent } from "./pages/clients/clients.component";
-import { CLIENT_ROUTES } from "./pages/clients/routes";
+import { CaissesAddComponent } from "./pages/caisses/caisses-add/caisses-add.component";
+import { CaissesListComponent } from "./pages/caisses/caisses-list/caisses-list.component";
+import { CaissesComponent } from "./pages/caisses/caisses.component";
+import { CreditsAddComponent } from "./pages/credits/credits-add/credits-add.component";
+import { CreditsListComponent } from "./pages/credits/credits-list/credits-list.component";
+import { CreditsComponent } from "./pages/credits/credits.component";
+import { DatAddComponent } from "./pages/dat/dat-add/dat-add.component";
+import { DatListComponent } from "./pages/dat/dat-list/dat-list.component";
+import { DatComponent } from "./pages/dat/dat.component";
+import { DashboardHomeComponent } from "./pages/home/home.component";
+import { SettingsComponent } from "./settings/settings.component";
+import { UpdatePasswordViewComponent } from "./settings/update-password-view/update-password-view.component";
 
 export const getRoutes = () => {
   const childRoutes: Routes = [
@@ -36,11 +33,6 @@ export const getRoutes = () => {
     {
       path: routes.dashboardHome,
       component: DashboardHomeComponent,
-    },
-    {
-      path: `${routes.clientsModuleRoute}`,
-      component: ClientsComponent,
-      children: CLIENT_ROUTES
     },
     // ACCOUNTS
     {
@@ -126,8 +118,6 @@ export class AdminDashboardRoutingModule {}
 export const MODULE_DECLARATIONS = [
   DashboardHomeComponent,
   DashboardComponent,
-  // Navigation component
-  AppNavComponent,
   // Accounts & Settings components
   SettingsComponent,
   UpdatePasswordViewComponent,
