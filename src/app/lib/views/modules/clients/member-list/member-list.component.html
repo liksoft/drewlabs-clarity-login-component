@@ -1,45 +1,27 @@
 <div class="clr-row">
   <div class="clr-col-12 lik-card">
     <div class="lik-card-title" [translate]="'Annuaire des Membres'"></div>
-    <div
-      class="lik-card-description"
-      [translate]="
+    <div class="lik-card-description" [translate]="
         'Consulter, modifier des informations et des statuts des membres'
-      "
-    ></div>
+      "></div>
     <div class="divider"></div>
     <div class="data-container clr-row">
       <!-- Card Start -->
       <div class="clr-col-12 clr-data">
         <clr-tabs clrLayout="horizontal">
           <clr-tab>
-            <button
-              title="Personnes physiques"
-              clrTabLink
-              [translate]="'Personnes physiques'"
-            ></button>
+            <button title="Personnes physiques" clrTabLink [translate]="'Personnes physiques'"></button>
             <clr-tab-content *clrIfActive>
-              <app-individual-member-list
-                [columns]="individualColumns"
-                [actionBarTemplate]="actionBarTemplate"
-                [overflowTemplate]="dgOverflowTemplate"
-              ></app-individual-member-list>
+              <app-individual-member-list [columns]="individualColumns" [actionBarTemplate]="actionBarTemplate"
+                [overflowTemplate]="dgOverflowTemplate"></app-individual-member-list>
             </clr-tab-content>
           </clr-tab>
 
           <clr-tab>
-            <button
-              title="Personnes Morales"
-              [translate]="'Personnes Morales'"
-              clrTabLink
-            ></button>
+            <button title="Personnes Morales" [translate]="'Personnes Morales'" clrTabLink></button>
             <clr-tab-content>
-
-              <app-moral-member-list
-                [columns]="moralColumns"
-                [actionBarTemplate]="actionBarTemplate"
-                [overflowTemplate]="dgOverflowTemplate"
-              ></app-moral-member-list>
+              <app-moral-member-list [columns]="moralColumns" [actionBarTemplate]="actionBarTemplate"
+                [overflowTemplate]="dgOverflowTemplate"></app-moral-member-list>
             </clr-tab-content>
           </clr-tab>
         </clr-tabs>
@@ -49,39 +31,21 @@
   </div>
 </div>
 
-<ng-template
-  #actionBarTemplate
-  let-selected="selected"
-  let-refresh="refresh"
-  let-create="create"
->
+<ng-template #actionBarTemplate let-selected="selected" let-refresh="refresh" let-create="create">
   <div class="btn-group">
-    <button
-      type="button"
-      class="btn btn-sm btn-primary"
-      (click)="create($event)"
-    >
+    <button type="button" class="btn btn-sm btn-primary" (click)="create($event)">
       <clr-icon shape="plus"></clr-icon>
       Nouveau
     </button>
-    <button
-      type="button"
-      class="btn btn-sm btn-primary"
-      (click)="refresh($event)"
-    >
+    <button type="button" class="btn btn-sm btn-primary" (click)="refresh($event)">
       <clr-icon shape="refresh"></clr-icon>
       Refraîchir
     </button>
   </div>
 </ng-template>
 
-<ng-template
-  #dgOverflowTemplate
-  let-item="item"
-  let-detailsClick="detailsClick"
-  let-updateDetails="updateDetails"
-  let-updateStatus="updateStatus"
->
+<ng-template #dgOverflowTemplate let-item="item" let-detailsClick="detailsClick" let-updateDetails="updateDetails"
+  let-updateStatus="updateStatus">
   <button class="action-item">
     <clr-icon shape="user"></clr-icon>
     Fiche signalétique

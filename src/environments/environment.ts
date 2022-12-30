@@ -25,13 +25,20 @@ export const environment = {
     },
   },
   api: {
-    // host: '',
-    host: "https://coopecclients.lik.tg/",
-    endpoints: {
-      clients: {
+    clients: {
+      host: "https://coopecclients.lik.tg/",
+      endpoints: {
         addresses: "api/v1/addresses",
         individuals: "api/v1/individuals",
         morals: "api/v1/morals",
+        memberTypes: "api/member-types",
+        memberCategories: "api/member-categories"
+      },
+    },
+    configurations: {
+      host: "https://coopecsettings.lik.tg/",
+      endpoints: {
+        agencies: "api/agencies",
       },
     },
   },
@@ -47,7 +54,7 @@ export const environment = {
   },
   testing: {
     _authToken:
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI4NTk3ODJFMS05QTJGLTQ5QTQtOUQ0Mi1CNTlBNzhFNTIwRkIiLCJqdGkiOiI5OGNmZGZlNTZmOWM3MDUwNTQxOWVhNDgxNDEwZDAyYWYyNzYzZjNmODNhMzEwYTc1ZmUyYzc1NjgxYTdiMmQ3MTA3M2M0MDg1MmZhY2U5ZSIsImlhdCI6MTY3MjA2OTQ0OS40MTQ3MDQsIm5iZiI6MTY3MjA2OTQ0OS40MTQ3MDksImV4cCI6MTY3MjE1NTg0OS40MDY2MzYsInN1YiI6IjEzIiwic2NvcGVzIjpbImNvb3BlYzpjdXN0b21lcnM6bWVtYmVyc2hpcHM6bGlzdCJdfQ.XgBR7zctsZmZtzZzjqUrA7wLay5gqwCqd5fOGFm8NcrM2rE_qGZavEd5jDG1p9VP4kD4z6fFKuYNXIxzj_a2o9vEJRn9YZ1lThFyZoOZ2MGTe6Y9PYF0XxT4GZ5O70vOHcyFmvgkdtKd2cSyWP7fVMC-azJcicn5n2ByXg2Hh2OotTIKrPtquEEwlJN-B-EL--vryYPbnKyncc7bo0A7mQRxN9Fc34GcZEC88FCdyDsYuRCnjN31JYQlgCiWrlXr4RnplLj37qIJoaGH4X-coP2bXz_cBeCuEqe85gr3dlTVqDSjOUiR0Xw0LTU3iAUyz5JavAg0kt7iD0qQfH2pfWpq4W5JLXEOJu9_bAIKHaUKDKU5vxtXKac1__h5KVcx1qTaVPcUGCq4QSlLTUO85LrMxD3RsvbAGX5nkgrRnPcZwpLDsxktYKegE7D90iv1btQystcUkEJpEom712LORP9n18wWjYHTdZpfZLmnyWSAO5mYU69gTWpBtvxowKeh-_mG-2ym3mrDFtGzSred5Zil9gbbsaBu-XOgKxTbVJtqQfEARCVXqA1gJFUE5AzNStbAPwfYq6CZ3Evt_B76J482_yTPSmPCeS7DFRCpKNR8vZLTmaPWW0N5RdUUzED_if7TuKQyxj-jRSESOteh3M0ZRp9cw6oyVAkxjbGaW64",
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI4NTk3ODJFMS05QTJGLTQ5QTQtOUQ0Mi1CNTlBNzhFNTIwRkIiLCJqdGkiOiI0MGU5YzI4Y2Q0MWRkZDhlNDdiZGZlNzVkYjY2YmU1YTc5ZTRiMTU4OWIxMzQ1YWQyMjg4ZmVmMTY2ZDJjYjgxM2MxNDgxMzZjZWI2ZWNiMSIsImlhdCI6MTY3MjI2MDUwMS45NjIxMTYsIm5iZiI6MTY3MjI2MDUwMS45NjIxMTksImV4cCI6MTY3MjM0NjkwMS45NjAyNDEsInN1YiI6IjEzIiwic2NvcGVzIjpbImNvb3BlYzpjdXN0b21lcnM6bWVtYmVyc2hpcHM6bGlzdCJdfQ.I0j8xEa93wxmxwY9_JpgPR5RPtPDRTo6ro2QKJCo0HOIfpS3XpijjQSP4ZbZzgVIsg4LLhNQTV-m4TpytiCp8yBXw9QAc93gbiiyZBUjG5i0xT7U8hWSIm76ATF8dXL8B4qILHjmoWYu-xc1wk5_vKU4LbuK9TRB7dVkCA7xfK0BBVoY69N6tA359Vt0O6B3QpgFVLhQBh6RUxPZg0R9KdwcNWsrq0jz-xS_3h4mENA9NuaLxrcrVGe93YBd-8kFc84BdXNcWY0zkNGvjJw36NPIm_BeDAj15Jp2f6alde3kw19aYbjPmdpyBG5V-YLUCAvh5BJm5pZghRSCKFkvbCHZ_cb1Ci8AGmHaGOjPtehQDsG5YR8NmccWvzAphJmXnBHF9vAJWmwfSGacB4UdsxnzjZy92uDLE_P0z8pkk3jVPWwjUTtACX5bKyDxNRxhqSWiLNkwxiUxlGXzjzszBb4mtFWl8QiNXQtHrI8D2Q7oAIaBfgiPo_kqZqIfR49W1D39FVusCaKhLAgkMnWqHqB50UdoG_0vfvY0HAs813n2u8QPiHww44rmDhQqPj8Pu5rdhvSUXVxow9jjkviVhWY90onIF4RPibMSYdEMVzzIT5mqDqB4Juso8PComBTciVqi-zBiqt5ykLI16CH9uodv9vGI0lLvjpwv0PKLm8E",
   },
 };
 
@@ -59,4 +66,3 @@ export const environment = {
  * on performance if an error is thrown.
  */
 // import 'zone.js/plugins/zone-error'; // Included with Angular CLI.
-

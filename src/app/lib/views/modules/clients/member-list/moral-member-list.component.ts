@@ -55,7 +55,7 @@ export class MoralMemberListComponent {
         `${routes.dashboardRoute}/${routes.clientsModuleRoute}/${routes.moralClientRoute}`
     );
   }
-  dgOnRefresh(event: Event) {
-    console.log("MoralMemberListComponent: Refresh button clicked!");
-  }
+
+  //
+  dgOnRefresh(event: Event) {}
 }

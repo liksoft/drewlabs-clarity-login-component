@@ -3,4 +3,7 @@ export const settingEnvironment = {
     memberCatories: "clients.members.categories",
     memberTypes: "clients.members.types",
   },
+  configurations: {
+    agencies: 'parameters.agencies'
+  }
 };

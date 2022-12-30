@@ -119,21 +119,36 @@ export class ClientsModule {
             config: ConfigurationManager
           ) => {
             return async () => {
-              console.log("Executing app initializers...");
               provider.loadSlice([
                 {
                   endpoint: `${config.get(
                     "api.host",
-                    environment.api.host
-                  )}/api/member-categories`,
+                    environment.api.clients.host
+                  )}/${config.get(
+                    "api.clients.endpoints.memberCategories",
+                    environment.api.clients.endpoints.memberCategories
+                  )}`,
                   key: settingEnvironment.clients.memberCatories,
                 },
                 {
                   endpoint: `${config.get(
                     "api.host",
-                    environment.api.host
-                  )}/api/member-types`,
+                    environment.api.clients.host
+                  )}/${config.get(
+                    "api.clients.endpoints.memberTypes",
+                    environment.api.clients.endpoints.memberTypes
+                  )}`,
                   key: settingEnvironment.clients.memberTypes,
+                },
+                {
+                  endpoint: `${config.get(
+                    "api.configurations.host",
+                    environment.api.configurations.host
+                  )}/${config.get(
+                    "api.configurations.endpoints.agencies",
+                    environment.api.configurations.endpoints.agencies
+                  )}`,
+                  key: settingEnvironment.configurations.agencies,
                 },
               ]);
               return Promise.resolve(true);
