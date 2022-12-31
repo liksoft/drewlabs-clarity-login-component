@@ -1,7 +1,25 @@
-import { Component, Input, TemplateRef } from "@angular/core";
+import {
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  Output,
+  TemplateRef
+} from "@angular/core";
 import { Router } from "@angular/router";
-import { GridColumnType } from "@azlabsjs/ngx-clr-smart-grid";
-import { routes } from "src/app/lib/views/routes";
+import {
+  GridColumnType,
+  PaginateResult,
+  ProjectPaginateQueryParamType
+} from "@azlabsjs/ngx-clr-smart-grid";
+import { APP_CONFIG_MANAGER, ConfigurationManager } from "@azlabsjs/ngx-config";
+import { useQuery } from "@azlabsjs/ngx-query";
+import { getHttpHost } from "@azlabsjs/requests";
+import { map, mergeMap, Observable, startWith, Subject, tap } from "rxjs";
+import { environment } from "src/environments/environment";
+import { defaultPaginateQuery } from "../datagrid";
+import { GridDataQueryProvider } from "../datagrid/grid-data.query.service";
+import { IndividualClient, IndividualClientType } from "../types";
 
 @Component({
   selector: "app-individual-member-list",
@@ -37,24 +55,117 @@ import { routes } from "src/app/lib/views/routes";
     </ngx-clr-smart-grid>
   `,
   styles: [],
+  providers: [GridDataQueryProvider],
 })
 export class IndividualMemberListComponent {
+  // #region Component input
   @Input() overflowTemplate!: TemplateRef<any>;
   @Input() actionBarTemplate!: TemplateRef<any>;
-  @Input() columns!: GridColumnType[];
   @Input() createRoute!: string;
+  @Input() columns: GridColumnType[] = [
+    {
+      title: "N° membre",
+      label: "member_id",
+    },
+    {
+      title: "Date Ouv.",
+      label: "created_at",
+    },
+    {
+      title: "Nom",
+      label: "by.lastname",
+      transform: "uppercase",
+    },
+    {
+      title: "Prénoms",
+      label: "by.firstname",
+      transform: "uppercase",
+    },
+    {
+      title: "Lien d'affaires",
+      label: "businesslink.label",
+    },
+    {
+      title: "Type",
+      label: "memberType.label",
+    },
+    {
+      title: "Téléphone",
+      label: "by.address.phoneNumber",
+    },
+    {
+      title: "Sexe",
+      label: "by.sex.label",
+    },
+    {
+      title: "Civilité",
+      label: "by.civilstate.label",
+    },
+    {
+      title: "Statut",
+      label: "status",
+    },
+  ];
+  // #endregion Component input
+
+  // #region Component outputs
+  @Output() create = new EventEmitter<Event>();
+  // #endregion Component outputs
+
+  // #region Component internal properties
+  private _dgChanges$ = new Subject<ProjectPaginateQueryParamType>();
+  @Input() requestPath!: string;
+  state$ = this._dgChanges$.pipe(
+    startWith(defaultPaginateQuery),
+    mergeMap(
+      (query) =>
+        useQuery(
+          this.queryProvider,
+          this.requestPath ??
+            `${getHttpHost(
+              this.config.get("api.clients.host", environment.api.clients.host)
+            )}/${this.config.get(
+              "api.clients.endpoints.individuals",
+              environment.api.clients.endpoints.individuals
+            )}`,
+          query,
+          [],
+          ["*", "member", "by.address"],
+          []
+        ) as Observable<PaginateResult<unknown>>
+    ),
+    map(
+      (result) =>
+        ({
+          ...result,
+          data:
+            result?.data
+              .map((item) => IndividualClient.safeParse(item).data)
+              .filter((item) => typeof item !== "undefined" && item !== null) ??
+            [],
+        } as Required<PaginateResult<IndividualClientType>>)
+    ),
+    tap(console.log)
+    // TODO: If possible, use a redux or flux store to share
+    // data between components
+  );
+  // #endregion Component internal properties
 
   // Creates an instance of the current component
-  constructor(private router: Router) {}
-
-  dgOnCreate(event: Event) {
-    this.router.navigateByUrl(
-      this.createRoute ??
-        `${routes.dashboardRoute}/${routes.clientsModuleRoute}/${routes.individualClientRoute}`
-    );
+  constructor(
+    private router: Router,
+    private queryProvider: GridDataQueryProvider,
+    @Inject(APP_CONFIG_MANAGER) private config: ConfigurationManager
+  ) {
+    // Subscribe to the state to test the result
+    this.state$.subscribe();
   }
 
-  dgOnRefresh(event: Event) {
-    console.log("IndividualMemberListComponent: Refresh button clicked!");
+  dgOnCreate(event: Event) {
+    this.create.emit(event);
+  }
+
+  dgOnRefresh(event: ProjectPaginateQueryParamType) {
+    this._dgChanges$.next(event);
   }
 }

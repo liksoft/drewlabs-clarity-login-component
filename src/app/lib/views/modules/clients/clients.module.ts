@@ -1,7 +1,9 @@
+import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { APP_INITIALIZER, ModuleWithProviders, NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { APP_CONFIG_MANAGER, ConfigurationManager } from "@azlabsjs/ngx-config";
 import { HighchartsChartModule } from "highcharts-angular";
+import { TestAuthInterceptor } from "src/app/lib/bloc";
 import { SettingsProvider } from "src/app/libs/ngx-settings";
 import { environment } from "src/environments/environment";
 import { routes as routesConfigs } from "../../routes";
@@ -103,6 +105,13 @@ export class ClientsRoutingModule {}
     MoralMemberAddComponent,
     IndividualMemberListComponent,
     MoralMemberListComponent,
+  ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TestAuthInterceptor,
+      multi: true,
+    },
   ],
 })
 export class ClientsModule {

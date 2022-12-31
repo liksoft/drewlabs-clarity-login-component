@@ -12,7 +12,7 @@
           <clr-tab>
             <button title="Personnes physiques" clrTabLink [translate]="'Personnes physiques'"></button>
             <clr-tab-content *clrIfActive>
-              <app-individual-member-list [columns]="individualColumns" [actionBarTemplate]="actionBarTemplate"
+              <app-individual-member-list [actionBarTemplate]="actionBarTemplate"
                 [overflowTemplate]="dgOverflowTemplate"></app-individual-member-list>
             </clr-tab-content>
           </clr-tab>
@@ -20,7 +20,7 @@
           <clr-tab>
             <button title="Personnes Morales" [translate]="'Personnes Morales'" clrTabLink></button>
             <clr-tab-content>
-              <app-moral-member-list [columns]="moralColumns" [actionBarTemplate]="actionBarTemplate"
+              <app-moral-member-list [actionBarTemplate]="actionBarTemplate"
                 [overflowTemplate]="dgOverflowTemplate"></app-moral-member-list>
             </clr-tab-content>
           </clr-tab>
