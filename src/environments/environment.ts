@@ -39,6 +39,17 @@ export const environment = {
       host: "https://coopecsettings.lik.tg/",
       endpoints: {
         agencies: "api/agencies",
+        civilstates: 'api/civil-states',
+        businesslinks: 'api/business-links',
+        activitysectors: 'api/activity-sectors',
+        genders: 'api/genders',
+        maritalstatuses: 'api/marital-statuses',
+        legalforms: 'api/legal-forms',
+        stakeholdertypes: 'api/stake-holder-types',
+        zones: 'api/zones',
+        countries: 'api/countries',
+        currencies: 'api/currencies',
+        financialorganizations: 'api/financial-organizations'
       },
     },
   },
@@ -54,7 +65,7 @@ export const environment = {
   },
   testing: {
     _authToken:
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI4NTk3ODJFMS05QTJGLTQ5QTQtOUQ0Mi1CNTlBNzhFNTIwRkIiLCJqdGkiOiJmNTUyOTBiYjE2YTM5NTJlNWY4NmZjY2E2ZWU5YmY5ZjY4Nzk0OGQ4NmUwYTRmODA4ODBjNjQwZWJkOGYyMDBmNWEyNjhhNWNhOWUzMjUzNiIsImlhdCI6MTY3MjUwODUwOC45MDg5MjgsIm5iZiI6MTY3MjUwODUwOC45MDg5MzIsImV4cCI6MTY3MjU5NDkwOC45MDE0NjksInN1YiI6IjEzIiwic2NvcGVzIjpbImNvb3BlYzpjdXN0b21lcnM6bWVtYmVyc2hpcHM6bGlzdCJdfQ.L80DvvBWjtTrj93qky3T7hkkMOi1BBx96pJZ6_Ul4ltKP4Mhizh6JfOI8S4d9tH2r6G9ihYTXRk07RPeCma0ZjA1Av5_UYZRqwHNiR1UD4TvF2kH3aUMBcxfkvNBPTpm6LOykLu7klcpmM2dYRNZgkYOiGMSd16Nb9y4PmZt1zcj1-IjSqNpAwT5TVvFcTbaTRWM_qSz0kOUgjAsBsKJs_IVDOn2s8_UyJIS4dBiyqIaPZvz_7XpdAcZp5ZwM0xRgDc64xGAc_3IFYXrcLeEzlow50rbWXza-USP0x1TQr4L5n7N-SLvQOEOZ6vXBu26gvn5Wq-tbytKRfpDrbr1FRjz0TcpPw1AF-vyz19_8pGwoKK0z9S96r7_hF5eMxrunjG0A5J53Q6BHb8eUn7QwHbur9EhFOIljWFnCAhsdjePjB6S5obzQkLX54iLZ6NlfQItswKjmVKC2DCc1Mqe0j9Fq0RYqPAhshWlCokw71q6p9DdRKlCoUVsZmZjpzkvS_2rK4GeEygCtEWkgSmPUKxDSn-ornrpwXGQfMpEBSOaUO6znMsMDqvmIK-Cyx8Lv8d7cWrpVsPH08SvOTOUSjx-ZT8BOMKREzuLCxKrHowZTvyoZ5D-BPM2Mxu-jm88p9bQ8DKK-SeW8N5hpKNG6GCmbv7lKeIf2_1kiX3HlTQ",
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI4NTk3ODJFMS05QTJGLTQ5QTQtOUQ0Mi1CNTlBNzhFNTIwRkIiLCJqdGkiOiI4Y2FhMWZmMmNiYTc1MjEzZTIyYWFkMjVjY2ExNjgyZmFlZDI0YTk5MzNjYjQyMjQ3OGIzODU4ODhhNGU0Y2FiMTNiNzY2MTU2ZjgzNTUzYyIsImlhdCI6MTY3MjY1Mzg2My41MzAzMjUsIm5iZiI6MTY3MjY1Mzg2My41MzAzMjksImV4cCI6MTY3Mjc0MDI2My41MjAzMTgsInN1YiI6IjEzIiwic2NvcGVzIjpbImNvb3BlYzpjdXN0b21lcnM6bWVtYmVyc2hpcHM6bGlzdCJdfQ.iCbV1PklE5TagTPjOTzmQFP2HwiPeCXxJcTQvLyKE_mdIfoVSRytIzrC3mdvbbNL0IEUdUH4VxBorfNifKIzGg_5XfQAKergA73bWC83AoWUNnhYtLfZUusMue6t-DmsPA7RT2TGUiKbDu6fpTJfPrk1CX-y6xzs3GwhPObXcrCpYFfIgCDAFYeYerYSmR-kSHrRtmiW52ga37dIEzIJJlzhz08Lb8b5etQIBhv636f5LeX4iAjUyu0TTZVCHkXXwkKqL6HvtA3Ok39Ifh0Xf0JXZsvZTabStXpSO4qwaI5yXuG23K-qWXegVLaxRNXHlPgaYCQq4jerx1-4w5-xzhhdULlAvZpUSklMdIS3BsuYJsDYIsMG_8OiSKUgPs62hfC4nJgQKep8o_5I-LdPeY6QvUNf92oIC51ldZ1BxTNo9KYFzHzKNzWHFtcr7PM9jTXmqKfeKqE0Mk5H_HzcudpmJLQf4regvHIZUAo9lqPtPUGbQMruCeNyKe8rH0PREcUGwo8LGmdDRy28HsxLoN5FefCXVYsrgQIXB1q7qtbsm0vyc0z31qdXugYzrDb6J8w_z2acmwTNmbD58jaODQYRNyxqNFGv5fxWAjhQR5aFfKJKcdFYccpWhVPxPqhLLYt-elZ_R0foAsn-hPlsKTCni63nU4IU-0UpVAJjCQo",
   },
 };
 

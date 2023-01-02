@@ -1,34 +1,63 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Inject, Injectable, Optional } from "@angular/core";
-import { ProvidesQuery } from "@azlabsjs/ngx-query";
 import { map, mergeMap, of, tap } from "rxjs";
-import { defaultSettingConfigs } from "./defaults";
 import {
   createPaginationChunk,
-  queryPaginationate,
-} from "./settings-query.helpers";
+  queryPaginationate
+} from "./dbsync-query.helpers";
 import {
-  ResponseInterceptorType,
-  SETTING_PROVIDER_CONFIG,
-  SettingProviderConfigType,
-  SettingsQueryProviderType,
+  CHUNK_SIZE_LIMIT,
+  defaultConfigs,
+  DEFAULT_QUERY_REFECTH_INTERVAL
+} from "./defaults";
+import {
+  DBSyncProviderConfigType,
+  DBSyncQueryProviderType,
+  DBSYNC_PROVIDER_CONFIG,
+  QueryCacheConfigType,
+  ResponseInterceptorType
 } from "./types";
 
 @Injectable()
-@ProvidesQuery({
-  observe: "body",
-  refetchInterval: 300000, // Set the refetch interval to 5min
-})
-export class RESTQueryProvider implements SettingsQueryProviderType {
-  // #region class properties
-  // #region class properties
+export class RESTQueryProvider implements DBSyncQueryProviderType {
+  // #region Service properties
+  _cacheConfig!: QueryCacheConfigType;
+  get cacheConfig() {
+    return this._cacheConfig;
+  }
+  private static cacheConfigNamePrefix = `query::bindTo[RESTQueryProvider]`;
+  // #endregion Service properties
 
   constructor(
     private http: HttpClient,
-    @Inject(SETTING_PROVIDER_CONFIG)
+    @Inject(DBSYNC_PROVIDER_CONFIG)
     @Optional()
-    private config: SettingProviderConfigType = defaultSettingConfigs
-  ) {}
+    private readonly config: DBSyncProviderConfigType = defaultConfigs
+  ) {
+    this._cacheConfig = {
+      observe: "body",
+      name: RESTQueryProvider.cacheConfigNamePrefix,
+      refetchInterval: DEFAULT_QUERY_REFECTH_INTERVAL,
+    };
+  }
+
+  // cacheConfig  Setter
+  setCacheConfig(state: Partial<QueryCacheConfigType>) {
+    this._cacheConfig = {
+      ...(this._cacheConfig ?? {}),
+      ...state,
+      name: state.name
+        ? `${RESTQueryProvider.cacheConfigNamePrefix}::${state.name}`
+        : RESTQueryProvider.cacheConfigNamePrefix,
+      // We make sure we always observe, the body of the query request
+      observe: "body",
+    };
+    return this;
+  }
+
+  copy() {
+    return new RESTQueryProvider(this.http, this.config);
+  }
 
   /**
    * {@inheritdoc}
@@ -38,7 +67,7 @@ export class RESTQueryProvider implements SettingsQueryProviderType {
    *
    * We aim for such implementation in order to load the first page of the paginated
    * data and display it to the user whenever requested, and load the remaining pages
-   * in background and notify the settings provider when the data is fully loaded
+   * in background and notify the db provider when the data is fully loaded
    */
   query(
     method: string,
@@ -86,9 +115,12 @@ export class RESTQueryProvider implements SettingsQueryProviderType {
               ),
             response["total"],
             this.config.pagination?.perPage ??
-              defaultSettingConfigs.pagination.perPage,
-            this.config.chunkSize ?? defaultSettingConfigs.chunkSize,
-            this.config.queryInterval ?? defaultSettingConfigs.queryInterval
+              defaultConfigs.pagination?.perPage ??
+              500,
+            this.config.chunkSize ??
+              defaultConfigs.chunkSize ??
+              CHUNK_SIZE_LIMIT,
+            this.config.queryInterval ?? defaultConfigs.queryInterval
           )(createPaginationChunk).pipe(
             // When the pagination data is completed loading, we fetch call the callback
             // with result items, and the partial flag turned off
@@ -110,9 +142,12 @@ export class RESTQueryProvider implements SettingsQueryProviderType {
       endpoint += "?";
     }
     if (endpoint.indexOf("per_page") === -1) {
-      const paginationQuery = `page=${page}&per_page=${
-        this.config.pagination?.perPage ?? 100
-      }`;
+      // The per_page request query is set to be a number between
+      // 100 - 1000 just for optimization and server performance purpose
+      const paginationQuery = `page=${page}&per_page=${Math.min(
+        1000,
+        Math.max(this.config.pagination?.perPage ?? 100, 100)
+      )}`;
       endpoint += endpoint.endsWith("?")
         ? paginationQuery
         : `&${paginationQuery}`;

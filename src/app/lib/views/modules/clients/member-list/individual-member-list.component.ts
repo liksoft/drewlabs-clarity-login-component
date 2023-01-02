@@ -25,6 +25,7 @@ import { IndividualClient, IndividualClientType } from "../types";
   selector: "app-individual-member-list",
   template: `
     <ngx-clr-smart-grid
+      [data]="(state$ | async)?.data ?? []"
       [config]="{
         sizeOptions: [10, 50, 100, 150],
         pageSize: 5
@@ -65,41 +66,42 @@ export class IndividualMemberListComponent {
   @Input() columns: GridColumnType[] = [
     {
       title: "N° membre",
-      label: "member_id",
+      label: "number",
     },
     {
       title: "Date Ouv.",
-      label: "created_at",
+      label: "validatedAt",
+      transform: 'date'
     },
     {
       title: "Nom",
-      label: "by.lastname",
+      label: "lastname",
       transform: "uppercase",
     },
     {
       title: "Prénoms",
-      label: "by.firstname",
+      label: "firstname",
       transform: "uppercase",
     },
     {
       title: "Lien d'affaires",
-      label: "businesslink.label",
+      label: "businesslink",
     },
     {
       title: "Type",
-      label: "memberType.label",
+      label: "type",
     },
     {
       title: "Téléphone",
-      label: "by.address.phoneNumber",
+      label: "phonenumber",
     },
     {
       title: "Sexe",
-      label: "by.sex.label",
+      label: "sex",
     },
     {
       title: "Civilité",
-      label: "by.civilstate.label",
+      label: "civility",
     },
     {
       title: "Statut",

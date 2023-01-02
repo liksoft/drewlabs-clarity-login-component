@@ -7,7 +7,7 @@ import { NgxClrSmartGridModule } from "@azlabsjs/ngx-clr-smart-grid";
 import { NgxSmartFormModule } from "@azlabsjs/ngx-smart-form";
 import { ClarityModule } from "@clr/angular";
 import { TranslateModule } from "@ngx-translate/core";
-import { SettingsModule } from "src/app/libs/ngx-settings";
+import { DBSyncModule } from "src/app/libs/ngx-dbsync";
 import { StrategyBasedAuthModule } from "./login/core";
 import { NavModule } from "./modules/nav";
 import { AzlDashboardModule } from "./partials/dashboard/dashboard.module";
@@ -51,8 +51,8 @@ import { UIStateComponentsModule } from "./partials/ui-state";
     // Export Azl dashboard module
     AzlDashboardModule,
 
-    // Azl Settings module
-    SettingsModule,
+    // Azl db sync module
+    DBSyncModule,
   ],
   declarations: [],
   providers: [{ provide: LOCALE_ID, useValue: "fr" }],

@@ -1,5 +1,5 @@
-import { Observable, forkJoin, interval, map, mergeMap, take } from "rxjs";
-import { PaginationChunkFunctionType } from "./types";
+import { forkJoin, interval, map, mergeMap, Observable, take } from "rxjs";
+import { PaginationChunkReturnType } from "./types";
 
 /**
  * @internal
@@ -37,7 +37,7 @@ export const queryPaginationate = (
   chunkSize: number,
   queryInterval?: number
 ) => {
-  return (chunkFn: PaginationChunkFunctionType) => {
+  return (chunkFn: PaginationChunkReturnType) => {
     // For the first chunk we do not provide any delay
     const chunks: number[][] = chunkFn(total, perPage, chunkSize);
     const first = chunks[0];

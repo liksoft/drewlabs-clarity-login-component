@@ -8,7 +8,11 @@ import { SharedModule } from "./lib/views/shared.module";
 
 // Register Fr local for it to be applied to global application local
 import { registerLocaleData } from "@angular/common";
-import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from "@angular/common/http";
+import {
+  HttpClient,
+  HttpClientModule,
+  HTTP_INTERCEPTORS
+} from "@angular/common/http";
 import localeFrExtra from "@angular/common/locales/extra/fr";
 import localeFr from "@angular/common/locales/fr";
 import { NgxSmartFormModule } from "@azlabsjs/ngx-smart-form";
@@ -16,7 +20,7 @@ import { DOCUMENT_SESSION_STORAGE, StorageModule } from "@azlabsjs/ngx-storage";
 import {
   TranslateLoader,
   TranslateModule,
-  TranslateService,
+  TranslateService
 } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { environment } from "src/environments/environment";
@@ -27,7 +31,7 @@ import {
   UIStateModule,
   UIStateProvider,
   UIStateStatusCode,
-  UI_STATE_PROVIDER,
+  UI_STATE_PROVIDER
 } from "./lib/views/partials/ui-state";
 // #endregion UI state module imports
 
@@ -37,23 +41,24 @@ import { NgxClrSmartGridModule } from "@azlabsjs/ngx-clr-smart-grid";
 import {
   APP_CONFIG_MANAGER,
   ConfigurationManager,
-  NgxConfigModule,
+  NgxConfigModule
 } from "@azlabsjs/ngx-config";
 import { NgxIntlTelInputModule } from "@azlabsjs/ngx-intl-tel-input";
 import { HTTP_HOST, QueryModule } from "@azlabsjs/ngx-query";
 import { HttpResponse } from "@azlabsjs/requests";
 import { interval, lastValueFrom } from "rxjs";
 import { first, map, tap } from "rxjs/operators";
-import { TestAuthInterceptor } from './lib/bloc';
+import { TestAuthInterceptor } from "./lib/bloc";
 import {
+  AuthStrategies,
   AUTH_ACTION_HANDLERS,
   AUTH_CLIENT_CONFIG,
-  AUTH_SERVICE_CONFIG,
-  AuthStrategies,
+  AUTH_SERVICE_CONFIG
 } from "./lib/views/login/constants";
 import { LocalStrategy, StrategyBasedAuthModule } from "./lib/views/login/core";
-import { ClientsModule } from './lib/views/modules/clients';
-import { SettingsModule } from './libs/ngx-settings';
+import { clientsDbSlice, ClientsModule } from "./lib/views/modules/clients";
+import { moduleRoutes } from "./lib/views/modules/routes";
+import { DBSyncModule } from "./libs/ngx-dbsync";
 // #endregion Dropzone configuration
 
 registerLocaleData(localeFr, "fr", localeFrExtra);
@@ -189,6 +194,14 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
             return response;
           };
         },
+        queries: {
+          name: {
+            host: "http://host-custom",
+            interceptor: (injector: Injector) => {
+              return (request, next) => {};
+            },
+          },
+        },
       },
     }),
     StorageModule.forRoot({
@@ -274,15 +287,25 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
       },
       httpClient: HttpClient as Type<any>,
     }),
-    SettingsModule.forRoot({
+    DBSyncModule.forRoot({
       debug: true,
       pagination: {
-        perPage: 3
-      }
+        perPage: 500,
+      },
+      router: {
+        autoload: true,
+        slicesFactory: (injector: Injector) => {
+          return {
+            [`${moduleRoutes.clients}`]: clientsDbSlice(
+              injector.get(APP_CONFIG_MANAGER)
+            ),
+          };
+        },
+      },
     }),
 
     // Feature modules
-    ClientsModule.forRoot()
+    ClientsModule.forRoot(),
   ],
   providers: [
     TranslateService,
@@ -296,8 +319,8 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TestAuthInterceptor,
-      multi: true
-    }
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })

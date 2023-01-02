@@ -1,16 +1,16 @@
 import {
-    ChangeDetectorRef,
-    OnDestroy,
-    Pipe,
-    PipeTransform,
+  ChangeDetectorRef,
+  OnDestroy,
+  Pipe,
+  PipeTransform
 } from "@angular/core";
-import { Subject, map, takeUntil } from "rxjs";
-import { SettingsProvider } from "./settings.service";
+import { map, Subject, takeUntil } from "rxjs";
+import { DBSyncProvider } from "./dbsync.service";
 
 @Pipe({
-  name: "azlSetting",
+  name: "azldbvalue",
 })
-export class SettingPipe implements PipeTransform, OnDestroy {
+export class AzlDbValuePipe implements PipeTransform, OnDestroy {
   // #region Class properties
   private result!: string;
   private last!: string | number;
@@ -19,10 +19,10 @@ export class SettingPipe implements PipeTransform, OnDestroy {
   // #endregion Class properties
 
   /**
-   * Creates a new setting pipe instance
+   * Creates a new {@see AzlDbValuePipe} pipe instance
    */
   constructor(
-    private settingsProvider: SettingsProvider,
+    private provider: DBSyncProvider,
     private cdRef: ChangeDetectorRef
   ) {}
   /**
@@ -50,12 +50,12 @@ export class SettingPipe implements PipeTransform, OnDestroy {
     key: string = "id",
     label: string = "label"
   ) {
-    let onSetting = (res: string) => {
+    let onResult = (res: string) => {
       this.result = res !== undefined && res !== null ? res : query;
       this.last = query;
       this.cdRef.markForCheck();
     };
-    this.settingsProvider.settings
+    this.provider.state$
       .pipe(
         map((state) => {
           if (
@@ -73,25 +73,25 @@ export class SettingPipe implements PipeTransform, OnDestroy {
             throw new Error(`"name" parameter required`);
           }
           let result = "";
-          const settings = state.get(name);
-          if (typeof settings !== "undefined" && settings !== null) {
-            const setting = settings.find(
+          const _result = state.get(name);
+          if (typeof _result !== "undefined" && _result !== null) {
+            const _value = _result.find(
               (s) => String(s[key]) === String(query)
             );
-            if (setting) {
-              result = (setting[label] as string) ?? "";
+            if (_value) {
+              result = (_value[label] as string) ?? "";
             }
           }
           return result;
         }),
         takeUntil(this._destroy$)
       )
-      .subscribe(onSetting);
+      .subscribe(onResult);
   }
 
   /**
    * Transform user provided query value and return
-   * the corresponding label from the settings provider
+   * the corresponding label from the db provider
    */
   transform(
     query: string | number,

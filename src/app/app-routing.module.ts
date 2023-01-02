@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { AUTH_RESOURCES_AUTHORIZATIONS } from "./lib/views/authorizations";
+import { moduleRoutes } from './lib/views/modules/routes';
 import { routes as routeDefinitions } from "./lib/views/routes";
 
 const routes: Routes = [
@@ -22,7 +23,7 @@ const routes: Routes = [
   // Porvides independant module routing before the dashboard routing
   // for more specific routing when navigating to the dashboard components
   {
-    path: `${routeDefinitions.dashboardRoute}/${routeDefinitions.clientsModuleRoute}`,
+    path: moduleRoutes.clients,
     loadChildren: () =>
       import("./lib/views/modules/clients/clients.module").then(
         (m) => m.ClientsModule

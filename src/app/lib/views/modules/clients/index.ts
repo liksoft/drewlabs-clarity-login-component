@@ -1,14 +1,14 @@
 export {
-    CLIENT_ROUTES, ClientsModule,
-    ClientsRoutingModule
+  ClientsModule,
+  ClientsRoutingModule,
+  CLIENT_ROUTES
 } from "./clients.module";
-export { settingEnvironment } from "./settings";
+export { clientsDbSlice } from "./db.slice.factory";
 export {
-    IndividualClient,
-    IndividualClientType,
-    MoralClient,
-    MoralClientType
+  IndividualClient,
+  IndividualClientType,
+  MoralClient,
+  MoralClientType
 } from "./types";
-
 
 

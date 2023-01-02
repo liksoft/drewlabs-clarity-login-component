@@ -66,28 +66,28 @@ export class MoralMemberListComponent {
   @Input() columns: GridColumnType[] = [
     {
       title: "N° membre",
-      label: "member_id",
+      label: "number",
     },
     {
       title: "Régistre du commerce",
-      label: "",
+      label: "registrynumber",
     },
     {
       title: "Raison sociale",
-      label: "socialReason",
+      label: "label",
       transform: "uppercase",
     },
     {
       title: "Secteur activité",
-      label: "activitySector.label",
+      label: "activitysector",
     },
     {
       title: "Type",
-      label: "memberType.label",
+      label: "type",
     },
     {
       title: "Téléphone",
-      label: "address.phoneNumber",
+      label: "phonenumber",
     },
     {
       title: "Statut",
@@ -126,9 +126,11 @@ export class MoralMemberListComponent {
       (result) =>
         ({
           ...result,
-          data: result?.data
-            .map((item) => MoralClient.safeParse(item).data)
-            .filter((item) => typeof item !== "undefined" && item !== null) ?? [],
+          data:
+            result?.data
+              .map((item) => MoralClient.safeParse(item).data)
+              .filter((item) => typeof item !== "undefined" && item !== null) ??
+            [],
         } as Required<PaginateResult<MoralClientType>>)
     ),
     tap(console.log)

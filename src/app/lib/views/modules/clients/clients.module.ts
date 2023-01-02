@@ -1,10 +1,8 @@
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
-import { APP_INITIALIZER, ModuleWithProviders, NgModule } from "@angular/core";
+import { ModuleWithProviders, NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { APP_CONFIG_MANAGER, ConfigurationManager } from "@azlabsjs/ngx-config";
 import { HighchartsChartModule } from "highcharts-angular";
 import { TestAuthInterceptor } from "src/app/lib/bloc";
-import { SettingsProvider } from "src/app/libs/ngx-settings";
 import { environment } from "src/environments/environment";
 import { routes as routesConfigs } from "../../routes";
 import { SharedModule } from "../../shared.module";
@@ -18,7 +16,6 @@ import { MemberListComponent } from "./member-list/member-list.component";
 import { MoralMemberListComponent } from "./member-list/moral-member-list.component";
 import { MemberViewComponent } from "./member-view/member-view.component";
 import { ProcurationsComponent } from "./procurations/procurations.component";
-import { settingEnvironment } from "./settings";
 
 /**
  * Client routes definitions constants. Provides
@@ -118,54 +115,7 @@ export class ClientsModule {
   static forRoot(): ModuleWithProviders<ClientsModule> {
     return {
       ngModule: ClientsModule,
-
-      providers: [
-        {
-          provide: APP_INITIALIZER,
-          multi: true,
-          useFactory: (
-            provider: SettingsProvider,
-            config: ConfigurationManager
-          ) => {
-            return async () => {
-              provider.loadSlice([
-                {
-                  endpoint: `${config.get(
-                    "api.host",
-                    environment.api.clients.host
-                  )}/${config.get(
-                    "api.clients.endpoints.memberCategories",
-                    environment.api.clients.endpoints.memberCategories
-                  )}`,
-                  key: settingEnvironment.clients.memberCatories,
-                },
-                {
-                  endpoint: `${config.get(
-                    "api.host",
-                    environment.api.clients.host
-                  )}/${config.get(
-                    "api.clients.endpoints.memberTypes",
-                    environment.api.clients.endpoints.memberTypes
-                  )}`,
-                  key: settingEnvironment.clients.memberTypes,
-                },
-                {
-                  endpoint: `${config.get(
-                    "api.configurations.host",
-                    environment.api.configurations.host
-                  )}/${config.get(
-                    "api.configurations.endpoints.agencies",
-                    environment.api.configurations.endpoints.agencies
-                  )}`,
-                  key: settingEnvironment.configurations.agencies,
-                },
-              ]);
-              return Promise.resolve(true);
-            };
-          },
-          deps: [SettingsProvider, APP_CONFIG_MANAGER],
-        },
-      ],
+      providers: [],
     };
   }
 }
