@@ -86,7 +86,7 @@ export type QueryConfigType = {
   method?: string;
   params?: Record<string, string>;
   responseInterceptor?: ResponseInterceptorType;
-  cacheConfig?: CacheQueryConfig
+  cacheConfig?: CacheQueryConfig;
 };
 
 /**
@@ -116,3 +116,12 @@ export interface DBSyncProviderType {
    */
   loadSlice(query: SliceQueryType): void;
 }
+
+export type PageResult<T = any> = {
+  total: number;
+  data: T[];
+  lastPage?: number;
+  nextPageURL?: string;
+  lastPageURL?: string;
+  page?: number;
+};

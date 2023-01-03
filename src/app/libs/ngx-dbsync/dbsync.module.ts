@@ -18,6 +18,7 @@ import {
   exports: [AzlDbValuePipe],
   providers: [
     RESTQueryProvider,
+    AzlDbValuePipe,
     {
       provide: DBSYNC_QUERY_CLIENT,
       useFactory: (http: HttpClient, config: DBSyncProviderConfigType) => {
@@ -25,6 +26,7 @@ import {
       },
       deps: [HttpClient, DBSYNC_PROVIDER_CONFIG]
     },
+    
   ],
 })
 export class DBSyncModule {

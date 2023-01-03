@@ -8,6 +8,7 @@ import {
 } from "@angular/core";
 import { Router } from "@angular/router";
 import {
+  createPipeTransform,
   GridColumnType,
   PaginateResult,
   ProjectPaginateQueryParamType
@@ -15,20 +16,23 @@ import {
 import { APP_CONFIG_MANAGER, ConfigurationManager } from "@azlabsjs/ngx-config";
 import { useQuery } from "@azlabsjs/ngx-query";
 import { getHttpHost } from "@azlabsjs/requests";
-import { map, mergeMap, Observable, startWith, Subject, tap } from "rxjs";
+import { map, mergeMap, Observable, startWith, Subject } from "rxjs";
+import { configsDbNames } from 'src/app/lib/bloc';
+import { AzlDbValuePipe } from "src/app/libs/ngx-dbsync";
 import { environment } from "src/environments/environment";
 import { defaultPaginateQuery } from "../datagrid";
 import { GridDataQueryProvider } from "../datagrid/grid-data.query.service";
+import { clientsDbConfigs } from '../db.slice.factory';
 import { MoralClient, MoralClientType } from "../types";
 
 @Component({
   selector: "app-moral-member-list",
   template: `
     <ngx-clr-smart-grid
-      [data]="(state$ | async)?.data ?? []"
+      [pageResult]="state$ | async"
       [config]="{
         sizeOptions: [20, 50, 100, 150],
-        pageSize: 5
+        pageSize: 20
       }"
       [columns]="columns"
     >
@@ -78,20 +82,27 @@ export class MoralMemberListComponent {
       transform: "uppercase",
     },
     {
-      title: "Secteur activité",
-      label: "activitysector",
-    },
-    {
-      title: "Type",
-      label: "type",
-    },
-    {
       title: "Téléphone",
       label: "phonenumber",
     },
     {
+      title: "Type",
+      label: "type",
+      transform: createPipeTransform(this.pipe, clientsDbConfigs.categories),
+    },
+    {
+      title: "Secteur activité",
+      label: "activitysector",
+      transform: createPipeTransform(this.pipe, configsDbNames.activitysectors),
+    },
+    {
+      title: "Activité",
+      label: "activity",
+    },
+    {
       title: "Statut",
       label: "status",
+      transform: createPipeTransform(this.pipe, clientsDbConfigs.status),
     },
   ];
   @Input() requestPath!: string;
@@ -128,14 +139,14 @@ export class MoralMemberListComponent {
           ...result,
           data:
             result?.data
-              .map((item) => MoralClient.safeParse(item).data)
+              .map((item) => {
+                const result = MoralClient.safeParse(item);
+                return result.data;
+              })
               .filter((item) => typeof item !== "undefined" && item !== null) ??
             [],
         } as Required<PaginateResult<MoralClientType>>)
-    ),
-    tap(console.log)
-    // TODO: If possible, use a redux or flux store to share
-    // data between components
+    )
   );
   // #endregion Component internal properties
 
@@ -143,11 +154,9 @@ export class MoralMemberListComponent {
   constructor(
     private router: Router,
     private queryProvider: GridDataQueryProvider,
-    @Inject(APP_CONFIG_MANAGER) private config: ConfigurationManager
-  ) {
-    // Subscribe to the state to test the result
-    this.state$.subscribe();
-  }
+    @Inject(APP_CONFIG_MANAGER) private config: ConfigurationManager,
+    private pipe: AzlDbValuePipe
+  ) {}
 
   dgOnCreate(event: Event) {
     this.create.emit(event);

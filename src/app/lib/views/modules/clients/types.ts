@@ -5,7 +5,7 @@ import { BuiltType, StrConstraint, TypeOf } from "@azlabsjs/built-type";
  */
 export const IndividualClient = BuiltType._object(
   {
-    number: BuiltType._str({ coerce: true }),
+    number: BuiltType._str().nullish(),
     validatedAt: BuiltType._str(),
     firstname: BuiltType._str(),
     lastname: BuiltType._str(),
@@ -15,7 +15,7 @@ export const IndividualClient = BuiltType._object(
       coerce: true,
       constraint: new StrConstraint().nullish(),
     }),
-    sex: BuiltType._str({ coerce: true }),
+    activity: BuiltType._str().nullish(),
     civility: BuiltType._str({ coerce: true }),
     status: BuiltType._str({ coerce: true }),
   },
@@ -26,7 +26,7 @@ export const IndividualClient = BuiltType._object(
     businesslink: "member.businessLinkId",
     type: "member.categoryId",
     phonenumber: "by.address.phoneNumber",
-    sex: "by.genderId",
+    activity: "member.activity",
     civility: "by.civilStateId",
     status: "member.membershipStatusId",
   }
@@ -37,25 +37,14 @@ export const IndividualClient = BuiltType._object(
  */
 export const MoralClient = BuiltType._object(
   {
-    number: BuiltType._str({ coerce: true }),
+    number: BuiltType._str().nullish(),
     registrynumber: BuiltType._str({ coerce: true }),
     label: BuiltType._str({ coerce: true }),
-    activitysector: BuiltType._str({
-      coerce: true,
-      constraint: new StrConstraint().nullish(),
-    }),
-    type: BuiltType._str({
-      coerce: true,
-      constraint: new StrConstraint().nullish(),
-    }),
-    phonenumber: BuiltType._str({
-      coerce: true,
-      constraint: new StrConstraint().nullish(),
-    }),
-    status: BuiltType._str({
-      coerce: true,
-      constraint: new StrConstraint().nullish(),
-    }),
+    activitysector: BuiltType._str({coerce: true}).nullish(),
+    type: BuiltType._str({coerce: true}).nullish(),
+    phonenumber: BuiltType._str({ coerce: true }).nullish(),
+    activity: BuiltType._str({coerce: true}).nullish(),
+    status: BuiltType._str({coerce: true}).nullish(),
   },
   {
     registrynumber: "receiptNumber",
@@ -64,6 +53,7 @@ export const MoralClient = BuiltType._object(
     type: "member.categoryId",
     phonenumber: "address.phoneNumber",
     status: "member.membershipStatusId",
+    activity: "member.activity",
   }
 );
 

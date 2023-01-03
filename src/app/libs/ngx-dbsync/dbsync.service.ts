@@ -62,22 +62,27 @@ export class DBSyncProvider implements DBSyncProviderType, OnDestroy {
     const chunks = this.chunkQueryParams(query, chunksize);
     let _interval = 0;
     // For the first chunk we do not provide any delay
-    const requests = [
-      forkJoin(chunks[0].map((param) => this.querySlice(param))),
-    ];
+    // const requests = [
+    //   forkJoin(chunks[0].map((param) => this.querySlice(param))),
+    // ];
+    forkJoin(chunks[0].map((param) => this.querySlice(param)))
+      .pipe(takeUntil(this._destroy$))
+      .subscribe();
     for (const chunk of chunks.slice(1)) {
       // We assume each request takes a maximum of 1 seconds, we use a query interval of number
       // of chunks divided by 2 for each chunk
       _interval +=
         this.config?.queryInterval ??
         (chunksize ? (chunksize * 1000) / 2 : QUERY_INTERVAL);
-      const request = interval(_interval).pipe(
-        take(1),
-        mergeMap(() => forkJoin(chunk.map((param) => this.querySlice(param))))
-      );
-      requests.push(request);
+      interval(_interval)
+        .pipe(
+          take(1),
+          mergeMap(() => forkJoin(chunk.map((param) => this.querySlice(param))))
+        )
+        .pipe(takeUntil(this._destroy$))
+        .subscribe();
     }
-    forkJoin(requests).pipe(takeUntil(this._destroy$)).subscribe();
+    // forkJoin(requests).pipe(takeUntil(this._destroy$)).subscribe();
   }
 
   /**
@@ -145,6 +150,7 @@ export class DBSyncProvider implements DBSyncProviderType, OnDestroy {
    */
   createResponseCallback(key: string) {
     return (items: Record<string, unknown>[], partial: boolean) => {
+      console.log('Updating cache...');
       const cache = this._state$.getValue();
       if (partial && cache.has(key) && (cache.get(key) ?? []).length !== 0) {
         return;

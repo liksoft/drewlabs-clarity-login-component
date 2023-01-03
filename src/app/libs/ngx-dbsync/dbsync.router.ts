@@ -11,20 +11,18 @@ import {
   filter,
   ObservableInput,
   Subject,
-  takeUntil
+  takeUntil,
+  tap
 } from "rxjs";
 import { DBSyncProvider } from "./dbsync.service";
 import { defaultConfigs } from "./defaults";
-import {
-  DBSyncProviderConfigType,
-  DBSYNC_PROVIDER_CONFIG
-} from "./types";
+import { DBSyncProviderConfigType, DBSYNC_PROVIDER_CONFIG } from "./types";
 
 @Injectable()
 export class DbSyncRouter implements OnDestroy {
   //#region Class properties
   private readonly _destroy$ = new Subject<void>();
-  private readonly loadedForRoute: { [k: string]: boolean } = {};
+  private _cache: Map<string, boolean> | null = new Map();
   //#endregion Class properties
 
   /**
@@ -60,31 +58,36 @@ export class DbSyncRouter implements OnDestroy {
       this.router.events
         .pipe(
           filter((events) => events instanceof NavigationEnd),
-          debounceTime(5000),
-          takeUntil(unsubscribeNotifier ? unsubscribeNotifier : this._destroy$)
-        )
-        .subscribe((event) => {
-          const _event = event as NavigationEnd;
-          const url = _event.urlAfterRedirects;
-          if (slices) {
-            for (let path of Object.keys(slices)) {
-              if (this.loadedForRoute[path]) {
-                continue;
-              }
-              const _path = path.startsWith("/") ? path : `/${path}`;
-              // TODO: If required in future release use regular expression
-              const value = slices[path];
-              if (url.startsWith(_path) && value) {
-                this.provider.loadSlice(value);
+          debounceTime(500),
+          tap((event) => {
+            const _event = event as NavigationEnd;
+            const url = _event.urlAfterRedirects;
+            if (slices) {
+              for (let path of Object.keys(slices)) {
+                if (this._cache?.has(path)) {
+                  continue;
+                }
+                const _path = path.startsWith("/") ? path : `/${path}`;
+                // TODO: If required in future release use regular expression
+                const value = slices[path];
+                if (url.startsWith(_path) && value) {
+                  this.provider.loadSlice(value);
+                  // Case a slice is loaded for a given path, we add the path
+                  // to the route load internal cache, in order to not reload it again
+                  this._cache?.set(path, true);
+                }
               }
             }
-          }
-        });
+          }),
+          takeUntil(unsubscribeNotifier ? unsubscribeNotifier : this._destroy$)
+        )
+        .subscribe();
     }
   }
 
   // Service destructor
   ngOnDestroy(): void {
     this._destroy$.next();
+    this._cache = null;
   }
 }

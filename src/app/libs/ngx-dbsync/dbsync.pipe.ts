@@ -1,43 +1,60 @@
 import {
   ChangeDetectorRef,
+  Injectable,
   OnDestroy,
   Pipe,
   PipeTransform
 } from "@angular/core";
-import { map, Subject, takeUntil } from "rxjs";
+import { map, Subject, takeUntil, tap } from "rxjs";
 import { DBSyncProvider } from "./dbsync.service";
 
 @Pipe({
   name: "azldbvalue",
+  pure: false,
 })
+@Injectable()
 export class AzlDbValuePipe implements PipeTransform, OnDestroy {
   // #region Class properties
-  private result!: string;
-  private last!: string | number;
-  private lastParams: string[] = [];
+  private result: Map<string, { lastparams: string[]; value: string }> | null =
+    new Map();
   private _destroy$ = new Subject<void>();
+  private _ref: ChangeDetectorRef | null;
   // #endregion Class properties
 
   /**
    * Creates a new {@see AzlDbValuePipe} pipe instance
    */
-  constructor(
-    private provider: DBSyncProvider,
-    private cdRef: ChangeDetectorRef
-  ) {}
+  constructor(private provider: DBSyncProvider, ref: ChangeDetectorRef) {
+    // Assign `ref` into `this._ref` manually instead of declaring `_ref` in the constructor
+    // parameter list, as the type of `this._ref` includes `null` unlike the type of `ref`.
+    this._ref = ref;
+  }
+
+  //
   /**
    * Compares the provided parameters agains the last
    * parameters values
    */
-  private paramsEquals(params: string[]) {
-    let equals = true;
+  private exists(searchkey: string, params: string[]) {
+    if (!this.result?.has(searchkey)) {
+      return false;
+    }
+    const lastparams = this.result?.get(searchkey)?.lastparams ?? [];
+    let exists = true;
     for (let index = 0; index < params.length; index++) {
-      if (this.lastParams[index] !== params[index]) {
-        equals = false;
+      if (lastparams[index] !== params[index]) {
+        exists = false;
         break;
       }
     }
-    return equals;
+    return exists;
+  }
+
+  /**
+   * Creates a search key for the map object
+   */
+  private createSearchKey(query: string, name: string) {
+    return `${name}::${query}`;
   }
 
   /**
@@ -51,9 +68,15 @@ export class AzlDbValuePipe implements PipeTransform, OnDestroy {
     label: string = "label"
   ) {
     let onResult = (res: string) => {
-      this.result = res !== undefined && res !== null ? res : query;
-      this.last = query;
-      this.cdRef.markForCheck();
+      if (res !== undefined && res !== null) {
+        this.result?.set(this.createSearchKey(query, name), {
+          value: res,
+          lastparams: [name, key, label],
+        });
+      }
+      // Note: `this._ref` is only cleared in `ngOnDestroy` so is known to be available when a
+      // value is being updated.
+      this._ref!.markForCheck();
     };
     this.provider.state$
       .pipe(
@@ -75,18 +98,19 @@ export class AzlDbValuePipe implements PipeTransform, OnDestroy {
           let result = "";
           const _result = state.get(name);
           if (typeof _result !== "undefined" && _result !== null) {
-            const _value = _result.find(
-              (s) => String(s[key]) === String(query)
-            );
+            const _value = _result.find((s) => {
+              return String(s[key]) === String(query);
+            });
             if (_value) {
               result = (_value[label] as string) ?? "";
             }
           }
           return result;
         }),
+        tap(onResult),
         takeUntil(this._destroy$)
       )
-      .subscribe(onResult);
+      .subscribe();
   }
 
   /**
@@ -104,13 +128,14 @@ export class AzlDbValuePipe implements PipeTransform, OnDestroy {
       return _query;
     }
     // if we ask another time for the same key, return the last value
-    if (_query === this.last && this.paramsEquals([name, key, label])) {
-      return this.result;
+    const searchkey = this.createSearchKey(_query, name);
+    console.log('Result: ', searchkey, this.result?.get(searchkey));
+    if (this.exists(searchkey, [name, key, label])) {
+      console.log('Key: ', searchkey , 'exists')
+      return this.result?.get(searchkey)?.value ?? "";
     }
-    this.last = _query;
-    this.lastParams = [name, key, label];
     this.updateResult(_query, name, key, label);
-    return this.result;
+    return "";
   }
 
   /**
@@ -120,5 +145,7 @@ export class AzlDbValuePipe implements PipeTransform, OnDestroy {
    */
   ngOnDestroy() {
     this._destroy$.next();
+    this._ref = null;
+    this.result = null;
   }
 }

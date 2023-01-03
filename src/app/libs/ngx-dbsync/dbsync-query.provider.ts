@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Inject, Injectable, Optional } from "@angular/core";
-import { map, mergeMap, of, tap } from "rxjs";
+import { map, mergeMap, Observable, of, tap } from "rxjs";
 import {
   createPaginationChunk,
   queryPaginationate
@@ -14,6 +14,7 @@ import {
   DBSyncProviderConfigType,
   DBSyncQueryProviderType,
   DBSYNC_PROVIDER_CONFIG,
+  PageResult,
   QueryCacheConfigType,
   ResponseInterceptorType
 } from "./types";
@@ -84,22 +85,21 @@ export class RESTQueryProvider implements DBSyncQueryProviderType {
       this.prepareForPagination(endpoint, 1),
       params
     ).pipe(
-      mergeMap((response: { [k: string]: any }) => {
+      mergeMap((response: PageResult) => {
         // First pagination chunk
         const items = (
-          responseInterceptor ??
-          ((response) => response as Record<string, unknown>[])
+          responseInterceptor ?? ((response: PageResult) => response.data)
         )(response);
         // When the first page of data is loaded, we call the callback function
         // with the loaded data with the partial flag turns on
         callback(items, true);
         if (
-          response["total"] &&
-          response["total"] !== null &&
-          typeof response["total"] !== "undefined" &&
+          response.total &&
+          response.total !== null &&
+          typeof response.total !== "undefined" &&
           // Add a condition that checks if the total items
           // is not greater than the length of the list of query result items
-          Number(response["total"]) > items.length
+          Number(response.total) > items.length
         ) {
           return queryPaginationate(
             (page) =>
@@ -110,10 +110,10 @@ export class RESTQueryProvider implements DBSyncQueryProviderType {
               ).pipe(
                 map(
                   responseInterceptor ??
-                    ((response) => response as Record<string, unknown>[])
+                    ((response: PageResult) => response.data)
                 )
               ),
-            response["total"],
+            response.total,
             this.config.pagination?.perPage ??
               defaultConfigs.pagination?.perPage ??
               500,
@@ -166,6 +166,6 @@ export class RESTQueryProvider implements DBSyncQueryProviderType {
     return this.http.request(method, endpoint, {
       params: new HttpParams({ fromObject: params }),
       responseType: "json",
-    });
+    }) as Observable<PageResult>;
   }
 }
