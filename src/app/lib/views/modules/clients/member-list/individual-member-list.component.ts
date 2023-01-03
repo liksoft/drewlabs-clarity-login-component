@@ -7,8 +7,8 @@ import {
   TemplateRef
 } from "@angular/core";
 import { Router } from "@angular/router";
+import { AzlCachePipe } from "@azlabsjs/ngx-azl-cache";
 import {
-  createPipeTransform,
   GridColumnType,
   PaginateResult,
   ProjectPaginateQueryParamType
@@ -17,12 +17,11 @@ import { APP_CONFIG_MANAGER, ConfigurationManager } from "@azlabsjs/ngx-config";
 import { useQuery } from "@azlabsjs/ngx-query";
 import { getHttpHost } from "@azlabsjs/requests";
 import { map, mergeMap, Observable, startWith, Subject } from "rxjs";
-import { configsDbNames } from 'src/app/lib/bloc';
-import { AzlDbValuePipe } from 'src/app/libs/ngx-dbsync';
+import { configsDbNames } from "src/app/lib/bloc";
 import { environment } from "src/environments/environment";
-import { defaultPaginateQuery } from '../datagrid';
+import { defaultPaginateQuery } from "../datagrid";
 import { GridDataQueryProvider } from "../datagrid/grid-data.query.service";
-import { clientsDbConfigs } from '../db.slice.factory';
+import { clientsDbConfigs } from "../db.slice.factory";
 import { IndividualClient, IndividualClientType } from "../types";
 
 @Component({
@@ -75,7 +74,7 @@ export class IndividualMemberListComponent {
     {
       title: "Date Ouv.",
       label: "validatedAt",
-      transform: 'date'
+      transform: "date",
     },
     {
       title: "Nom",
@@ -90,12 +89,14 @@ export class IndividualMemberListComponent {
     {
       title: "Lien d'affaires",
       label: "businesslink",
-      transform: createPipeTransform(this.pipe, configsDbNames.businesslinks)
+      // transform: createPipeTransform(this.pipe, configsDbNames.businesslinks),
+      transform: `azlcache:${configsDbNames.businesslinks}`,
     },
     {
       title: "Type",
       label: "type",
-      transform: createPipeTransform(this.pipe, clientsDbConfigs.categories)
+      // transform: createPipeTransform(this.pipe, clientsDbConfigs.categories),
+      transform: `azlcache:${clientsDbConfigs.categories}`,
     },
     {
       title: "Téléphone",
@@ -104,7 +105,8 @@ export class IndividualMemberListComponent {
     {
       title: "Civilité",
       label: "civility",
-      transform: createPipeTransform(this.pipe, configsDbNames.civilstates)
+      // transform: createPipeTransform(this.pipe, configsDbNames.civilstates),
+      transform: `azlcache:${configsDbNames.civilstates}`,
     },
     {
       title: "Activité",
@@ -113,7 +115,8 @@ export class IndividualMemberListComponent {
     {
       title: "Statut",
       label: "status",
-      transform: createPipeTransform(this.pipe, clientsDbConfigs.status)
+      // transform: createPipeTransform(this.pipe, clientsDbConfigs.status),
+      transform: `azlcache:${clientsDbConfigs.status}`,
     },
   ];
   // #endregion Component input
@@ -154,7 +157,7 @@ export class IndividualMemberListComponent {
               .filter((item) => typeof item !== "undefined" && item !== null) ??
             [],
         } as Required<PaginateResult<IndividualClientType>>)
-    ),
+    )
     // TODO: If possible, use a redux or flux store to share
     // data between components
   );
@@ -165,7 +168,7 @@ export class IndividualMemberListComponent {
     private router: Router,
     private queryProvider: GridDataQueryProvider,
     @Inject(APP_CONFIG_MANAGER) private config: ConfigurationManager,
-    private pipe: AzlDbValuePipe
+    private pipe: AzlCachePipe
   ) {
     // Subscribe to the state to test the result
     this.state$.subscribe();

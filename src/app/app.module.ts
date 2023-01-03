@@ -37,6 +37,7 @@ import {
 
 // #region Dropzone configuration
 import { Router } from "@angular/router";
+import { NgxAzlCacheModule } from "@azlabsjs/ngx-azl-cache";
 import { NgxClrSmartGridModule } from "@azlabsjs/ngx-clr-smart-grid";
 import {
   APP_CONFIG_MANAGER,
@@ -58,7 +59,6 @@ import {
 import { LocalStrategy, StrategyBasedAuthModule } from "./lib/views/login/core";
 import { clientsDbSlice, ClientsModule } from "./lib/views/modules/clients";
 import { moduleRoutes } from "./lib/views/modules/routes";
-import { DBSyncModule } from "./libs/ngx-dbsync";
 // #endregion Dropzone configuration
 
 registerLocaleData(localeFr, "fr", localeFrExtra);
@@ -287,7 +287,7 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
       },
       httpClient: HttpClient as Type<any>,
     }),
-    DBSyncModule.forRoot({
+    NgxAzlCacheModule.forRoot({
       debug: true,
       pagination: {
         perPage: 500,

@@ -1,6 +1,6 @@
+import { QueryConfigType } from '@azlabsjs/ngx-azl-cache';
 import { ConfigurationManager } from "@azlabsjs/ngx-config";
 import { configsDbNames } from "src/app/lib/bloc";
-import { QueryConfigType } from 'src/app/libs/ngx-dbsync';
 import { environment } from "src/environments/environment";
 
 export const clientsDbConfigs = {

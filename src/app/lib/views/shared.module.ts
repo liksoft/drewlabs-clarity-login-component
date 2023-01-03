@@ -3,11 +3,11 @@ import { CommonModule } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
 import { LOCALE_ID, ModuleWithProviders, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { NgxAzlCacheModule } from "@azlabsjs/ngx-azl-cache";
 import { NgxClrSmartGridModule } from "@azlabsjs/ngx-clr-smart-grid";
 import { NgxSmartFormModule } from "@azlabsjs/ngx-smart-form";
 import { ClarityModule } from "@clr/angular";
 import { TranslateModule } from "@ngx-translate/core";
-import { DBSyncModule } from "src/app/libs/ngx-dbsync";
 import { StrategyBasedAuthModule } from "./login/core";
 import { NavModule } from "./modules/nav";
 import { AzlDashboardModule } from "./partials/dashboard/dashboard.module";
@@ -51,8 +51,8 @@ import { UIStateComponentsModule } from "./partials/ui-state";
     // Export Azl dashboard module
     AzlDashboardModule,
 
-    // Azl db sync module
-    DBSyncModule,
+    // Azl cache module
+    NgxAzlCacheModule,
   ],
   declarations: [],
   providers: [{ provide: LOCALE_ID, useValue: "fr" }],

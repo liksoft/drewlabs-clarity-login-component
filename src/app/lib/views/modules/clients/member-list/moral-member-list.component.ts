@@ -7,6 +7,7 @@ import {
   TemplateRef
 } from "@angular/core";
 import { Router } from "@angular/router";
+import { AzlCachePipe } from '@azlabsjs/ngx-azl-cache';
 import {
   createPipeTransform,
   GridColumnType,
@@ -18,7 +19,6 @@ import { useQuery } from "@azlabsjs/ngx-query";
 import { getHttpHost } from "@azlabsjs/requests";
 import { map, mergeMap, Observable, startWith, Subject } from "rxjs";
 import { configsDbNames } from 'src/app/lib/bloc';
-import { AzlDbValuePipe } from "src/app/libs/ngx-dbsync";
 import { environment } from "src/environments/environment";
 import { defaultPaginateQuery } from "../datagrid";
 import { GridDataQueryProvider } from "../datagrid/grid-data.query.service";
@@ -155,7 +155,7 @@ export class MoralMemberListComponent {
     private router: Router,
     private queryProvider: GridDataQueryProvider,
     @Inject(APP_CONFIG_MANAGER) private config: ConfigurationManager,
-    private pipe: AzlDbValuePipe
+    private pipe: AzlCachePipe
   ) {}
 
   dgOnCreate(event: Event) {
