@@ -1,18 +1,19 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import {
-  createDateQueryParamPipe, PaginateResult, projectPaginateQuery,
+  PaginateResult,
   ProjectPaginateQueryParamType,
   QueryFiltersType
 } from "@azlabsjs/ngx-clr-smart-grid";
 import { ProvidesQuery } from "@azlabsjs/ngx-query";
 import { QueryProviderType } from "@azlabsjs/rx-query";
 import { Observable } from "rxjs";
+import { createDateQueryParamPipe, projectPaginateQuery } from "./helpers";
 
 @Injectable()
 @ProvidesQuery({
-  observe: 'response',
-  cacheTime: 300000
+  observe: "response",
+  cacheTime: 300000,
 })
 export class GridDataQueryProvider
   implements

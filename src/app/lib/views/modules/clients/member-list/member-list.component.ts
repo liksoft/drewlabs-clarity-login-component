@@ -20,5 +20,7 @@ export class MemberListComponent {
     //     `${routes.dashboardRoute}/${routes.clientsModuleRoute}/${routes.individualClientRoute}`
     // );
   }
+
+  onUpdateMembersipStatus(status?: number) {}
   // #endregion component members
 }

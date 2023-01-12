@@ -7,9 +7,7 @@ import {
   TemplateRef
 } from "@angular/core";
 import { Router } from "@angular/router";
-import { AzlCachePipe } from '@azlabsjs/ngx-azl-cache';
 import {
-  createPipeTransform,
   GridColumnType,
   PaginateResult,
   ProjectPaginateQueryParamType
@@ -17,12 +15,22 @@ import {
 import { APP_CONFIG_MANAGER, ConfigurationManager } from "@azlabsjs/ngx-config";
 import { useQuery } from "@azlabsjs/ngx-query";
 import { getHttpHost } from "@azlabsjs/requests";
-import { map, mergeMap, Observable, startWith, Subject } from "rxjs";
-import { configsDbNames } from 'src/app/lib/bloc';
+import {
+  catchError,
+  map,
+  mergeMap,
+  Observable,
+  startWith,
+  Subject,
+  tap,
+  throwError
+} from "rxjs";
+import { configsDbNames } from "src/app/lib/bloc";
 import { environment } from "src/environments/environment";
+import { UIStateProvider, UI_STATE_PROVIDER } from "../../../partials/ui-state";
 import { defaultPaginateQuery } from "../datagrid";
 import { GridDataQueryProvider } from "../datagrid/grid-data.query.service";
-import { clientsDbConfigs } from '../db.slice.factory';
+import { clientsDbConfigs } from "../db.slice.factory";
 import { MoralClient, MoralClientType } from "../types";
 
 @Component({
@@ -32,28 +40,34 @@ import { MoralClient, MoralClientType } from "../types";
       [pageResult]="state$ | async"
       [config]="{
         sizeOptions: [20, 50, 100, 150],
-        pageSize: 20
+        pageSize: 20,
+        hasActionOverflow: true,
+        hasExpandableRows: true
       }"
       [columns]="columns"
+      [loading]="(uistate$ | async)?.performingAction ?? false"
     >
       <!-- Action Bar -->
       <ng-template #dgActionBar let-selected>
         <ng-container
           *ngTemplateOutlet="
             actionBarTemplate;
-            context: {
-              selected: this.selected,
-              create: dgOnCreate.bind(this),
-              refresh: dgOnRefresh.bind(this)
-            }
+            context: { $implicit: selected }
           "
         ></ng-container>
       </ng-template>
       <!-- Action Bar -->
+      <!-- Expanded row -->
+      <ng-template #dgRowDetail let-item>
+        <ng-container
+          *ngTemplateOutlet="expandedRowTemplate; context: { $implicit: item }"
+        ></ng-container>
+      </ng-template>
+      <!-- Expanded row -->
       <!-- Action overflow -->
       <ng-template #dgActionOverflow let-item>
         <ng-container
-          *ngTemplateOutlet="overflowTemplate; context: { item: this.item }"
+          *ngTemplateOutlet="overflowTemplate; context: { $implicit: item }"
         ></ng-container>
       </ng-template>
       <!-- Action overflow -->
@@ -66,7 +80,7 @@ export class MoralMemberListComponent {
   //#region Component inputs
   @Input() overflowTemplate!: TemplateRef<any>;
   @Input() actionBarTemplate!: TemplateRef<any>;
-  @Input() createRoute!: string;
+  @Input() expandedRowTemplate!: TemplateRef<any>;
   @Input() columns: GridColumnType[] = [
     {
       title: "N° membre",
@@ -88,12 +102,12 @@ export class MoralMemberListComponent {
     {
       title: "Type",
       label: "type",
-      transform: createPipeTransform(this.pipe, clientsDbConfigs.categories),
+      transform: `azlcache:${clientsDbConfigs.categories}`,
     },
     {
       title: "Secteur activité",
       label: "activitysector",
-      transform: createPipeTransform(this.pipe, configsDbNames.activitysectors),
+      transform: `azlcache:${configsDbNames.activitysectors}`,
     },
     {
       title: "Activité",
@@ -102,7 +116,7 @@ export class MoralMemberListComponent {
     {
       title: "Statut",
       label: "status",
-      transform: createPipeTransform(this.pipe, clientsDbConfigs.status),
+      transform: `azlcache:${clientsDbConfigs.status}`,
     },
   ];
   @Input() requestPath!: string;
@@ -116,6 +130,7 @@ export class MoralMemberListComponent {
   private _dgChanges$ = new Subject<ProjectPaginateQueryParamType>();
   state$ = this._dgChanges$.pipe(
     startWith(defaultPaginateQuery),
+    tap(() => this.uistate.startAction()),
     mergeMap(
       (query) =>
         useQuery(
@@ -133,6 +148,7 @@ export class MoralMemberListComponent {
           []
         ) as Observable<PaginateResult<unknown>>
     ),
+    tap(() => this.uistate.endAction()),
     map(
       (result) =>
         ({
@@ -146,8 +162,15 @@ export class MoralMemberListComponent {
               .filter((item) => typeof item !== "undefined" && item !== null) ??
             [],
         } as Required<PaginateResult<MoralClientType>>)
-    )
+    ),
+    tap(console.log),
+    catchError((error) => {
+      this.uistate.endAction();
+      return throwError(() => error);
+    })
   );
+
+  uistate$ = this.uistate.uiState;
   // #endregion Component internal properties
 
   // Creates an instance of the current component
@@ -155,14 +178,6 @@ export class MoralMemberListComponent {
     private router: Router,
     private queryProvider: GridDataQueryProvider,
     @Inject(APP_CONFIG_MANAGER) private config: ConfigurationManager,
-    private pipe: AzlCachePipe
+    @Inject(UI_STATE_PROVIDER) private uistate: UIStateProvider
   ) {}
-
-  dgOnCreate(event: Event) {
-    this.create.emit(event);
-  }
-
-  dgOnRefresh(event: ProjectPaginateQueryParamType) {
-    this._dgChanges$.next(event);
-  }
 }

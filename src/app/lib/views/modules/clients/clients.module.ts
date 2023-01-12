@@ -16,6 +16,7 @@ import { MemberListComponent } from "./member-list/member-list.component";
 import { MoralMemberListComponent } from "./member-list/moral-member-list.component";
 import { MemberViewComponent } from "./member-view/member-view.component";
 import { ProcurationsComponent } from "./procurations/procurations.component";
+import { StakeHoldersListComponent } from './stake-holders/stake-holders-list/stake-holders-list.component';
 
 /**
  * Client routes definitions constants. Provides
@@ -89,6 +90,7 @@ export class ClientsRoutingModule {}
     MoralMemberAddComponent,
     IndividualMemberListComponent,
     MoralMemberListComponent,
+    StakeHoldersListComponent
   ],
   exports: [
     ClientsComponent,
@@ -102,6 +104,7 @@ export class ClientsRoutingModule {}
     MoralMemberAddComponent,
     IndividualMemberListComponent,
     MoralMemberListComponent,
+    StakeHoldersListComponent
   ],
   providers: [
     {

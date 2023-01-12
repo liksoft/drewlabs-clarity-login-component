@@ -37,7 +37,7 @@ import {
 
 // #region Dropzone configuration
 import { Router } from "@angular/router";
-import { NgxAzlCacheModule } from "@azlabsjs/ngx-azl-cache";
+import { AzlCachePipe, NgxAzlCacheModule } from "@azlabsjs/ngx-azl-cache";
 import { NgxClrSmartGridModule } from "@azlabsjs/ngx-clr-smart-grid";
 import {
   APP_CONFIG_MANAGER,
@@ -46,7 +46,6 @@ import {
 } from "@azlabsjs/ngx-config";
 import { NgxIntlTelInputModule } from "@azlabsjs/ngx-intl-tel-input";
 import { HTTP_HOST, QueryModule } from "@azlabsjs/ngx-query";
-import { HttpResponse } from "@azlabsjs/requests";
 import { interval, lastValueFrom } from "rxjs";
 import { first, map, tap } from "rxjs/operators";
 import { TestAuthInterceptor } from "./lib/bloc";
@@ -185,13 +184,14 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
             //     },
             //   },
             // });
-            const response = await (next(request) as Promise<HttpResponse>);
-            let res = response["response"] as Record<string, any>;
-            response["response"] =
-              typeof res["data"] !== "undefined" && res["data"] !== null
-                ? res["data"]
-                : res;
-            return response;
+            // const response = await (next(request) as Promise<HttpResponse>);
+            // let res = response["response"] as Record<string, any>;
+            // response["response"] =
+            //   typeof res["data"] !== "undefined" && res["data"] !== null
+            //     ? res["data"]
+            //     : res;
+            // return response;
+            return next(request);
           };
         },
         queries: {
@@ -275,7 +275,11 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
       //   deps: any[]; // Provider
       // },
     }),
-    NgxClrSmartGridModule,
+    NgxClrSmartGridModule.forRoot({
+      pipeTransformMap: {
+        azlcache: AzlCachePipe,
+      },
+    }),
     HttpClientModule,
     QueryModule.forRoot({
       hostProvider: {
@@ -303,7 +307,6 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
         },
       },
     }),
-
     // Feature modules
     ClientsModule.forRoot(),
   ],

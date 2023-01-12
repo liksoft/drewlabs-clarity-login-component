@@ -28,12 +28,14 @@ export const environment = {
     clients: {
       host: "https://coopecclients.lik.tg/",
       endpoints: {
+        members: "api/members",
         addresses: "api/addresses",
         individuals: "api/individuals",
         morals: "api/morals",
         types: "api/member-types",
         categories: "api/member-categories",
-        status: 'api/membership-statuses'
+        status: 'api/membership-statuses',
+        stakeholders: 'api/account-stake-holders'
       },
     },
     configurations: {
@@ -66,7 +68,7 @@ export const environment = {
   },
   testing: {
     _authToken:
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI4NTk3ODJFMS05QTJGLTQ5QTQtOUQ0Mi1CNTlBNzhFNTIwRkIiLCJqdGkiOiI3M2I1NDYzMjc0NjdiZTRkZjg0NjI1Mjk1YjcxNGY2ODQyZjM1NjkzMzcwNWNmNzhkZjNkZjljZDZmMzI2NDRmOGY5ZmVkNWZmMWNjYzg4NCIsImlhdCI6MTY3Mjc0MDUxMS42NzQ0OTYsIm5iZiI6MTY3Mjc0MDUxMS42NzQ1LCJleHAiOjE2NzI4MjY5MTEuNjYyODQ4LCJzdWIiOiIxMyIsInNjb3BlcyI6WyJjb29wZWM6Y3VzdG9tZXJzOm1lbWJlcnNoaXBzOmxpc3QiXX0.uPCABieYNvRyz5dGEdAaQEW-ceqiXb9VDm8lt2S8Abdx5Mz-2zaED5TkPCCzYrQNjuMiQsg3_nawczRDQCzYsQ0UI2KyiQb0kz981NWIevtfK9KkQ-bBUiT_9Pzuc2ICsi7LtlmBJ7tGoNQ4FdyR5jgxxzfz9H6Ooe3a4oYqG62-AaBmcq0QbtJtKR2YlBdiCgj2CaBbqfbmfev44N_ot190iFSINJkUUAk1P0y9qgZfgR8s4pQanGaYVfzckwe0ZEE5ORwtvlsB86p3bhrTPvoJSjRICwmwvV0B3oDgtsrSfs4vJ2MNyG_PT241jxBX24STTlaPQj4eHfpvC1GF3boCTWU3LxobIBvajV1Igqg1cWj5d6vbUEz_iK-ZXF2CY-ehmBY9cXrDEc-zPD4l_Ef-aR6FJ56H4n_QbcQeix-fuc5Xr4wOEHSWLrLbhKIYt9NDdz_ZcqUt6SL1HFmpbLBXK3NVfkjavUchpjLF92PZF2_825DsSqmEtbRKheKj3T2aIjs9JGUPYsJHh6rNCa0I-cEZA5AE8d2KqVr2KvNDs7ql_SXpSl-jSnzr2_osxgXKsgc9HVzDLDoUtyLg-KafjD8uErv9jU5SC_-g15nyDaYwtR-jQjaPjpBbzQ6VGiO0ShiERd1fWY72NVRWgV00aDpILWRIjtfcy9nCmgM",
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI4NTk3ODJFMS05QTJGLTQ5QTQtOUQ0Mi1CNTlBNzhFNTIwRkIiLCJqdGkiOiJmMDhiN2Y0NjJjZTY2OWIzZGIxYmZhNDI1ZDA5YzRkZjZjYzU4MjFlYjI1YWEwNjU4Zjk5ZjdiNWYzMWU2ZDZhMzc4MTFmY2ZhYjNkYzljOSIsImlhdCI6MTY3MzQ2NTUwOS44Nzc0MzEsIm5iZiI6MTY3MzQ2NTUwOS44Nzc0MzYsImV4cCI6MTY3MzU1MTkwOS44NzIzOTcsInN1YiI6IjEzIiwic2NvcGVzIjpbImNvb3BlYzpjdXN0b21lcnM6bWVtYmVyc2hpcHM6bGlzdCJdfQ.ZQ98rLRmxnxDyk-evsXEVvfwiCD0XkZ6x6mFvMuXo5iqyhTPsg8ljHqUVVAsF1MFRhJcoA4kjccLn98h6WRxMFZmLtRAScHtveYihlRjboeD3BVPicbTTLuBiKD7idMWnfZvVI9fnvKpW9guDLjGnq0tyQ5xuYaLcoTc0Gf6hosJlU-3S8tobOjp8QHCVsvILX7GdH02L5oCpUpSmTktENVGuLt0IKwEkrx6gP_zeZTr5Ad-82019KQ1D-4THCnlRByjZ2z2TAoAoFfvPkHUDQJ9hroNEu3pOyWq9gnOIF6PX0MlBqQMD3jPDyRSnINkyqIrJW8gmgeQ2c09mnUSUFKJiQUx-wDEl_0TxG38oAzDRXyD3W9SKSVGASaIC2ql1zdRThLoEhyqDl8CNyw-LMD8Xe7Mt6Q-PtbQaMzGC6lTdBGCmcFLbIJrCwh1QmRMNwZxaVPhEtQb-9c7HXghBKJbBbMP7tBgFsidxsC-ghYkETquOp5mAuMZZ3BEs2ej2xQDZHgtlhXbYMS714X36xRgG7okpHmIOWkgBM1dPSN7vJA6FC6TWeHrZZqgBkWxQxOIXrfrX9Pkx-WQXiJcJq4vh9f-dPW3StobcuDla-YjfV3Vpwio-3YgaZ8SY7xG_vkNQ7tvQ2cFrOGanZUb5gMsX90LJQUP58UNIr3Z7n8",
   },
 };
 

@@ -1,13 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  Output,
-  TemplateRef
-} from "@angular/core";
-import { Router } from "@angular/router";
-import { AzlCachePipe } from "@azlabsjs/ngx-azl-cache";
+import { Component, Inject, Input, TemplateRef } from "@angular/core";
 import {
   GridColumnType,
   PaginateResult,
@@ -16,9 +7,19 @@ import {
 import { APP_CONFIG_MANAGER, ConfigurationManager } from "@azlabsjs/ngx-config";
 import { useQuery } from "@azlabsjs/ngx-query";
 import { getHttpHost } from "@azlabsjs/requests";
-import { map, mergeMap, Observable, startWith, Subject } from "rxjs";
+import {
+  catchError,
+  map,
+  mergeMap,
+  Observable,
+  startWith,
+  Subject,
+  tap,
+  throwError
+} from "rxjs";
 import { configsDbNames } from "src/app/lib/bloc";
 import { environment } from "src/environments/environment";
+import { UIStateProvider, UI_STATE_PROVIDER } from "../../../partials/ui-state";
 import { defaultPaginateQuery } from "../datagrid";
 import { GridDataQueryProvider } from "../datagrid/grid-data.query.service";
 import { clientsDbConfigs } from "../db.slice.factory";
@@ -30,9 +31,12 @@ import { IndividualClient, IndividualClientType } from "../types";
     <ngx-clr-smart-grid
       [pageResult]="state$ | async"
       [config]="{
-        sizeOptions: [10, 50, 100, 150],
-        pageSize: 5
+        sizeOptions: [20, 50, 100, 150],
+        pageSize: 20,
+        hasActionOverflow: true,
+        hasExpandableRows: true
       }"
+      [loading]="(uistate$ | async)?.performingAction ?? false"
       [columns]="columns"
     >
       <!-- Action Bar -->
@@ -40,19 +44,22 @@ import { IndividualClient, IndividualClientType } from "../types";
         <ng-container
           *ngTemplateOutlet="
             actionBarTemplate;
-            context: {
-              selected: this.selected,
-              create: dgOnCreate.bind(this),
-              refresh: dgOnRefresh.bind(this)
-            }
+            context: { $implicit: selected }
           "
         ></ng-container>
       </ng-template>
       <!-- Action Bar -->
+      <!-- Expanded row -->
+      <ng-template #dgRowDetail let-item>
+        <ng-container
+          *ngTemplateOutlet="expandedRowTemplate; context: { $implicit: item }"
+        ></ng-container>
+      </ng-template>
+      <!-- Expanded row -->
       <!-- Action overflow -->
       <ng-template #dgActionOverflow let-item>
         <ng-container
-          *ngTemplateOutlet="overflowTemplate; context: { item: this.item }"
+          *ngTemplateOutlet="overflowTemplate; context: { $implicit: item }"
         ></ng-container>
       </ng-template>
       <!-- Action overflow -->
@@ -65,7 +72,8 @@ export class IndividualMemberListComponent {
   // #region Component input
   @Input() overflowTemplate!: TemplateRef<any>;
   @Input() actionBarTemplate!: TemplateRef<any>;
-  @Input() createRoute!: string;
+  @Input() expandedRowTemplate!: TemplateRef<any>;
+  @Input() requestPath!: string;
   @Input() columns: GridColumnType[] = [
     {
       title: "N° membre",
@@ -89,13 +97,11 @@ export class IndividualMemberListComponent {
     {
       title: "Lien d'affaires",
       label: "businesslink",
-      // transform: createPipeTransform(this.pipe, configsDbNames.businesslinks),
       transform: `azlcache:${configsDbNames.businesslinks}`,
     },
     {
       title: "Type",
       label: "type",
-      // transform: createPipeTransform(this.pipe, clientsDbConfigs.categories),
       transform: `azlcache:${clientsDbConfigs.categories}`,
     },
     {
@@ -105,7 +111,6 @@ export class IndividualMemberListComponent {
     {
       title: "Civilité",
       label: "civility",
-      // transform: createPipeTransform(this.pipe, configsDbNames.civilstates),
       transform: `azlcache:${configsDbNames.civilstates}`,
     },
     {
@@ -115,21 +120,19 @@ export class IndividualMemberListComponent {
     {
       title: "Statut",
       label: "status",
-      // transform: createPipeTransform(this.pipe, clientsDbConfigs.status),
       transform: `azlcache:${clientsDbConfigs.status}`,
     },
   ];
   // #endregion Component input
 
   // #region Component outputs
-  @Output() create = new EventEmitter<Event>();
   // #endregion Component outputs
 
   // #region Component internal properties
   private _dgChanges$ = new Subject<ProjectPaginateQueryParamType>();
-  @Input() requestPath!: string;
   state$ = this._dgChanges$.pipe(
     startWith(defaultPaginateQuery),
+    tap(() => this.uistate.startAction()),
     mergeMap(
       (query) =>
         useQuery(
@@ -147,38 +150,37 @@ export class IndividualMemberListComponent {
           []
         ) as Observable<PaginateResult<unknown>>
     ),
+    tap(() => this.uistate.endAction()),
     map(
       (result) =>
         ({
           ...result,
           data:
             result?.data
-              .map((item) => IndividualClient.safeParse(item).data)
+              .map((item) => {
+                const result = IndividualClient.safeParse(item);
+                console.log(result);
+                return result.data;
+              })
               .filter((item) => typeof item !== "undefined" && item !== null) ??
             [],
         } as Required<PaginateResult<IndividualClientType>>)
-    )
+    ),
+    catchError((error) => {
+      this.uistate.endAction();
+      return throwError(() => error);
+    })
     // TODO: If possible, use a redux or flux store to share
     // data between components
   );
+
+  uistate$ = this.uistate.uiState;
   // #endregion Component internal properties
 
   // Creates an instance of the current component
   constructor(
-    private router: Router,
     private queryProvider: GridDataQueryProvider,
     @Inject(APP_CONFIG_MANAGER) private config: ConfigurationManager,
-    private pipe: AzlCachePipe
-  ) {
-    // Subscribe to the state to test the result
-    this.state$.subscribe();
-  }
-
-  dgOnCreate(event: Event) {
-    this.create.emit(event);
-  }
-
-  dgOnRefresh(event: ProjectPaginateQueryParamType) {
-    this._dgChanges$.next(event);
-  }
+    @Inject(UI_STATE_PROVIDER) private uistate: UIStateProvider
+  ) {}
 }
