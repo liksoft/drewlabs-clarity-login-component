@@ -23,5 +23,21 @@
   "explorer.compactFolders": false,
   "compile-hero.disable-compile-files-on-did-save-code": true,
   "javascript.preferences.quoteStyle": "single",
-  "typescript.preferences.quoteStyle": "single"
+  "typescript.preferences.quoteStyle": "single",
+  "sqltools.connections": [
+    {
+      "mysqlOptions": {
+        "authProtocol": "default"
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 3306,
+      "driver": "MariaDB",
+      "name": "Biosecu Admin",
+      "group": "Biosecu",
+      "database": "biosecuadm",
+      "username": "biosecuadm",
+      "askForPassword": true
+    }
+  ]
 }

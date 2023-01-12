@@ -9,6 +9,7 @@ import { NgxSmartFormModule } from "@azlabsjs/ngx-smart-form";
 import { ClarityModule } from "@clr/angular";
 import { TranslateModule } from "@ngx-translate/core";
 import { StrategyBasedAuthModule } from "./login/core";
+import { IconsModule } from './modules/icons';
 import { NavModule } from "./modules/nav";
 import { AzlDashboardModule } from "./partials/dashboard/dashboard.module";
 import { ProgressBarModule } from "./partials/progress-bar";
@@ -53,6 +54,9 @@ import { UIStateComponentsModule } from "./partials/ui-state";
 
     // Azl cache module
     NgxAzlCacheModule,
+
+    // Icons module
+    IconsModule
   ],
   declarations: [],
   providers: [{ provide: LOCALE_ID, useValue: "fr" }],

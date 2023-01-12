@@ -1,15 +1,15 @@
 import { Location } from "@angular/common";
+import { HttpClient } from "@angular/common/http";
 import { Component, Inject } from "@angular/core";
 import { Router } from "@angular/router";
-import {
-  UIStateProvider,
-  UI_STATE_PROVIDER,
-} from "./lib/views/partials/ui-state";
-import { map } from "rxjs";
 import { JSDate } from "@azlabsjs/js-datetime";
-import { HttpClient } from "@angular/common/http";
 import { APP_CONFIG_MANAGER, ConfigurationManager } from "@azlabsjs/ngx-config";
 import { TranslateService } from "@ngx-translate/core";
+import { map } from "rxjs";
+import {
+  UIStateProvider,
+  UI_STATE_PROVIDER
+} from "./lib/views/partials/ui-state";
 
 @Component({
   selector: "app-root",

@@ -3,12 +3,12 @@ import {
   EventEmitter,
   OnDestroy,
   OnInit,
-  Output,
+  Output
 } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import {
   ComponentReactiveFormHelpers,
-  CustomValidators,
+  CustomValidators
 } from "@azlabsjs/ngx-smart-form";
 import { Subject } from "rxjs";
 
