@@ -1,0 +1,175 @@
+<!-- <div class="clr-row">
+  <div class="clr-col-12 lik-card">
+    <div class="lik-card-title">Fiche Signalétique membre</div>
+    <div class="lik-card-description">
+      Retrouvez le détails de la fiche d'informations du membre
+    </div>
+    <div class="divider"></div>
+    <div class="table-btn-group btn-group btn-outline-primary">
+      <button class="btn">Add</button>
+      <button class="btn">Edit</button>
+      <button class="btn">Download</button>
+      <button class="btn">Delete</button>
+    </div>
+    <div class="client-sigle-data clr-row">
+
+      <table class="table">
+        <thead>
+          <th colspan="2">
+            <h3 class="member-reference">#23404 - KOLANI RODRIGUE</h3>
+          </th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+
+              <table class="table inset-table">
+                <tbody>
+                  <tr>
+                    <th>Statut</th>
+                    <td>ACTIF</td>
+                  </tr>
+                  <tr>
+                    <th>N° membre</th>
+                    <td>3</td>
+                  </tr>
+                  <tr>
+                    <th>Date ouverture</th>
+                    <td>2018-05-15 12:45:44</td>
+                  </tr>
+                  <tr>
+                    <th>Relation d'affaires</th>
+                    <td>REGULIER</td>
+                  </tr>
+                  <tr>
+                    <th>Type de compte</th>
+                    <td>INDIVIDUEL</td>
+                  </tr>
+                  <tr>
+                    <th>Catégorie</th>
+                    <td>MEMBRE RÉGULIER</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <table class="table inset-table">
+                <tbody>
+                  <tr>
+                    <th>Compte Part Sociale</th>
+                    <td>02000001</td>
+                  </tr>
+                  <tr>
+                    <th>Compte dépôt à vue</th>
+                    <td>01000001</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <table class="table inset-table">
+                <tbody>
+                  <tr>
+                    <th>Nom</th>
+                    <td>KOLANI</td>
+                  </tr>
+                  <tr>
+                    <th>Prénoms</th>
+                    <td>RODRIGUE</td>
+                  </tr>
+                  <tr>
+                    <th>Date de Naissance</th>
+                    <td>1988-04-10 00:00:00</td>
+                  </tr>
+                  <tr>
+                    <th>Sexe</th>
+                    <td>M</td>
+                  </tr>
+                  <tr>
+                    <th>Nationalité</th>
+                    <td>Togo</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <table class="table inset-table">
+                <tbody>
+                  <tr>
+                    <th>Type pièce</th>
+                    <td>PASSEPORT</td>
+                  </tr>
+                  <tr>
+                    <th>Numéro Pièce</th>
+                    <td>EB2257546</td>
+                  </tr>
+                  <tr>
+                    <th>Autorité de Délivrance</th>
+                    <td>DGDN</td>
+                  </tr>
+                  <tr>
+                    <th>Pays de Délivrance</th>
+                    <td>TOGO</td>
+                  </tr>
+                  <tr>
+                    <th>Date Expiration</th>
+                    <td>2025-11-12 12:45:44</td>
+                  </tr>
+                  <tr>
+                    <th>Profession</th>
+                    <td>ARCHITECTE</td>
+                  </tr>
+                  <tr>
+                    <th>Type d'activité</th>
+                    <td>PROFESSION LIBERALE</td>
+                  </tr>
+                  <tr>
+                    <th>Secteur d'activité</th>
+                    <td>URBANISME & CONSTRUCTION</td>
+                  </tr>
+                  <tr>
+                    <th>Situation Matrimoniale</th>
+                    <td>CELIBATAIRE</td>
+                  </tr>
+                  <tr>
+                    <th>Localité</th>
+                    <td>BADJA</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+            <td>
+              << Photo ici>>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div> -->
+<ng-content select=".tab-header"></ng-content>
+<clr-tabs clrLayout="horizontal">
+  <clr-tab>
+    <button type="button" title="États Martimonials & Nuptialité" clrTabLink
+      [translate]="'États Martimonials & Nuptialité'"></button>
+    <clr-tab-content *clrIfActive>
+      <ng-content select=".tab-metadata"></ng-content>
+    </clr-tab-content>
+  </clr-tab>
+  <clr-tab>
+    <button type="button" title="Adresse & Contacts" clrTabLink [translate]="'Adresse & Contacts'"></button>
+    <clr-tab-content *clrIfActive>
+      <ng-content select=".tab-address"></ng-content>
+    </clr-tab-content>
+  </clr-tab>
+  <clr-tab>
+    <button type="button" title="Bénéficiaires" clrTabLink [translate]="'Bénéficiaires'"></button>
+    <clr-tab-content *clrIfActive>
+      <ng-content select=".tab-beneficiaries"></ng-content>
+    </clr-tab-content>
+  </clr-tab>
+  <clr-tab>
+    <button type="button" title="Mandataires" clrTabLink [translate]="'Mandataires'"></button>
+    <clr-tab-content *clrIfActive>
+      <ng-content select=".tab-representatives"></ng-content>
+    </clr-tab-content>
+  </clr-tab>
+</clr-tabs>
+<ng-content select=".tab-footer"></ng-content>

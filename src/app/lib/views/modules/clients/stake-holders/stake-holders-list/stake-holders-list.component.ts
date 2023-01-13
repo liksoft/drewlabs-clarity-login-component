@@ -1,25 +1,25 @@
 import { Component, Inject, Input, TemplateRef } from "@angular/core";
 import {
-    GridColumnType,
-    PaginateResult,
-    ProjectPaginateQueryParamType
+  GridColumnType,
+  PaginateResult,
+  ProjectPaginateQueryParamType
 } from "@azlabsjs/ngx-clr-smart-grid";
 import { APP_CONFIG_MANAGER, ConfigurationManager } from "@azlabsjs/ngx-config";
 import { useQuery } from "@azlabsjs/ngx-query";
 import { getHttpHost } from "@azlabsjs/requests";
 import {
-    catchError,
-    map,
-    mergeMap,
-    Observable,
-    startWith,
-    Subject,
-    tap,
-    throwError
+  catchError,
+  map,
+  mergeMap,
+  Observable,
+  startWith,
+  Subject,
+  tap,
+  throwError
 } from "rxjs";
 import {
-    UIStateProvider,
-    UI_STATE_PROVIDER
+  UIStateProvider,
+  UI_STATE_PROVIDER
 } from "src/app/lib/views/partials/ui-state";
 import { environment } from "src/environments/environment";
 import { defaultPaginateQuery } from "../../datagrid";
@@ -38,6 +38,7 @@ export class StakeHoldersListComponent {
   @Input() membernumber!: string | number;
   @Input() requestPath!: string;
   @Input("has-loading") hasLoading: boolean = true;
+  @Input() representative: boolean = false;
   // #endregion Component inputs
 
   // #region Component outputs

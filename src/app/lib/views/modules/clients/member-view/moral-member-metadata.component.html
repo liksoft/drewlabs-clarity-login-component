@@ -1,0 +1,20 @@
+<table class="table inset-table" *ngIf="metadata">
+    <tbody>
+        <tr>
+            <th>RAISON SOCIALE</th>
+            <td>{{ metadata.label }}</td>
+        </tr>
+        <tr>
+            <th>N° RÉGISTRE COMMERCE</th>
+            <td>{{ metadata.registrynumber }}</td>
+        </tr>
+        <tr>
+            <th>N° IDENTIFICATION FISCALE</th>
+            <td>{{ metadata.receiptnumber }}</td>
+        </tr>
+        <tr>
+            <th>FORME JURIDIQUE</th>
+            <td>{{ metadata.legalform | azlcache:configsDbNames.legalforms }}</td>
+        </tr>
+    </tbody>
+</table>

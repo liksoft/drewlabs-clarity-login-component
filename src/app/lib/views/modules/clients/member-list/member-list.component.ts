@@ -3,7 +3,17 @@ import { Component } from "@angular/core";
 @Component({
   selector: "app-member-list",
   templateUrl: "./member-list.component.html",
-  styleUrls: ["./member-list.component.scss"],
+  styles: [
+    `
+      .flex-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        height: 100%;
+      }
+    `
+  ]
 })
 export class MemberListComponent {
   // #region component members

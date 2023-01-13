@@ -1,0 +1,28 @@
+<table class="table inset-table">
+    <tbody>
+        <tr>
+            <th>NUMÉRO DE TEL.</th>
+            <td>{{ address.phoneNumber}} {{ address.otherPhoneNumber ? '/ ' + address.otherPhoneNumber : ''}}</td>
+        </tr>
+        <tr>
+            <th>EMAIL</th>
+            <td>{{ address.email }}</td>
+        </tr>
+        <tr>
+            <th>PAYS</th>
+            <td>{{ address.country }}</td>
+        </tr>
+        <tr>
+            <th>VILLE</th>
+            <td>{{ address.city }}</td>
+        </tr>
+        <tr>
+            <th>Po. Box.</th>
+            <td>{{address.district }} {{ address.postalBox }}</td>
+        </tr>
+        <tr>
+            <th>DETAILS</th>
+            <td>{{ address.address }}</td>
+        </tr>
+    </tbody>
+</table>

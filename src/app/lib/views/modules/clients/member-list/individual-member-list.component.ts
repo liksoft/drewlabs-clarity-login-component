@@ -23,7 +23,7 @@ import { UIStateProvider, UI_STATE_PROVIDER } from "../../../partials/ui-state";
 import { defaultPaginateQuery } from "../datagrid";
 import { GridDataQueryProvider } from "../datagrid/grid-data.query.service";
 import { clientsDbConfigs } from "../db.slice.factory";
-import { IndividualClient, IndividualClientType } from "../types";
+import { IndividualMember, IndividualMemberType, Member } from "../types";
 
 @Component({
   selector: "app-individual-member-list",
@@ -34,7 +34,8 @@ import { IndividualClient, IndividualClientType } from "../types";
         sizeOptions: [20, 50, 100, 150],
         pageSize: 20,
         hasActionOverflow: true,
-        hasExpandableRows: true
+        hasExpandableRows: false,
+        hasDetails: true
       }"
       [loading]="(uistate$ | async)?.performingAction ?? false"
       [columns]="columns"
@@ -50,12 +51,27 @@ import { IndividualClient, IndividualClientType } from "../types";
       </ng-template>
       <!-- Action Bar -->
       <!-- Expanded row -->
-      <ng-template #dgRowDetail let-item>
+      <!-- <ng-template #dgRowDetail let-item>
         <ng-container
           *ngTemplateOutlet="expandedRowTemplate; context: { $implicit: item }"
         ></ng-container>
-      </ng-template>
+      </ng-template> -->
       <!-- Expanded row -->
+      <!-- Dg Details pane body -->
+      <ng-template #dgDetailBody let-item>
+        <ng-container
+          *ngTemplateOutlet="
+            detailPaneRef;
+            context: {
+              $implicit: item,
+              address: item.address,
+              personal: item.personal,
+              member: projectMember(item)
+            }
+          "
+        ></ng-container>
+      </ng-template>
+      <!-- Dg Details pane body -->
       <!-- Action overflow -->
       <ng-template #dgActionOverflow let-item>
         <ng-container
@@ -77,7 +93,7 @@ export class IndividualMemberListComponent {
   @Input() columns: GridColumnType[] = [
     {
       title: "N° membre",
-      label: "number",
+      label: "accountNumber",
     },
     {
       title: "Date Ouv.",
@@ -123,6 +139,7 @@ export class IndividualMemberListComponent {
       transform: `azlcache:${clientsDbConfigs.status}`,
     },
   ];
+  @Input("detailPane") detailPaneRef!: TemplateRef<any>;
   // #endregion Component input
 
   // #region Component outputs
@@ -157,14 +174,10 @@ export class IndividualMemberListComponent {
           ...result,
           data:
             result?.data
-              .map((item) => {
-                const result = IndividualClient.safeParse(item);
-                console.log(result);
-                return result.data;
-              })
+              .map((item) => IndividualMember.safeParse(item).data)
               .filter((item) => typeof item !== "undefined" && item !== null) ??
             [],
-        } as Required<PaginateResult<IndividualClientType>>)
+        } as Required<PaginateResult<IndividualMemberType>>)
     ),
     catchError((error) => {
       this.uistate.endAction();
@@ -183,4 +196,18 @@ export class IndividualMemberListComponent {
     @Inject(APP_CONFIG_MANAGER) private config: ConfigurationManager,
     @Inject(UI_STATE_PROVIDER) private uistate: UIStateProvider
   ) {}
+
+  projectMember(value: IndividualMemberType) {
+    return Member.safeParse({
+      id: value.memberid,
+      validatedAt: value.validatedAt,
+      status: value.status,
+      activity: value.activity,
+      type: value.type,
+      accountNumber: value.accountNumber,
+      label: `${value.firstname}, ${value.lastname}`,
+      businesslink: value.businesslink,
+      address: value.address,
+    }).data;
+  }
 }

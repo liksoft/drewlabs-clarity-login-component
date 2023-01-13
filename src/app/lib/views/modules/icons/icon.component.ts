@@ -10,7 +10,7 @@ import { _avatar } from "./_icons";
 type SizeType = "md" | "sm" | "lg" | "x-lg";
 
 @Component({
-  selector: "app-svg-icons",
+  selector: "svg-icons",
   template: `
     <span class="icon" [innerHTML]="getIcon(shape)" [ngClass]="ngClass"></span>
   `,

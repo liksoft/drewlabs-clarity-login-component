@@ -57,6 +57,7 @@ import {
 } from "./lib/views/login/constants";
 import { LocalStrategy, StrategyBasedAuthModule } from "./lib/views/login/core";
 import { clientsDbSlice, ClientsModule } from "./lib/views/modules/clients";
+import { ViewHeaderModule } from './lib/views/modules/header';
 import { moduleRoutes } from "./lib/views/modules/routes";
 // #endregion Dropzone configuration
 
@@ -292,7 +293,7 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
       httpClient: HttpClient as Type<any>,
     }),
     NgxAzlCacheModule.forRoot({
-      debug: true,
+      debug: false,
       pagination: {
         perPage: 500,
       },
@@ -309,6 +310,9 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
     }),
     // Feature modules
     ClientsModule.forRoot(),
+
+    // View Header module
+    ViewHeaderModule.forRoot(),
   ],
   providers: [
     TranslateService,

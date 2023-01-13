@@ -1,0 +1,35 @@
+<ng-content select=".tab-header"></ng-content>
+<clr-tabs clrLayout="horizontal">
+    <clr-tab>
+        <button type="button" title="Information sur l'entreprise / Association" clrTabLink
+            [translate]="'Information sur l\'entreprise / Association'"></button>
+        <clr-tab-content *clrIfActive>
+            <ng-content select=".tab-metadata"></ng-content>
+        </clr-tab-content>
+    </clr-tab>
+    <clr-tab>
+        <button type="button" title="Adresse & Contacts" clrTabLink [translate]="'Adresse & Contacts'"></button>
+        <clr-tab-content *clrIfActive>
+            <ng-content select=".tab-address"></ng-content>
+        </clr-tab-content>
+    </clr-tab>
+    <clr-tab>
+        <button type="button" title="Signataires" clrTabLink [translate]="'Signataires'"></button>
+        <clr-tab-content *clrIfActive>
+            <span>Données de signataires sur compte</span>
+        </clr-tab-content>
+    </clr-tab>
+    <clr-tab>
+        <button type="button" title="Bénéficiaires" clrTabLink [translate]="'Bénéficiaires'"></button>
+        <clr-tab-content *clrIfActive>
+            <ng-content select=".tab-beneficiaries"></ng-content>
+        </clr-tab-content>
+    </clr-tab>
+    <clr-tab>
+        <button type="button" title="Mandataires" clrTabLink [translate]="'Mandataires'"></button>
+        <clr-tab-content *clrIfActive>
+            <ng-content select=".tab-representatives"></ng-content>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
+<ng-content select=".tab-footer"></ng-content>

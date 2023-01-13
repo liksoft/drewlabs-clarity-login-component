@@ -1,0 +1,55 @@
+
+<table class="table inset-table" *ngIf="data">
+    <tbody>
+        <tr>
+            <th>NATIONALITÉ</th>
+            <td>{{ data.nationality }}</td>
+        </tr>
+        <tr>
+            <th>DATE DE NAISSANCE</th>
+            <td>{{ data.birthdate | date }}</td>
+        </tr>
+        <tr>
+            <th>LIEU DE NAISSANCE</th>
+            <td>{{ data.birthplace }}</td>
+        </tr>
+        <tr>
+            <th>SITUATION MATRIMONIALE</th>
+            <td>{{ data.maritalstatus | azlcache:configsDbNames.maritalstatuses }}</td>
+        </tr>
+        <tr>
+            <th>CIVILITÉ</th>
+            <td>{{ data.civilstate | azlcache:configsDbNames.civilstates }}</td>
+        </tr>
+        <tr>
+            <th>GENRE</th>
+            <td>{{ data.gender | azlcache:configsDbNames.genders }}</td>
+        </tr>
+        <tr>
+            <th>SEXE</th>
+            <td>{{ data.sex }}</td>
+        </tr>
+        <tr>
+            <th>PROFRESSION</th>
+            <td>{{ data.profession }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Spouce details -->
+<table class="table inset-table">
+    <tbody>
+        <tr>
+            <th>NOM ÉPOUX/ÉPOUSE</th>
+            <td>{{ data.spoucelastname }}</td>
+        </tr>
+        <tr>
+            <th>PRÉNOM(s) ÉPOUX/ÉPOUSE</th>
+            <td>{{ data.spoucefirstname }}</td>
+        </tr>
+        <tr>
+            <th>NOMBRE TOTAL D'ENFANT</th>
+            <td>{{ data.children || 0 }}</td>
+        </tr>
+    </tbody>
+</table>

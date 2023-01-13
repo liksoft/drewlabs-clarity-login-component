@@ -14,9 +14,16 @@ import { MoralMemberAddComponent } from "./member-add-edit/moral-member-add.comp
 import { IndividualMemberListComponent } from "./member-list/individual-member-list.component";
 import { MemberListComponent } from "./member-list/member-list.component";
 import { MoralMemberListComponent } from "./member-list/moral-member-list.component";
-import { MemberViewComponent } from "./member-view/member-view.component";
+import {
+  IndividualMemberComponent,
+  IndividualMemberMetadataComponent,
+  MemberAddressComponent,
+  MemberHeaderComponent,
+  MoralMemberComponent,
+  MoralMemberMetaDataComponent
+} from "./member-view";
 import { ProcurationsComponent } from "./procurations/procurations.component";
-import { StakeHoldersListComponent } from './stake-holders/stake-holders-list/stake-holders-list.component';
+import { StakeHoldersListComponent } from "./stake-holders/stake-holders-list/stake-holders-list.component";
 
 /**
  * Client routes definitions constants. Provides
@@ -47,7 +54,7 @@ export const CLIENT_ROUTES: Routes = [
   },
   {
     path: routesConfigs.clientsHomeRoute,
-    component: MemberViewComponent,
+    component: IndividualMemberComponent,
   },
   {
     path: routesConfigs.procurationsManageRoute,
@@ -83,28 +90,38 @@ export class ClientsRoutingModule {}
     ClientsHomeComponent,
     MemberListComponent,
     ProcurationsComponent,
-    MemberViewComponent,
     MemberAddEditComponent,
     ClientsHomeComponent,
     IndividualMemberAddComponent,
     MoralMemberAddComponent,
     IndividualMemberListComponent,
     MoralMemberListComponent,
-    StakeHoldersListComponent
+    StakeHoldersListComponent,
+    IndividualMemberComponent,
+    MemberHeaderComponent,
+    MoralMemberComponent,
+    MemberAddressComponent,
+    IndividualMemberMetadataComponent,
+    MoralMemberMetaDataComponent,
   ],
   exports: [
     ClientsComponent,
     ClientsHomeComponent,
     MemberListComponent,
     ProcurationsComponent,
-    MemberViewComponent,
+    IndividualMemberComponent,
     MemberAddEditComponent,
     ClientsHomeComponent,
     IndividualMemberAddComponent,
     MoralMemberAddComponent,
     IndividualMemberListComponent,
     MoralMemberListComponent,
-    StakeHoldersListComponent
+    StakeHoldersListComponent,
+    MemberHeaderComponent,
+    MoralMemberComponent,
+    MemberAddressComponent,
+    IndividualMemberMetadataComponent,
+    MoralMemberMetaDataComponent,
   ],
   providers: [
     {

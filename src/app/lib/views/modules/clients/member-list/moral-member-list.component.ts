@@ -31,7 +31,7 @@ import { UIStateProvider, UI_STATE_PROVIDER } from "../../../partials/ui-state";
 import { defaultPaginateQuery } from "../datagrid";
 import { GridDataQueryProvider } from "../datagrid/grid-data.query.service";
 import { clientsDbConfigs } from "../db.slice.factory";
-import { MoralClient, MoralClientType } from "../types";
+import { Member, MoralMember, MoralMemberType } from "../types";
 
 @Component({
   selector: "app-moral-member-list",
@@ -42,7 +42,8 @@ import { MoralClient, MoralClientType } from "../types";
         sizeOptions: [20, 50, 100, 150],
         pageSize: 20,
         hasActionOverflow: true,
-        hasExpandableRows: true
+        hasExpandableRows: false,
+        hasDetails: true
       }"
       [columns]="columns"
       [loading]="(uistate$ | async)?.performingAction ?? false"
@@ -58,16 +59,34 @@ import { MoralClient, MoralClientType } from "../types";
       </ng-template>
       <!-- Action Bar -->
       <!-- Expanded row -->
-      <ng-template #dgRowDetail let-item>
+      <!-- <ng-template #dgRowDetail let-item>
         <ng-container
           *ngTemplateOutlet="expandedRowTemplate; context: { $implicit: item }"
         ></ng-container>
-      </ng-template>
+      </ng-template> -->
       <!-- Expanded row -->
+      <!-- Dg Details pane body -->
+      <ng-template #dgDetailBody let-item>
+        <ng-container
+          *ngTemplateOutlet="
+            detailPaneRef;
+            context: {
+              $implicit: item,
+              address: item.address,
+              personal: item.personal,
+              member: projectMember(item)
+            }
+          "
+        ></ng-container>
+      </ng-template>
+      <!-- Dg Details pane body -->
       <!-- Action overflow -->
       <ng-template #dgActionOverflow let-item>
         <ng-container
-          *ngTemplateOutlet="overflowTemplate; context: { $implicit: item }"
+          *ngTemplateOutlet="
+            overflowTemplate;
+            context: { $implicit: item }
+          "
         ></ng-container>
       </ng-template>
       <!-- Action overflow -->
@@ -84,7 +103,7 @@ export class MoralMemberListComponent {
   @Input() columns: GridColumnType[] = [
     {
       title: "N° membre",
-      label: "number",
+      label: "accountNumber",
     },
     {
       title: "Régistre du commerce",
@@ -120,6 +139,7 @@ export class MoralMemberListComponent {
     },
   ];
   @Input() requestPath!: string;
+  @Input("detailPane") detailPaneRef!: TemplateRef<any>;
   //#endregion Component inputs
 
   // #region Component outputs
@@ -155,15 +175,11 @@ export class MoralMemberListComponent {
           ...result,
           data:
             result?.data
-              .map((item) => {
-                const result = MoralClient.safeParse(item);
-                return result.data;
-              })
+              .map((item) => MoralMember.safeParse(item).data)
               .filter((item) => typeof item !== "undefined" && item !== null) ??
             [],
-        } as Required<PaginateResult<MoralClientType>>)
+        } as Required<PaginateResult<MoralMemberType>>)
     ),
-    tap(console.log),
     catchError((error) => {
       this.uistate.endAction();
       return throwError(() => error);
@@ -180,4 +196,18 @@ export class MoralMemberListComponent {
     @Inject(APP_CONFIG_MANAGER) private config: ConfigurationManager,
     @Inject(UI_STATE_PROVIDER) private uistate: UIStateProvider
   ) {}
+
+  projectMember(value: MoralMemberType) {
+    return Member.safeParse({
+      id: value.memberid,
+      validatedAt: value.validatedAt,
+      status: value.status,
+      activity: value.activity,
+      type: value.type,
+      accountNumber: value.accountNumber,
+      label: value.label,
+      businesslink: value.businesslink,
+      address: value.address,
+    }).data;
+  }
 }
