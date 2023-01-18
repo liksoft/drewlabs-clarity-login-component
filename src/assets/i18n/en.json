@@ -151,5 +151,11 @@
     "createControlSuccess": "Form control added successfully!",
     "updateControlSuccess": "Form control updated!",
     "deleteControlSuccess": "Control successfully deleted!"
+  },
+  "datagrid": {
+    "placeholders": {
+      "empty": "We couldn't find any data!",
+      "loading": "Loading data, please wait ..."
+    }
   }
 }

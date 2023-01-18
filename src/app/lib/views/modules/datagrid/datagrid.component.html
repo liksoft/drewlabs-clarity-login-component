@@ -1,0 +1,31 @@
+<ngx-clr-smart-grid [pageResult]="state$ | async" [config]="{
+    sizeOptions,
+    pageSize,
+    hasActionOverflow: overflow,
+    hasDetails: detailed,
+    useServerPagination: true
+  }" [loading]="loading"
+  [placeholder]="(false === ((uistate$ | async)?.performingAction ?? false) ? placeholder : loadingtext)"
+  [columns]="columns">
+  <!-- Action Bar -->
+  <ng-template #dgActionBar let-selected>
+    <ng-container *ngTemplateOutlet="
+        actionBarTemplate;
+        context: { selected }
+      "></ng-container>
+  </ng-template>
+  <!-- Action Bar -->
+  <!-- Action overflow -->
+  <ng-template #dgActionOverflow let-item>
+    <ng-container *ngTemplateOutlet="overflowTemplate; context: { item: this.item }"></ng-container>
+  </ng-template>
+  <!-- Action overflow -->
+  <!-- Dg Details pane body -->
+  <ng-template #dgDetailBody let-item>
+    <ng-container *ngTemplateOutlet="
+        detailPaneRef;
+        context: { $implicit: item }
+      "></ng-container>
+  </ng-template>
+  <!--\ Dg Details pane body -->
+</ngx-clr-smart-grid>

@@ -1,0 +1,117 @@
+<div class="clr-row">
+  <div class="clr-col-12 lik-card">
+    <app-view-header [title]="'Annuaire des Membres'|translate"
+      [description]="'Consulter, modifier des informations et des statuts des membres'|translate"></app-view-header>
+    <div class="data-container clr-row">
+      <!-- Card Start -->
+      <div class="clr-col-12 clr-data">
+        <clr-tabs clrLayout="horizontal">
+          <clr-tab>
+            <button type="button" title="Personnes Morales" clrTabLink [translate]="'Personnes Morales'"></button>
+            <clr-tab-content *clrIfActive>
+              <ngx-datagrid [projectResult]="morals.project" [url]="morals.url" [columns]="morals.datagrid.columns"
+                [query]="morals.datagrid.query" [actionBarTemplate]="actionBarTemplate"
+                [overflowTemplate]="dgOverflowTemplate" [detail-pane]="detailPaneRef">
+                <!-- Dg row details -->
+                <ng-template let-item #detailPaneRef>
+                  <ng-container *ngIf="(item | projectmembertype:'moral') as member">
+                    <moral-member>
+                      <member-header *ngIf="member" class="tab-header" [member]="member" [editable]="false">
+                      </member-header>
+                      <moral-member-metadata class="tab-metadata" [metadata]="item"></moral-member-metadata>
+                      <member-address class="tab-address" [address]="member.address"></member-address>
+                      <ngx-datagrid class="tab-beneficiaries" [url]="stakeholders.datagrid.url"
+                        [projectResult]="stakeholders.createProjectResult(member.accountNumber)"
+                        [columns]="stakeholders.datagrid.columns" [query]="stakeholders.datagrid.queries.beneficiaries"
+                        [filters]="[{property: 'member_id', value: member.id}]"></ngx-datagrid>
+                      <ngx-datagrid class="tab-representatives" [columns]="stakeholders.datagrid.columns"
+                        [projectResult]="stakeholders.createProjectResult(member.accountNumber)"
+                        [url]="stakeholders.datagrid.url" [query]="stakeholders.datagrid.queries.representatives"
+                        [filters]="[{property: 'member_id', value: member.id}]"></ngx-datagrid>
+                    </moral-member>
+                  </ng-container>
+                </ng-template>
+              </ngx-datagrid>
+              <!--\ Dg row details -->
+            </clr-tab-content>
+          </clr-tab>
+
+          <clr-tab>
+            <button type="button" title="Personnes physiques" clrTabLink [translate]="'Personnes physiques'"></button>
+            <clr-tab-content *clrIfActive>
+              <ngx-datagrid [projectResult]="individuals.project" [url]="individuals.url"
+                [columns]="individuals.datagrid.columns" [query]="individuals.datagrid.query"
+                [actionBarTemplate]="actionBarTemplate" [overflowTemplate]="dgOverflowTemplate"
+                [detail-pane]="detailPaneRef">
+                <!-- Dg row details -->
+                <ng-template let-item #detailPaneRef>
+                  <ng-container *ngIf="(item | projectmembertype:'individual') as member">
+                    <individual-member>
+                      <member-header *ngIf="member" class="tab-header" [member]="member" [editable]="false"
+                        [avatar]="avatarRef">
+                        <ng-template #avatarRef>
+                          <div class="flex-center">
+                            <svg-icons color="#4f4f4f" shape="avatar" size="x-lg"></svg-icons>
+                          </div>
+                        </ng-template>
+                      </member-header>
+                      <member-address class="tab-address" [address]="member.address"></member-address>
+                      <individual-member-metadata class="tab-metadata" [data]="item.personal"
+                        [editable]="false"></individual-member-metadata>
+                      <ngx-datagrid class="tab-beneficiaries" [url]="stakeholders.datagrid.url"
+                        [projectResult]="stakeholders.createProjectResult(member.accountNumber)"
+                        [columns]="stakeholders.datagrid.columns" [query]="stakeholders.datagrid.queries.beneficiaries"
+                        [filters]="[{property: 'member_id', value: member.id}]"></ngx-datagrid>
+                      <ngx-datagrid class="tab-representatives" [columns]="stakeholders.datagrid.columns"
+                        [projectResult]="stakeholders.createProjectResult(member.accountNumber)"
+                        [url]="stakeholders.datagrid.url" [query]="stakeholders.datagrid.queries.representatives"
+                        [filters]="[{property: 'member_id', value: member.id}]"></ngx-datagrid>
+                    </individual-member>
+                  </ng-container>
+                </ng-template>
+              </ngx-datagrid>
+              <!--\ Dg row details -->
+            </clr-tab-content>
+          </clr-tab>
+        </clr-tabs>
+      </div>
+      <!-- Card End -->
+    </div>
+  </div>
+</div>
+
+<ng-template #actionBarTemplate let-selected="selected" let-refresh="refresh" let-create="create">
+  <div class="btn-group">
+    <button type="button" class="btn btn-sm btn-primary" (click)="create($event)">
+      <clr-icon shape="plus"></clr-icon>
+      {{ 'new' | translate | uppercase }}
+    </button>
+    <button type="button" class="btn btn-sm btn-primary" (click)="refresh($event)">
+      <clr-icon shape="refresh"></clr-icon>
+      {{ 'refresh' | translate | uppercase }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #dgOverflowTemplate let-item="item" let-detailsClick="detailsClick" let-updateDetails="updateDetails"
+  let-updateStatus="updateStatus">
+  <button type="button" class="action-item">
+    <!-- <clr-icon shape="user"></clr-icon> -->
+    {{' Fiche signalétique' | translate | uppercase}}
+  </button>
+  <button type="button" class="action-item">
+    <!-- <clr-icon shape="edit"></clr-icon> -->
+    {{'Modifier infos'| translate | uppercase}}
+  </button>
+  <button type="button" class="action-item">
+    <!-- <clr-icon shape="tasks"></clr-icon> -->
+    {{'Changer statut' | translate | uppercase}}
+  </button>
+  <button type="button" class="action-item">
+    <!-- <clr-icon shape="close"></clr-icon> -->
+    {{'Clotûrer Dossier'| translate | uppercase}}
+  </button>
+  <button type="button" class="action-item">
+    {{ "deactivate" | translate | uppercase }}
+  </button>
+</ng-template>

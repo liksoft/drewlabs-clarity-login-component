@@ -1,5 +1,5 @@
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
-import { ModuleWithProviders, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { HighchartsChartModule } from "highcharts-angular";
 import { TestAuthInterceptor } from "src/app/lib/bloc";
@@ -8,22 +8,18 @@ import { routes as routesConfigs } from "../../routes";
 import { SharedModule } from "../../shared.module";
 import { ClientsComponent } from "./clients.component";
 import { ClientsHomeComponent } from "./home/clients-home.component";
-import { IndividualMemberAddComponent } from "./member-add-edit/individual-member-add.component";
-import { MemberAddEditComponent } from "./member-add-edit/member-add-edit.component";
-import { MoralMemberAddComponent } from "./member-add-edit/moral-member-add.component";
-import { IndividualMemberListComponent } from "./member-list/individual-member-list.component";
-import { MemberListComponent } from "./member-list/member-list.component";
-import { MoralMemberListComponent } from "./member-list/moral-member-list.component";
 import {
   IndividualMemberComponent,
   IndividualMemberMetadataComponent,
   MemberAddressComponent,
-  MemberHeaderComponent,
-  MoralMemberComponent,
-  MoralMemberMetaDataComponent
-} from "./member-view";
+  MemberHeaderComponent, MemberListComponent, MoralMemberComponent,
+  MoralMemberMetaDataComponent,
+  ProjectMemberPipe
+} from "./member";
+import { IndividualMemberAddComponent } from "./member-add-edit/individual-member-add.component";
+import { MemberAddEditComponent } from "./member-add-edit/member-add-edit.component";
+import { MoralMemberAddComponent } from "./member-add-edit/moral-member-add.component";
 import { ProcurationsComponent } from "./procurations/procurations.component";
-import { StakeHoldersListComponent } from "./stake-holders/stake-holders-list/stake-holders-list.component";
 
 /**
  * Client routes definitions constants. Provides
@@ -94,15 +90,15 @@ export class ClientsRoutingModule {}
     ClientsHomeComponent,
     IndividualMemberAddComponent,
     MoralMemberAddComponent,
-    IndividualMemberListComponent,
-    MoralMemberListComponent,
-    StakeHoldersListComponent,
     IndividualMemberComponent,
     MemberHeaderComponent,
     MoralMemberComponent,
     MemberAddressComponent,
     IndividualMemberMetadataComponent,
     MoralMemberMetaDataComponent,
+
+    // Pipes
+    ProjectMemberPipe,
   ],
   exports: [
     ClientsComponent,
@@ -114,14 +110,14 @@ export class ClientsRoutingModule {}
     ClientsHomeComponent,
     IndividualMemberAddComponent,
     MoralMemberAddComponent,
-    IndividualMemberListComponent,
-    MoralMemberListComponent,
-    StakeHoldersListComponent,
     MemberHeaderComponent,
     MoralMemberComponent,
     MemberAddressComponent,
     IndividualMemberMetadataComponent,
     MoralMemberMetaDataComponent,
+
+    // Pipes
+    ProjectMemberPipe,
   ],
   providers: [
     {
@@ -131,11 +127,4 @@ export class ClientsRoutingModule {}
     },
   ],
 })
-export class ClientsModule {
-  static forRoot(): ModuleWithProviders<ClientsModule> {
-    return {
-      ngModule: ClientsModule,
-      providers: [],
-    };
-  }
-}
+export class ClientsModule {}

@@ -2,7 +2,7 @@ import { Component, Inject, Input } from "@angular/core";
 import { APP_CONFIG_MANAGER, ConfigurationManager } from "@azlabsjs/ngx-config";
 import { useQuery } from "@azlabsjs/ngx-query";
 import { getHttpHost, isValidHttpUrl } from "@azlabsjs/requests";
-import { map, Observable, tap } from "rxjs";
+import { map, Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { chartOptions, highcharts } from "../testing/charts";
 import { ZonesReportQueryProvider } from "./zones-reports.query.provider";
@@ -48,7 +48,6 @@ export class ClientsHomeComponent {
       }[]
     >
   ).pipe(
-    tap((state) => console.log(state)),
     map((state) => ({
       chart: {
         plotBackgroundColor: "white",

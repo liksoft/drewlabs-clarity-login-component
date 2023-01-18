@@ -10,11 +10,11 @@ import { QueryProviderType } from "@azlabsjs/rx-query";
 import { Observable } from "rxjs";
 import { createDateQueryParamPipe, projectPaginateQuery } from "./helpers";
 
-@Injectable()
 @ProvidesQuery({
   observe: "response",
   cacheTime: 300000,
 })
+@Injectable()
 export class GridDataQueryProvider
   implements
     QueryProviderType<
@@ -35,8 +35,9 @@ export class GridDataQueryProvider
     project: ProjectPaginateQueryParamType,
     filters?: QueryFiltersType,
     columns: string[] = ["*"],
-    hiddenColumns: string[] = []
+    excepts: string[] = []
   ): Observable<PaginateResult<T>> {
+    console.log(path, project, filters, columns, excepts);
     // Project the query parameter using the projection function
     let query = projectPaginateQuery(
       filters ?? [],
@@ -47,8 +48,9 @@ export class GridDataQueryProvider
     query = {
       ...query,
       "_columns[]": columns ?? ["*"],
-      "_hidden[]": hiddenColumns ?? [],
+      "_hidden[]": excepts ?? [],
     };
+    console.log(query);
     return this.http.get(path, { params: query }) as Observable<
       PaginateResult<T>
     >;

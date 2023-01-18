@@ -151,5 +151,11 @@
     "createControlSuccess": "Le champ a été ajouté à la liste existante!",
     "updateControlSuccess": "Le champ a été mise à jour!",
     "deleteControlSuccess": "Le champ a été suprimé de la liste des champs du formulaire!"
+  },
+  "datagrid": {
+    "placeholders": {
+      "empty": "Aucune donnée disponible",
+      "loading": "Chargement des données, veuillez patienter ..."
+    }
   }
 }

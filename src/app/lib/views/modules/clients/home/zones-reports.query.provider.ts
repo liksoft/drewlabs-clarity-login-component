@@ -16,7 +16,7 @@ import {
   take,
   takeUntil
 } from "rxjs";
-import { configsDbNames } from "src/app/lib/bloc";
+import { environment } from "src/environments/environment";
 import { ZonesType } from "../types";
 
 /**
@@ -44,7 +44,10 @@ export class ZonesReportQueryProvider
 
   query(zonesURL: string, membersURL: string) {
     return this.cache.state$.pipe(
-      map((state) => state.get(configsDbNames.zones) as ZonesType[]),
+      map(
+        (state) =>
+          state.get(environment.app.caching.keys.settings.zones) as ZonesType[]
+      ),
       filter((zones) => (zones ?? []).length !== 0),
       mergeMap((state) => this.queryTotalMembersPerZones(state, membersURL))
     );
@@ -86,7 +89,7 @@ export class ZonesReportQueryProvider
     }
     return forkJoin(request$).pipe(
       takeUntil(this._destroy$),
-      map(state => state.flat())
+      map((state) => state.flat())
     );
   }
 

@@ -3,7 +3,15 @@ export {
   ClientsRoutingModule,
   CLIENT_ROUTES
 } from "./clients.module";
-export { clientsDbSlice } from "./db.slice.factory";
-export { IndividualMemberType as IndividualClient, IndividualMemberType as IndividualClientType, MoralMember as MoralClient, MoralMemberType as MoralClientType } from "./types";
-
+export { createClientCacheSlice as clientsDbSlice } from "./db.slice.factory";
+export {
+  IndividualMember,
+  IndividualMemberType,
+  Member,
+  MemberType,
+  MoralMember,
+  MoralMemberType,
+  StakeHolder,
+  StakeHolderType
+} from "./types";
 

@@ -1,4 +1,3 @@
-
 <table class="table inset-table" *ngIf="data">
     <tbody>
         <tr>
@@ -15,15 +14,15 @@
         </tr>
         <tr>
             <th>SITUATION MATRIMONIALE</th>
-            <td>{{ data.maritalstatus | azlcache:configsDbNames.maritalstatuses }}</td>
+            <td>{{ data.maritalstatus | azlcache:settingcachingkeys.maritalstatuses }}</td>
         </tr>
         <tr>
             <th>CIVILITÉ</th>
-            <td>{{ data.civilstate | azlcache:configsDbNames.civilstates }}</td>
+            <td>{{ data.civilstate | azlcache:settingcachingkeys.civilstates }}</td>
         </tr>
         <tr>
             <th>GENRE</th>
-            <td>{{ data.gender | azlcache:configsDbNames.genders }}</td>
+            <td>{{ data.gender | azlcache:settingcachingkeys.genders }}</td>
         </tr>
         <tr>
             <th>SEXE</th>
