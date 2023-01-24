@@ -124,6 +124,16 @@ export function createClientCacheSlice(config: ConfigurationManager) {
         "api.configurations.host",
         environment.api.configurations.host
       )}/${config.get(
+        "api.configurations.endpoints.professions",
+        environment.api.configurations.endpoints.professions
+      )}`,
+      key: environment.app.caching.keys.settings.professions,
+    },
+    {
+      endpoint: `${config.get(
+        "api.configurations.host",
+        environment.api.configurations.host
+      )}/${config.get(
         "api.configurations.endpoints.zones",
         environment.api.configurations.endpoints.zones
       )}`,

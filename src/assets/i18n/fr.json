@@ -156,6 +156,14 @@
     "placeholders": {
       "empty": "Aucune donnée disponible",
       "loading": "Chargement des données, veuillez patienter ..."
+    },
+    "members": {
+      "actions": {
+        "close": "Clotûrer Dossier",
+        "deactivate": "Désactiver",
+        "activate": "Activer",
+        "preview-accounts": "Comptes"
+      }
     }
   }
 }

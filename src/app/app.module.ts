@@ -56,6 +56,7 @@ import {
   AUTH_SERVICE_CONFIG
 } from "./lib/views/login/constants";
 import { LocalStrategy, StrategyBasedAuthModule } from "./lib/views/login/core";
+import { AccountsModule } from "./lib/views/modules";
 import { clientsDbSlice } from "./lib/views/modules/clients";
 import { ViewHeaderModule } from "./lib/views/modules/header";
 import { moduleRoutes } from "./lib/views/modules/routes";
@@ -311,6 +312,9 @@ export const DropzoneDictLoader = async (translate: TranslateService) => {
 
     // View Header module
     ViewHeaderModule.forRoot(),
+
+    // Accounts module
+    AccountsModule.forRoot(),
   ],
   providers: [
     TranslateService,

@@ -1,10 +1,10 @@
 import { BuiltType, TypeOf } from "@azlabsjs/built-type";
 
 export const Address = BuiltType._object({
-  id: BuiltType._num({ coerce: true }),
-  country: BuiltType._str(),
+  id: BuiltType._num({ coerce: true }).nullish(),
+  country: BuiltType._str().nullish(),
   city: BuiltType._str().nullish(),
-  phoneNumber: BuiltType._str({ coerce: true }),
+  phoneNumber: BuiltType._str({ coerce: true }).nullish(),
   district: BuiltType._str().nullish(),
   address: BuiltType._str().nullish(),
   otherPhoneNumber: BuiltType._str().nullish(),
@@ -31,7 +31,7 @@ export const Customer = BuiltType._object(
   },
   {
     maritalstatus: "maritalStatusId",
-    profession: "profession",
+    profession: "professionId",
     gender: "genderId",
     sex: "sex",
     civilstate: "civilStateId",
@@ -102,9 +102,9 @@ export const MoralMember = BuiltType._object(
     status: BuiltType._str({ coerce: true }).nullish(),
     businesslink: BuiltType._str({ coerce: true }),
     address: Address.nullish(),
-    legalform: BuiltType._str({coerce: true}).nullish(),
-    receiptnumber: BuiltType._str({coerce: true}).nullish(),
-    approvalnumber: BuiltType._str({coerce: true}).nullish(),
+    legalform: BuiltType._str({ coerce: true }).nullish(),
+    receiptnumber: BuiltType._str({ coerce: true }).nullish(),
+    approvalnumber: BuiltType._str({ coerce: true }).nullish(),
     // signatories: BuiltType._array(Customer).nullish()
   },
   {
@@ -118,9 +118,9 @@ export const MoralMember = BuiltType._object(
     status: "member.membershipStatusId",
     activity: "member.activity",
     businesslink: "member.businessLinkId",
-    receiptnumber: 'receiptNumber',
-    approvalnumber: 'approvalNumber',
-    legalform: 'legalFormId',
+    receiptnumber: "receiptNumber",
+    approvalnumber: "approvalNumber",
+    legalform: "legalFormId",
     // signatories: 'by'
   }
 );
@@ -132,7 +132,7 @@ export const StakeHolder = BuiltType._object(
     lastname: BuiltType._str({ coerce: true }),
     contact: BuiltType._str(),
     accountnumber: BuiltType._str({ coerce: true }),
-    createdAt: BuiltType._str().nullish(),
+    createdAt: BuiltType._str(),
     membernumber: BuiltType._str().nullish(),
     address: Address.nullish(),
   },
@@ -161,6 +161,35 @@ export const Member = BuiltType._object({
   label: BuiltType._str({ coerce: true }),
   businesslink: BuiltType._str({ coerce: true }),
   address: Address.nullish(),
+});
+
+export const Signatory = BuiltType._object(
+  {
+    id: BuiltType._num({ coerce: true }),
+    createdAt: BuiltType._str(),
+    firstname: BuiltType._str({ coerce: true }).nullable(),
+    lastname: BuiltType._str({ coerce: true }),
+    contact: BuiltType._str().nullish(),
+    moralid: BuiltType._num({ coerce: true }).nullish(),
+    address: Address.nullish(),
+    profession: BuiltType._num().nullish(),
+  },
+  {
+    firstname: "customer.firstname",
+    lastname: "customer.firstname",
+    contact: "customer.address.phoneNumber",
+    profession: "customer.professionId",
+    moralid: "moralId",
+  }
+);
+
+export const Status = BuiltType._object({
+  id: BuiltType._num(),
+  label: BuiltType._str({ coerce: true }),
+  activated: BuiltType._bool({ coerce: true }).nullish(),
+  closed: BuiltType._bool({ coerce: true }).nullish(),
+  deactivated: BuiltType._bool({ coerce: true }).nullish(),
+  revoked: BuiltType._bool({ coerce: true }).nullish(),
 });
 
 /**
@@ -197,3 +226,13 @@ export type AddressType = TypeOf<typeof Address>;
  * Individual member personal details instance type
  */
 export type CustomerType = TypeOf<typeof Customer>;
+
+/**
+ * Signatory type
+ */
+export type SignatoryType = TypeOf<typeof Signatory>;
+
+/**
+ * Member status built type
+ */
+export type StatusType = TypeOf<typeof Status>;

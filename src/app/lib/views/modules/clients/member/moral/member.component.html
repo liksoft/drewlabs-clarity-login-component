@@ -16,7 +16,7 @@
     <clr-tab>
         <button type="button" title="Signataires" clrTabLink [translate]="'Signataires'"></button>
         <clr-tab-content *clrIfActive>
-            <span>Données de signataires sur compte</span>
+            <ng-content select=".tab-signatories"></ng-content>
         </clr-tab-content>
     </clr-tab>
     <clr-tab>

@@ -19,6 +19,7 @@ const caching = {
       countries: "configurations.countries",
       currencies: "configurations.currencies",
       financialorganizations: "configurations.financial-organizations",
+      professions: "configurations.professions",
     },
     clients: {
       categories: "clients.members.categories",
@@ -63,6 +64,7 @@ export const environment = {
         status: "api/membership-statuses",
         stakeholders: "api/account-stake-holders",
         customers: "api/customers",
+        signatories: "api/moral-signatories",
       },
     },
     configurations: {
@@ -80,6 +82,7 @@ export const environment = {
         countries: "api/countries",
         currencies: "api/currencies",
         financialorganizations: "api/financial-organizations",
+        professions: "api/professions",
       },
     },
   },
@@ -95,7 +98,7 @@ export const environment = {
   },
   testing: {
     _authToken:
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI4NTk3ODJFMS05QTJGLTQ5QTQtOUQ0Mi1CNTlBNzhFNTIwRkIiLCJqdGkiOiJjNGQ3ZTFiNTFlOGNhNjYxODMxZTFlMTAyMTdiYjcxNjc0ZjBmZDkzODY2MzkzY2Q4NzY3ZDI0ZWU3ZGMwMTk2ZWM5ZjZlYmExOWJlOWQ3ZiIsImlhdCI6MTY3Mzk0OTk4NS4xNjM3NiwibmJmIjoxNjczOTQ5OTg1LjE2Mzc2NSwiZXhwIjoxNjc0MDM2Mzg1LjE2MDUzMywic3ViIjoiMTMiLCJzY29wZXMiOlsiY29vcGVjOmN1c3RvbWVyczptZW1iZXJzaGlwczpsaXN0Il19.tiDoH_EDSEQNMRbtbOZ9JkQpBAN7G9dGUz_g4W9FYOgqjnOJW2NzhTUzXMPcpzzj1EAukk4bZt4uo6CUZePsHu9VAn5pZxXzLkXzx-QamGfppvlEofjYkacXcZBY5RIci52wgyKpY4CrWWkjf0L-Tkdo_Bm-oSj3KtXrK93kUwC64G1Crck6aFgZIz1cx27X8QSaH3u_51UbP24QPKCh2rZfG7WAMGRMU60GlOQCP4g_b3OVw7BXh2MchAh7ApYnU_rOlW3ZCxS3BgLbdKpzayjHM-amSuXxF8HhmWJSBk3xR-4w0-nai2TUIaJpCmnowetDphA0awGC1mvo9XY7ZoCRzJuh3lMhCsPWZ0vK7Q8d3y-d3DIxPV394GgetajfGcNGz3fQjIvlfP2JTvUJ7TKrqzby9gP7-hLZvcruynLw63irbyOuHTHTgnFacUPg4-ZdJ0Yn6WwWKrJ7uMNeRes3Hp-52nTBvtNk44rCms3yheDrjrXkErQ24rxYERXjAnUSXCD2TaU0YibpqqEMgK5K5HnvHSWK9ZMEu9B9T7OnhTgP7t5ikQi8LJN9SYeJo0J5wJ4u5KtMmu45esHJ0Hs1PKuJSbgSs9pjA_nmK2-9dIsBrZZSrMwEnmEJyyhO3elImTzVdIV7SW2JcOx-ghpmRH7GGkA5CVuDplwqRkY",
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI4NTk3ODJFMS05QTJGLTQ5QTQtOUQ0Mi1CNTlBNzhFNTIwRkIiLCJqdGkiOiJiZTMxODU0NzIxYjYzMTI1Yjc0Njg2ZmU0NDNlNGY3OTRjMzY3ZmU1MDA0NmUzZGY0YmNhOTVlMDg5ZjEyM2ZlNjIzM2ExYzExYTc3NWVlYSIsImlhdCI6MTY3NDA1Nzk2My42OTU5NTIsIm5iZiI6MTY3NDA1Nzk2My42OTU5NTUsImV4cCI6MTY3NDE0NDM2My42OTMxMzMsInN1YiI6IjEzIiwic2NvcGVzIjpbImNvb3BlYzpjdXN0b21lcnM6bWVtYmVyc2hpcHM6bGlzdCJdfQ.f9Gtz7P5OzBH7bWiCyG2B6TaSikc2TeO6L6B4dXAYyO-Txt7c7QUbm_3nrSjuh291SDGRoHlwbq62e2d7nyNPXdt0-JxLMKc--XFC_d2g-j5HJTVYXC6NIX0yi5-1wwHI1vKjekBh9jtxYCkz-tI_wi8MicHBNbYXFbv3WPgtyT4XCuB17gnbpDF9A1d3M4AFxW5ZvjP3YPTBsGxZr1QU3r4wos-m3ydPCwekOGIgdze1yCIacy_R9L8qQEzgI4zISewVE8d4b_lgtA1rZDNBr0cSQCaTEy69ev7opR8NIGPmo1rmDnynUNyy_NVz4IJ0fdZMUQ32mjMy6_Fagojc5nHw7L4UGoBocGL0JOIPi-A1ahd0ySs0T1MY0WJFgkTVy3EB9M1hqXlkGZUA_QhIh0ge_E6RkYrYWyG96TtzOKlunSh41jEIhUS9_Gce_C0uSL_K5aHC41284SbR5TKlV1QMGWjGqV7lkJV3ixuSrHPkn-SZxV4ZvVrcJxGpk6DRZrxE8qEgXJagx6LCAog_ydc4_DuubpgpgTARzeXlk3eXwYq9uimWi1bz3OzHM_p48_H4YRd_UJpzUtCDdrQJo1-Mxe8Cfw3Yl7ALK8gZ-S-0DDSg8menO1BP2YdbvZuDU9AKOxkSfOtez77PZNxRbDdVs96NwEM2PEGaDUaEAY",
   },
   app: {
     caching,
@@ -108,7 +111,7 @@ export const environment = {
               label: "accountNumber",
             },
             {
-              title: "Régistre du commerce",
+              title: "N° Régistre Comm.",
               label: "registrynumber",
             },
             {
@@ -255,6 +258,48 @@ export const environment = {
               // _query: []
             } as RestQueryType,
           },
+        },
+      },
+      signatories: {
+        datagrid: {
+          columns: [
+            {
+              title: "ID",
+              label: "id",
+            },
+            {
+              title: "N° membre",
+              label: "number",
+            },
+            {
+              title: "Date Enr.",
+              label: "createdAt",
+              transform: "date",
+            },
+            {
+              title: "Nom",
+              label: "lastname",
+              transform: "uppercase",
+            },
+            {
+              title: "Prénoms",
+              label: "firstname",
+              transform: "uppercase",
+            },
+            {
+              title: "Téléphone",
+              label: "contact",
+            },
+            {
+              title: "Profession",
+              label: "profession",
+              transform: `azlcache:${caching.keys.settings.professions}`,
+            },
+          ],
+          query: {
+            _columns: ["*", "customer.address"],
+            _excepts: [],
+          } as RestQueryType,
         },
       },
     },

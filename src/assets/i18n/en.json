@@ -156,6 +156,14 @@
     "placeholders": {
       "empty": "We couldn't find any data!",
       "loading": "Loading data, please wait ..."
+    },
+    "members": {
+      "actions": {
+        "close": "Close Dossier",
+        "deactivate": "Deactivate",
+        "activate": "Activate",
+        "preview-accounts": "Accounts"
+      }
     }
   }
 }

@@ -20,6 +20,10 @@
                       </member-header>
                       <moral-member-metadata class="tab-metadata" [metadata]="item"></moral-member-metadata>
                       <member-address class="tab-address" [address]="member.address"></member-address>
+                      <ngx-datagrid class="tab-signatories" [url]="signatories.datagrid.url"
+                        [projectResult]="signatories.project" [columns]="signatories.datagrid.columns"
+                        [query]="signatories.datagrid.query"
+                        [filters]="[{property: 'moral_id', value: item.id}]"></ngx-datagrid>
                       <ngx-datagrid class="tab-beneficiaries" [url]="stakeholders.datagrid.url"
                         [projectResult]="stakeholders.createProjectResult(member.accountNumber)"
                         [columns]="stakeholders.datagrid.columns" [query]="stakeholders.datagrid.queries.beneficiaries"
@@ -95,23 +99,22 @@
 
 <ng-template #dgOverflowTemplate let-item="item" let-detailsClick="detailsClick" let-updateDetails="updateDetails"
   let-updateStatus="updateStatus">
-  <button type="button" class="action-item">
-    <!-- <clr-icon shape="user"></clr-icon> -->
-    {{' Fiche signalétique' | translate | uppercase}}
-  </button>
-  <button type="button" class="action-item">
-    <!-- <clr-icon shape="edit"></clr-icon> -->
-    {{'Modifier infos'| translate | uppercase}}
-  </button>
-  <button type="button" class="action-item">
-    <!-- <clr-icon shape="tasks"></clr-icon> -->
-    {{'Changer statut' | translate | uppercase}}
-  </button>
-  <button type="button" class="action-item">
-    <!-- <clr-icon shape="close"></clr-icon> -->
-    {{'Clotûrer Dossier'| translate | uppercase}}
-  </button>
-  <button type="button" class="action-item">
-    {{ "deactivate" | translate | uppercase }}
-  </button>
+  <ng-container *ngIf="statuses$|async as statuses">
+    <button type="button" class="action-item">
+      <!-- <clr-icon shape="user"></clr-icon> -->
+      {{' Fiche signalétique' | translate | uppercase}}
+    </button>
+    <button *ngIf="statuses.closed" (click)="updateStatus(statuses.closed)" type="button" class="action-item">
+      <!-- <clr-icon shape="edit"></clr-icon> -->
+      {{'datagrid.members.actions.close'| translate | uppercase}}
+    </button>
+    <button *ngIf="statuses.deactivated"  (click)="updateStatus(statuses.closed)" type="button" class="action-item">
+      <!-- <clr-icon shape="tasks"></clr-icon> -->
+      {{'datagrid.members.actions.deactivate' | translate | uppercase}}
+    </button>
+    <button type="button" class="action-item">
+      <!-- <clr-icon shape="user"></clr-icon> -->
+      {{'datagrid.members.actions.preview-accounts' | translate | uppercase}}
+    </button>
+  </ng-container>
 </ng-template>

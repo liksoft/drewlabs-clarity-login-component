@@ -1,12 +1,11 @@
-<ngx-clr-smart-grid [pageResult]="state$ | async" [config]="{
+<ngx-clr-smart-grid [pageResult]="(state$ | async)" (dgRefresh)="dgRefreshListener($event)" [config]="{
     sizeOptions,
     pageSize,
     hasActionOverflow: overflow,
     hasDetails: detailed,
     useServerPagination: true
-  }" [loading]="loading"
-  [placeholder]="(false === ((uistate$ | async)?.performingAction ?? false) ? placeholder : loadingtext)"
-  [columns]="columns">
+  }" [loading]="loading" [columns]="columns">
+  <!-- [placeholder]="(placeholder$| async) ?? ''"  -->
   <!-- Action Bar -->
   <ng-template #dgActionBar let-selected>
     <ng-container *ngTemplateOutlet="

@@ -1,10 +1,19 @@
 import { Component, Inject } from "@angular/core";
+import { AzlCacheProvider } from "@azlabsjs/ngx-azl-cache";
 import { GridColumnType } from "@azlabsjs/ngx-clr-smart-grid";
 import { APP_CONFIG_MANAGER, ConfigurationManager } from "@azlabsjs/ngx-config";
 import { getHttpHost } from "@azlabsjs/requests";
+import { filter, map } from "rxjs";
 import { environment } from "src/environments/environment";
 import { RestQueryType } from "../../datagrid";
-import { IndividualMember, MoralMember, StakeHolder } from "../types";
+import {
+  IndividualMember,
+  MoralMember,
+  Signatory,
+  StakeHolder,
+  Status,
+  StatusType
+} from "../types";
 
 @Component({
   selector: "app-member-list",
@@ -91,9 +100,67 @@ export class MemberListComponent {
     },
   };
 
+  signatories = {
+    datagrid: {
+      url: `${getHttpHost(
+        this.config.get("api.clients.host", environment.api.clients.host)
+      )}/${this.config.get(
+        "api.clients.endpoints.signatories",
+        environment.api.clients.endpoints.signatories
+      )}`,
+      columns: this.config.get<GridColumnType[]>(
+        "app.clients.signatories.datagrid.columns",
+        environment.app.clients.signatories.datagrid.columns
+      ),
+      query: this.config.get<RestQueryType>(
+        "app.clients.signatories.datagrid.query",
+        environment.app.clients.signatories.datagrid.query
+      ),
+    },
+    project: (item: any) => {
+      const result = Signatory.safeParse(item);
+      console.log(result);
+      return result.data;
+    },
+  };
+
+  statuses$ = this.provider.state$.pipe(
+    map(
+      (state) =>
+        [
+          state,
+          this.config.get<string>(
+            "app.caching.keys.clients.status",
+            environment.app.caching.keys.clients.status
+          ),
+        ] as [typeof state, string]
+    ),
+    filter(([state, key]) => state.has(key)),
+    map(([state, key]) =>
+      ((state.get(key) as Record<string, unknown>[]) ?? [])
+        .map((value) => Status.safeParse(value).data)
+        .filter((value) => typeof value !== "undefined" && value !== null)
+    ),
+    map((state) => ({
+      activated: state.find((value) => Boolean(value?.activated) === true),
+      deactivated: state.find((value) => Boolean(value?.deactivated) === true),
+      revoked: state.find((value) => Boolean(value?.activated) === true),
+      closed: state.find((value) => Boolean(value?.deactivated) === true),
+    }))
+  );
+
   constructor(
-    @Inject(APP_CONFIG_MANAGER) private config: ConfigurationManager
+    @Inject(APP_CONFIG_MANAGER) private config: ConfigurationManager,
+    private provider: AzlCacheProvider
   ) {}
   // #region component members
+
+  updateStatus(status: StatusType) {
+    console.log("Setting status...", status);
+  }
+
+  listAccounts() {
+    // TODO : Show account page
+  }
   // #endregion component members
 }

@@ -33,7 +33,7 @@ import { RestQueryType } from "./types";
 @Component({
   selector: "ngx-datagrid",
   templateUrl: "./datagrid.component.html",
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatagridComponent implements OnDestroy {
   // #region Component inputs
@@ -61,7 +61,10 @@ export class DatagridComponent implements OnDestroy {
   private _dgChanges$ = new Subject<ProjectPaginateQueryParamType>();
   state$ = this._dgChanges$.pipe(
     startWith(defaultPaginateQuery),
-    tap(() => this.uistate.startAction()),
+    tap(() => {
+      this.uistate.startAction();
+      this._placeholder$.next(this.loadingtext);
+    }),
     map((query) => ({
       ...query,
       filters: [
@@ -93,6 +96,11 @@ export class DatagridComponent implements OnDestroy {
             [],
         } as Required<PaginateResult<{ [k: string]: any }>>)
     ),
+    tap((state) =>
+      this._placeholder$.next(
+        state.total && state.total === 0 ? this.placeholder : ""
+      )
+    ),
     catchError((error) => {
       this.uistate.endAction();
       return throwError(() => error);
@@ -110,6 +118,8 @@ export class DatagridComponent implements OnDestroy {
     );
   }
   uistate$ = this.uistate.uiState;
+  _placeholder$ = new Subject<string>();
+  placeholder$ = this._placeholder$.asObservable();
   // #endregion Component properties / states
 
   /**
@@ -119,6 +129,11 @@ export class DatagridComponent implements OnDestroy {
     @Inject(UI_STATE_PROVIDER) private uistate: UIStateProvider,
     private queryProvider: GridDataQueryProvider
   ) {}
+
+  // Listen for datagrid refresh event
+  dgRefreshListener(event: ProjectPaginateQueryParamType) {
+    this._dgChanges$.next(event);
+  }
 
   //
   ngOnDestroy(): void {
