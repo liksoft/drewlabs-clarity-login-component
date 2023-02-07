@@ -1,6 +1,3 @@
-[submodule "src/app/lib/views/login"]
-	path = src/app/lib/views/login
-	url = git@github.com:azandrew-sidoine/drewlabs-clarity-login-component.git
 [submodule "src/app/lib/views/partials"]
 	path = src/app/lib/views/partials
 	url = git@github.com:azandrew-sidoine/elewou-clarity-partial-components.git
