@@ -6,7 +6,7 @@ import {
   CanLoad,
   Route,
   Router,
-  RouterStateSnapshot
+  RouterStateSnapshot,
 } from "@angular/router";
 import { interval, map, Observable, Subject, take, takeUntil, tap } from "rxjs";
 import { AUTH_SERVICE } from "../constants";
@@ -78,24 +78,23 @@ export class ScopeGuard
    * @param redirectTo
    */
   tokenCan(scopes: string[] | string, redirectTo?: string) {
-    const observable$ = interval(100).pipe(
-      take(1),
-      map(() => {
-        scopes = Array.isArray(scopes) ? scopes : [scopes];
-        let authorized = true;
-        for (const scope of scopes) {
-          // We check for any missing scope from authorized token scopes
-          if (this._scopes.indexOf(scope) === -1) {
-            authorized = false;
-            break;
-          }
+    return new Promise<boolean>((resolve) => {
+      scopes = Array.isArray(scopes) ? scopes : [scopes];
+      if (scopes.length === 0) {
+        return resolve(true);
+      }
+      let authorized = true;
+      for (const scope of scopes) {
+        // We check for any missing scope from authorized token scopes
+        if (this._scopes.indexOf(scope) === -1) {
+          authorized = false;
+          break;
         }
-        if (!authorized && redirectTo) {
-          this.router.navigateByUrl(redirectTo);
-        }
-        return authorized;
-      })
-    );
-    return observable$;
+      }
+      if (!authorized && redirectTo) {
+        this.router.navigateByUrl("/login");
+      }
+      resolve(authorized);
+    });
   }
 }

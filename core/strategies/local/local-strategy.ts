@@ -53,7 +53,7 @@ export class LocalStrategy implements StrategyInterface {
     private cache?: Storage,
     endpoints?: Partial<RESTInterfaceType>
   ) {
-    this._endpoints = { ...(endpoints ?? {}), ...DEFAULT_ENDPOINTS };
+    this._endpoints = { ...DEFAULT_ENDPOINTS, ...(endpoints ?? {}) };
   }
 
   initialize(autologin?: boolean): Observable<void> {
