@@ -4,3 +4,6 @@
 [submodule "src/app/lib/views/global-styles"]
 	path = src/app/lib/views/global-styles
 	url = git@github.com:liksoft/elewou-light-styles.git
+[submodule "src/app/lib/views/login"]
+	path = src/app/lib/views/login
+	url = git@github.com:azandrew-sidoine/drewlabs-clarity-login-component.git
