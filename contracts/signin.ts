@@ -3,6 +3,7 @@ export interface SignInResultInterface {
     provider: string;
     id: string|number;
     emails: string[];
+    email?: string;
     name: string;
     photoUrl?: string;
     firstName: string;
